@@ -4,10 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { devices, healthConditions } from "@/utils/Hardcodeddata";
 import SignatureCanvas from "react-signature-canvas";
 import toast from "react-hot-toast";
+
+//service
 import { consentService } from "@/services/consentService";
 import { therapistsService } from "@/services/therapistsService";
 import { customerService } from "@/services/customerService";
 import { interestsService } from "@/services/interestsService";
+
+//hook
+import useInitializeConsentForm from "@/hooks/useInitializeConsentForm";
+import useInitializeCustomerForm from "@/hooks/useInitializeCustomerForm";
 
 //partial
 import DateAndVoucher from "./consentspart/DateAndVoucher";
@@ -195,63 +201,9 @@ const CustomerConsentForm = ({ role = "customer" }) => {
   };
   //---------------------------- Signature Set Up End
 
-  useEffect(() => {
-    if (dataExist && dataExist.length > 0) {
-      setFormData((prev) => ({
-        ...prev,
-        date: dataExist[0].consentfrmdate ? new Date(dataExist[0].consentfrmdate).toISOString().split("T")[0] : "",
-        voucherNo: dataExist[0].voucherno || "",
-        selectedDevices: dataExist[0].device_used || "",
-        gender: dataExist[0].gender || "",
-        selectedConditions: "",
-        signatureDate: dataExist[0].consentfrmdate ? new Date(dataExist[0].consentfrmdate).toISOString().split("T")[0] : "",
-        therapist: "",
-        breastImplant: dataExist[0].implantbreast || 0,
-        pacemakerImplant: dataExist[0].implantpacemaker || 0,
-        electronicMonitorImplant: dataExist[0].implantelecmon || 0,
-        metalImplant: dataExist[0].implantmetal || 0,
-        eyeLensImplant: dataExist[0].implanteyslens || 0,
-        historyOfHeartBypass: dataExist[0].issueheartbypass || 0,
-        walkin: dataExist[0].walkin || "",
-        referralType: "",
-        nonWalkin: "Walk-in",
-        nonWalkinName: dataExist[0].nonwalkinname || "",
-        nonWalkinContact: dataExist[0].nonwalkincontact || "",
-        others: "",
-        otherCondition: dataExist[0].issueothers || 0,
-        issuecoheartdisease: dataExist[0].issuecoheartdisease || 0,
-        issuelungdisease: dataExist[0].issuelungdisease || 0,
-        issuediabetes: dataExist[0].issuediabetes || 0,
-        issuestrokehistory: dataExist[0].issuestrokehistory || 0,
-        issuehypertension: dataExist[0].issuehypertension || 0,
-        issuepregnant: dataExist[0].issuepregnant || 0,
-        issuecancer: dataExist[0].issuecancer || 0,
-        issuemenstruating: dataExist[0].issuemenstruating || 0,
-        issuesurgery: dataExist[0].issuesurgery || 0,
-        issuehospitalninetydays: dataExist[0].issuehospitalninetydays || 0,
-        issueseizure: dataExist[0].issueseizure || 0,
-      }));
-    }
-  }, [dataExist]);
+  useInitializeConsentForm(dataExist, setFormData);
 
-  useEffect(() => {
-    if (personalData && personalData.length > 0) {
-      setFormPersonalData((prev) => ({
-        ...prev,
-        name: personalData[0].name || "",
-        contact_no: personalData[0].contact_no || "",
-        email: personalData[0].email || "",
-        emergency_contact_name: personalData[0].emergency_contact_name || "",
-        emergency_contact_no: personalData[0].emergency_contact_no || "",
-        dateOfBirth: personalData[0].dateofbirth ? new Date(personalData[0].dateofbirth).toISOString().split("T")[0] : "",
-        address: personalData[0].address || "",
-        country: personalData[0].country || "",
-        postalcode: personalData[0].postalcode || "",
-        referred_by: personalData[0].referred_by || "",
-        referred_other: personalData[0].referred_other || "",
-      }));
-    }
-  }, [personalData]);
+  useInitializeCustomerForm(personalData, setFormPersonalData);
 
   console.log(formData);
   return (

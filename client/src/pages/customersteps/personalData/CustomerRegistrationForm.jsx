@@ -11,6 +11,7 @@ import PersonalDetail from "./personalDataPart/PersonalDetail";
 import EmergancyContact from "./personalDataPart/EmergencyContact";
 import InterestSelection from "./personalDataPart/InterestSelection";
 import { useAuth } from "@/context/AuthContext";
+import useInitializeCustomerForm from "@/hooks/useInitializeCustomerForm";
 
 const CustomerRegistrationForm = () => {
   const navigate = useNavigate();
@@ -82,25 +83,7 @@ const CustomerRegistrationForm = () => {
     });
   }, []);
 
-  useEffect(() => {
-    if (dataExist && dataExist.length > 0) {
-      console.log(dataExist);
-      setFormData((prev) => ({
-        ...prev,
-        name: dataExist[0].name || "",
-        email: dataExist[0].email || "",
-        contact_no: dataExist[0].contact_no || "",
-        address: dataExist[0].address || "",
-        postalcode: dataExist[0].postalcode || "",
-        date: dataExist[0].dateofbirth ? new Date(dataExist[0].dateofbirth).toISOString().split("T")[0] : "",
-        country: dataExist[0].country || "",
-        referred_by: dataExist[0].referred_by || "",
-        referred_other: dataExist[0].referred_other || "",
-        emergency_contact_name: dataExist[0].emergency_contact_name || "",
-        emergency_contact_no: dataExist[0].emergency_contact_no || "",
-      }));
-    }
-  }, [dataExist]);
+  useInitializeCustomerForm(dataExist, setFormData);
 
   const toggleInterest = (item) => {
     setInterests((prev) => {
