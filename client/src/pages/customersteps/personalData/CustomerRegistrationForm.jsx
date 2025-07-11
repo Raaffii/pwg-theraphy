@@ -57,10 +57,8 @@ const CustomerRegistrationForm = () => {
         const isDataExist = await customerService.getCustomerData();
         console.log(isDataExist);
         if (isDataExist.length > 0) {
-          console.log("update nih yee");
           await customerService.updateRegistration(user.customerId, formData, selectedInterest);
         } else {
-          console.log("regis nih yee");
           await customerService.customerRegistration(user.customerId, formData, selectedInterest);
         }
         toast.success("Data Saved");
