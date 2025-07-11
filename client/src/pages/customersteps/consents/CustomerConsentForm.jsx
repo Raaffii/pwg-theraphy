@@ -37,16 +37,15 @@ const CustomerConsentForm = ({ role = "customer" }) => {
   const handleNext = async () => {
     if (role == "customer") {
       //change this ----------------------------------------------------------------------------------------
+
       try {
         const check = await consentService.getConsentByid(user.customerId);
 
         const isDataExist = await customerService.getCustomerData();
-        console.log(isDataExist);
+
         if (isDataExist.length > 0) {
-          console.log("update nih yee");
           await customerService.updateRegistration(user.customerId, formPersonalData);
         } else {
-          console.log("regis nih yee");
           await customerService.customerRegistration(user.customerId, formPersonalData);
         }
         let status;
@@ -110,6 +109,17 @@ const CustomerConsentForm = ({ role = "customer" }) => {
     nonWalkinName: "",
     nonWalkinContact: "",
     others: "",
+    issuecoheartdisease: 0,
+    issuelungdisease: 0,
+    issuediabetes: 0,
+    issuestrokehistory: 0,
+    issuehypertension: 0,
+    issuepregnant: 0,
+    issuecancer: 0,
+    issuemenstruating: 0,
+    issuesurgery: 0,
+    issuehospitalninetydays: 0,
+    issueseizure: 0,
   });
 
   const [formPersonalData, setFormPersonalData] = useState({
@@ -187,7 +197,6 @@ const CustomerConsentForm = ({ role = "customer" }) => {
 
   useEffect(() => {
     if (dataExist && dataExist.length > 0) {
-      console.log(dataExist);
       setFormData((prev) => ({
         ...prev,
         date: dataExist[0].consentfrmdate ? new Date(dataExist[0].consentfrmdate).toISOString().split("T")[0] : "",
@@ -209,7 +218,18 @@ const CustomerConsentForm = ({ role = "customer" }) => {
         nonWalkinName: dataExist[0].nonwalkinname || "",
         nonWalkinContact: dataExist[0].nonwalkincontact || "",
         others: "",
-        otherCondition: dataExist[0].issueothers || "",
+        otherCondition: dataExist[0].issueothers || 0,
+        issuecoheartdisease: dataExist[0].issuecoheartdisease || 0,
+        issuelungdisease: dataExist[0].issuelungdisease || 0,
+        issuediabetes: dataExist[0].issuediabetes || 0,
+        issuestrokehistory: dataExist[0].issuestrokehistory || 0,
+        issuehypertension: dataExist[0].issuehypertension || 0,
+        issuepregnant: dataExist[0].issuepregnant || 0,
+        issuecancer: dataExist[0].issuecancer || 0,
+        issuemenstruating: dataExist[0].issuemenstruating || 0,
+        issuesurgery: dataExist[0].issuesurgery || 0,
+        issuehospitalninetydays: dataExist[0].issuehospitalninetydays || 0,
+        issueseizure: dataExist[0].issueseizure || 0,
       }));
     }
   }, [dataExist]);
@@ -233,6 +253,7 @@ const CustomerConsentForm = ({ role = "customer" }) => {
     }
   }, [personalData]);
 
+  console.log(formData);
   return (
     <div className='p-6 space-y-3'>
       {/* Header */}

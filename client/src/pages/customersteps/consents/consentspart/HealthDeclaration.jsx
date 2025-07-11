@@ -6,7 +6,7 @@ export default function HealthDeclaration({ formData, handleChange, healthCondit
       <div className='grid grid-cols-2 md:grid-cols-3 gap-2 mb-4'>
         {healthConditions.map((cond) => (
           <label key={cond.key} className='block'>
-            <input type='checkbox' value='1' checked={formData[cond.key]} onChange={(e) => setFormData({ ...formData, [cond.key]: e.target.checked })} className='mr-2' />
+            <input type='checkbox' value='1' checked={formData[cond.key]} onChange={(e) => setFormData({ ...formData, [cond.key]: e.target.checked ? 1 : 0 })} className='mr-2' />
             {cond.name}
           </label>
         ))}

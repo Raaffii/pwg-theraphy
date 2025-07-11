@@ -135,12 +135,23 @@ CREATE TABLE `consentfrm` (
   `editedby` int DEFAULT NULL,
   `editeddate` datetime DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
+  `issuecoheartdisease` tinyint(1) DEFAULT '0',
+  `issuelungdisease` tinyint(1) DEFAULT '0',
+  `issuediabetes` tinyint(1) DEFAULT '0',
+  `issuestrokehistory` tinyint(1) DEFAULT '0',
+  `issuehypertension` tinyint(1) DEFAULT '0',
+  `issuepregnant` tinyint(1) DEFAULT '0',
+  `issuecancer` tinyint(1) DEFAULT '0',
+  `issuemenstruating` tinyint(1) DEFAULT '0',
+  `issuesurgery` tinyint(1) DEFAULT '0',
+  `issuehospitalninetydays` tinyint(1) DEFAULT '0',
+  `issueseizure` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`consentfrmid`),
   KEY `customerid` (`customerid`),
   KEY `therapistid` (`therapistid`),
   CONSTRAINT `consentfrm_ibfk_1` FOREIGN KEY (`customerid`) REFERENCES `customers` (`customerid`),
   CONSTRAINT `consentfrm_ibfk_2` FOREIGN KEY (`therapistid`) REFERENCES `therapists` (`therapistsid`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,7 +160,7 @@ CREATE TABLE `consentfrm` (
 
 LOCK TABLES `consentfrm` WRITE;
 /*!40000 ALTER TABLE `consentfrm` DISABLE KEYS */;
-INSERT INTO `consentfrm` VALUES (38,7,1,'2025-07-19','2121','Arowave','Male',NULL,1,'Walk-in','','',1,0,0,1,0,0,'',5,'2025-07-10 12:55:21',NULL,NULL,1),(39,6,2,'2025-07-17','2132','iTeraCare','Male',NULL,1,'Walk-in','','',1,0,0,1,0,0,'',1,'2025-07-11 09:12:23',NULL,NULL,1),(43,NULL,1,'2025-07-17','2121','iTeraCare','Male',NULL,1,'Walk-in','','',1,1,0,0,0,0,'',NULL,'2025-07-11 09:17:34',NULL,NULL,1);
+INSERT INTO `consentfrm` VALUES (38,7,1,'2025-07-19','2121','Arowave','Male',NULL,1,'Walk-in','','',1,0,0,1,0,0,'',5,'2025-07-10 12:55:21',NULL,NULL,1,0,0,0,0,0,0,0,0,0,0,0),(39,6,2,'2025-07-14','2132','iTeraCare','Male',NULL,1,'Walk-in','','',1,0,0,1,0,0,'0',1,'2025-07-11 09:12:23',1,'2025-07-11 23:16:58',1,0,1,0,0,0,0,0,0,0,0,1),(46,NULL,2,'2022-03-02','2132','7 Wonder','Male',NULL,1,'Walk-in','','',1,0,0,1,0,0,'',NULL,'2025-07-11 09:57:25',NULL,NULL,1,0,0,0,0,0,0,0,0,0,0,0),(47,NULL,2,'2022-03-02','2132','7 Wonder','Male',NULL,1,'Walk-in','','',1,0,0,1,0,0,'',NULL,'2025-07-11 09:58:00',NULL,NULL,1,0,0,0,0,0,0,0,0,0,0,0),(48,NULL,2,'2022-03-02','2132','7 Wonder','Male',NULL,1,'Walk-in','','',1,0,0,1,0,0,'',NULL,'2025-07-11 09:59:01',NULL,NULL,1,0,0,0,0,0,0,0,0,0,0,0),(55,44,2,'2022-03-02','2132','Prife LifeMeal','Male',NULL,1,'Walk-in','','',1,0,0,1,0,0,'',2,'2025-07-11 10:34:28',NULL,NULL,1,0,0,0,0,0,0,0,0,0,0,0),(57,49,1,'2025-07-16','2132','7 Wonder','Male',NULL,1,'Walk-in','Romeo Oreo','3123',1,0,0,0,0,0,'',2,'2025-07-11 23:20:37',NULL,NULL,1,0,0,0,0,0,1,0,1,0,1,0);
 /*!40000 ALTER TABLE `consentfrm` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -242,7 +253,7 @@ CREATE TABLE `customers` (
   PRIMARY KEY (`customerid`),
   UNIQUE KEY `account_id` (`account_id`),
   CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,7 +262,7 @@ CREATE TABLE `customers` (
 
 LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` VALUES (6,'Romeo Milo','Madagascar@gmail.com','085555555','Jl. Madagascar','231','Indonesia','Superman',NULL,'Romeo Oreo','3123',1,NULL,NULL,NULL,NULL,1,NULL,'spiderman'),(7,'Jackson Irvince','Madagascar@gmail.com','0831212','Jl. Madagascar','231','Indonesia','Soka',NULL,'Romeo Oreo','0831121',5,NULL,NULL,NULL,NULL,1,'2025-07-21','Abosa'),(25,'Romeo Oreo','Madagascar@gmail.com','3123','','','','','2025-07-11','Romeo Oreo','3123',NULL,NULL,NULL,NULL,NULL,1,NULL,''),(26,'Romeo Oreo','Madagascar@gmail.com','3123','','','','','2025-07-11','Romeo Oreo','3123',NULL,NULL,NULL,NULL,NULL,1,NULL,''),(27,'Rododod','Madagascar@gmail.com','3123333333','','','','','2025-07-11','GOGOG','saaaa',NULL,NULL,NULL,NULL,NULL,1,NULL,''),(28,'Rododod','Madagascar@gmail.com','3123333333','','','','','2025-07-11','GOGOG','saaaa',NULL,NULL,NULL,NULL,NULL,1,NULL,''),(29,'Rododod','Madagascar@gmail.com','3123333333','','','','','2025-07-11','GOGOG','saaaa',NULL,NULL,NULL,NULL,NULL,1,NULL,''),(30,'Rododod','Madagascar@gmail.com','3123333333','','','','','2025-07-11','GOGOG','saaaa',NULL,NULL,NULL,NULL,NULL,1,NULL,''),(31,'Rododod','Madagascar@gmail.com','3123333333','','','','','2025-07-11','GOGOG','saaaa',NULL,NULL,NULL,NULL,NULL,1,NULL,''),(32,'Rododod','Madagascar@gmail.com','3123333333','','','','','2025-07-11','GOGOG','saaaa',NULL,NULL,NULL,NULL,NULL,1,NULL,'');
+INSERT INTO `customers` VALUES (6,'Romeo Milo','Madagascar@gmail.com','085555555','Jl. Madagascar','231','Indonesia','Superman',NULL,'Romeo Oreo','3123',1,NULL,NULL,NULL,NULL,1,'2020-01-09','spiderman'),(7,'Jackson Irvince','Madagascar@gmail.com','0831212','Jl. Madagascar','231','Indonesia','Soka',NULL,'Romeo Oreo','0831121',5,NULL,NULL,NULL,NULL,1,'2025-07-21','Abosa'),(44,'Rodas Oreosss','Madagascar@gmail.com','3123','','','','','2025-07-11','Romeo Oreo','3123',NULL,NULL,NULL,NULL,NULL,1,NULL,''),(45,'Chalisda Chelliana','rraaafffii@gmail.com','032121','','','','','2025-07-11','Romeo Oreo','3123',NULL,NULL,NULL,NULL,NULL,1,'2002-02-04',''),(46,'Brandon','Madagascar@gmail.com','0212312','','','','','2025-07-11','Romeo Oreo','3123',NULL,NULL,NULL,NULL,NULL,1,'1979-01-30',''),(47,'Brandon','Madagascar@gmail.com','0212312','','','','','2025-07-11','Romeo Oreo','3123',NULL,NULL,NULL,NULL,NULL,1,'1979-01-30',''),(48,'Brandon','Madagascar@gmail.com','0212312','','','','','2025-07-11','Romeo Oreo','3123',NULL,NULL,NULL,NULL,NULL,1,'1979-01-30',''),(49,'Brandon','Madagascar@gmail.com','0212312','','','','','2025-07-11','Romeo Oreo','3123',NULL,NULL,NULL,NULL,NULL,1,'1979-01-30','');
 /*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -541,4 +552,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-07-11  9:34:40
+-- Dump completed on 2025-07-11 23:22:34

@@ -3,12 +3,42 @@ const pool = require("../config/db");
 const insertConsent = async (data, customer_id, user_id) => {
   console.log(data);
   const now = new Date();
-  const { date, therapist, walkin, voucherNo, gender, age, selectedDevices, breastImplant, pacemakerImplant, electronicMonitorImplant, metalImplant, eyeLensImplant, historyOfHeartBypass, nonWalkinContact, nonWalkinName, nonWalkin, otherCondition } = data;
+  const {
+    date,
+    therapist,
+    walkin,
+    voucherNo,
+    gender,
+    age,
+    selectedDevices,
+    breastImplant,
+    pacemakerImplant,
+    electronicMonitorImplant,
+    metalImplant,
+    eyeLensImplant,
+    historyOfHeartBypass,
+    nonWalkinContact,
+    nonWalkinName,
+    nonWalkin,
+    otherCondition,
+    issuecoheartdisease,
+    issuelungdisease,
+    issuediabetes,
+    issuestrokehistory,
+    issuehypertension,
+    issuepregnant,
+    issuecancer,
+    issuemenstruating,
+    issuesurgery,
+    issuehospitalninetydays,
+    issueseizure,
+  } = data;
 
   const query = `INSERT INTO consentfrm 
   (customerid, therapistid,  voucherno, device_used, gender, age, walkin, implantelecmon, 
   implantmetal, implanteyslens, issueheartbypass, implantbreast, implantpacemaker,nonwalkin, nonwalkincontact, 
-  nonwalkinname,  consentfrmdate, entereddate, enteredby, issueothers ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+  nonwalkinname,  consentfrmdate, entereddate, enteredby, issueothers,issuecoheartdisease, issuelungdisease, issuediabetes, issuestrokehistory, issuehypertension, issuepregnant, issuecancer, issuemenstruating, issuesurgery, issuehospitalninetydays,
+  issueseizure ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
   const [result] = await pool.query(query, [
     customer_id,
@@ -31,6 +61,17 @@ const insertConsent = async (data, customer_id, user_id) => {
     now,
     user_id,
     otherCondition,
+    issuecoheartdisease,
+    issuelungdisease,
+    issuediabetes,
+    issuestrokehistory,
+    issuehypertension,
+    issuepregnant,
+    issuecancer,
+    issuemenstruating,
+    issuesurgery,
+    issuehospitalninetydays,
+    issueseizure,
   ]);
 
   return result.affectedRows > 0;
@@ -48,7 +89,34 @@ const getConsentById = async (customer_id) => {
 
 const updateConsent = async (data, customer_id, user_id) => {
   const now = new Date();
-  const { date, therapist, voucherNo, gender, age, selectedDevices, breastImplant, pacemakerImplant, electronicMonitorImplant, metalImplant, eyeLensImplant, historyOfHeartBypass, nonWalkinContact, nonWalkinName, otherCondition } = data;
+  const {
+    date,
+    therapist,
+    voucherNo,
+    gender,
+    age,
+    selectedDevices,
+    breastImplant,
+    pacemakerImplant,
+    electronicMonitorImplant,
+    metalImplant,
+    eyeLensImplant,
+    historyOfHeartBypass,
+    nonWalkinContact,
+    nonWalkinName,
+    otherCondition,
+    issuecoheartdisease,
+    issuelungdisease,
+    issuediabetes,
+    issuestrokehistory,
+    issuehypertension,
+    issuepregnant,
+    issuecancer,
+    issuemenstruating,
+    issuesurgery,
+    issuehospitalninetydays,
+    issueseizure,
+  } = data;
 
   console.log(data);
 
@@ -71,7 +139,18 @@ const updateConsent = async (data, customer_id, user_id) => {
     consentfrmdate = ?,
     editeddate = ?,
     editedby = ?,
-    issueothers=?
+    issueothers=?,
+    issuecoheartdisease=?,
+    issuelungdisease=?,
+    issuediabetes=?,
+    issuestrokehistory=?,
+    issuehypertension=?,
+    issuepregnant=?,
+    issuecancer=?,
+    issuemenstruating=?,
+    issuesurgery=?,
+    issuehospitalninetydays=?,
+    issueseizure=?
   WHERE customerid = ?
 `;
 
@@ -94,6 +173,17 @@ const updateConsent = async (data, customer_id, user_id) => {
     now,
     user_id,
     otherCondition,
+    issuecoheartdisease,
+    issuelungdisease,
+    issuediabetes,
+    issuestrokehistory,
+    issuehypertension,
+    issuepregnant,
+    issuecancer,
+    issuemenstruating,
+    issuesurgery,
+    issuehospitalninetydays,
+    issueseizure,
     customer_id, // untuk WHERE
   ]);
 
