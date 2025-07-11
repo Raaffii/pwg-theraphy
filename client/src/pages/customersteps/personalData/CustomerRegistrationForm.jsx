@@ -25,7 +25,7 @@ const CustomerRegistrationForm = () => {
   }
   const [formData, setFormData] = useState({
     name: "",
-    date: "",
+    dateOfBirth: "",
     email: "",
     contact_no: "",
     address: "",

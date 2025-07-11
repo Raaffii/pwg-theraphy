@@ -2,7 +2,7 @@ import { calculateAge } from "../../../../utils/calculateAges";
 export default function PersonalParticulars({ formData, formPersonalData, handleChange, personalData, handleChangePersonal }) {
   const age = calculateAge(formPersonalData.dateOfBirth);
 
-  console.log(formData);
+  console.log(formPersonalData);
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function PersonalParticulars({ formData, formPersonalData, handle
         <input type='text' name='name' value={formPersonalData.name} onChange={handleChangePersonal} placeholder='Name as per ID' className='border rounded px-2 py-1' />
         <div className='w-full grid grid-cols-2'>
           <p className='border rounded px-2 py-1 '>{age} Years Old</p>
-          <input type='date' name='dateOfBirth' value={formPersonalData.dateOfBirth} onChange={handleChange} className='border rounded px-2 py-1' />
+          <input type='date' name='dateOfBirth' value={formPersonalData.dateOfBirth} onChange={handleChangePersonal} className='border rounded px-2 py-1' />
         </div>
         <input type='text' name='contact_no' value={formPersonalData.contact_no} onChange={handleChangePersonal} placeholder='Mobile No.' className='border rounded px-2 py-1' />
         <input type='email' name='email' value={formPersonalData.email} onChange={handleChangePersonal} placeholder='Email' className='border rounded px-2 py-1' />

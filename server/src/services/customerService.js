@@ -8,7 +8,7 @@ const createRegistration = async (data, idAccount, idCustomer) => {
     //   console.log(idCustomer);
     // await customer.updateCustomer(data.data1, idCustomer);
     // } else {
-    await customer.insertCustomer(data.data1, idAccount);
+    const result = await customer.insertCustomer(data.data1, idAccount);
     // }
     if (data.data2 && data.data2.length > 0) {
       for (const idInterests of data.data2) {
@@ -16,7 +16,7 @@ const createRegistration = async (data, idAccount, idCustomer) => {
         await customer.customerInterests(idCustomer, intId);
       }
     }
-    return true;
+    return result;
   } catch (error) {
     console.error("Service error:", error);
     throw new Error("Failed to register customer");

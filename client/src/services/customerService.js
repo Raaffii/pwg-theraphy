@@ -14,7 +14,7 @@ export const customerService = {
           Authorization: `Bearer ${token}`,
         },
       });
-      return response.data;
+      return response;
     } catch (error) {
       console.error("Error registation", error);
     }

@@ -43,16 +43,17 @@ const insertCustomer = async (data, idaccount = 0) => {
     referred_by,
     emergency_contact_name,
     emergency_contact_no,
-    date,
+    dateOfBirth,
     referred_other,
     editedby, // tambahan
   } = data;
 
   const query = `INSERT INTO customers (name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, registration_date, account_id, dateofbirth, referred_other) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
-  const [result] = await pool.query(query, [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, new Date(), idaccount, date, referred_other]);
-
-  return result.affectedRows > 0;
+  const [result] = await pool.query(query, [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, new Date(), idaccount, dateOfBirth, referred_other]);
+  console.log("idd");
+  console.log(result.insertId);
+  return result.insertId;
 };
 
 const updateCustomer = async (updateData, id) => {
@@ -68,7 +69,7 @@ const updateCustomer = async (updateData, id) => {
     other,
     emergency_contact_name,
     emergency_contact_no,
-    date,
+    dateOfBirth,
     referred_other,
     editedby, // tambahan
   } = updateData;
@@ -89,7 +90,7 @@ const updateCustomer = async (updateData, id) => {
       dateofbirth=?,
       referred_other=?
      WHERE customerid = ?`,
-    [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, date, referred_other, id]
+    [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, dateOfBirth, referred_other, id]
   );
 
   return result.affectedRows > 0;

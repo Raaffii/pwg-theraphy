@@ -5,7 +5,7 @@ export default function PersonalDetail({ handleChange, formData }) {
       <div>
         <label className='block text-sm font-medium'>Date / 日期</label>
 
-        <input type='date' className='w-full border rounded px-2 py-1' onChange={handleChange} name='date' value={formData.date} />
+        <input type='date' className='w-full border rounded px-2 py-1' onChange={handleChange} name='dateOfBirth' value={formData.dateOfBirth} />
       </div>
       <input type='text' placeholder='Address / 地址' className='border rounded px-2 py-1' name='address' onChange={handleChange} value={formData.address} />
       <input type='text' placeholder='Contact No. / 联系号码' className='border rounded px-2 py-1' name='contact_no' onChange={handleChange} value={formData.contact_no} />

@@ -69,8 +69,15 @@ const CustomerConsentForm = ({ role = "customer" }) => {
       }
     } else {
       try {
-        await customerService.customerRegistration(0, formPersonalData);
-        await consentService.consentRegistration(user.customerId, formData);
+        const resp = await customerService.customerRegistration(0, formPersonalData);
+        const status = await consentService.consentRegistration(resp.data.data, formData);
+        if (status.response && status.response.status === 500) {
+          toast.error("Someting Is Miss");
+          navigate("/therapist");
+        } else {
+          toast.success("Data Saved");
+          navigate("/therapist");
+        }
       } catch (error) {
         console.log(error);
       } finally {
@@ -225,7 +232,7 @@ const CustomerConsentForm = ({ role = "customer" }) => {
       }));
     }
   }, [personalData]);
-  console.log(personalData);
+
   return (
     <div className='p-6 space-y-3'>
       {/* Header */}
