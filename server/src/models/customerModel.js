@@ -14,7 +14,7 @@ const getDataJoinInterest = async (id) => {
 };
 
 const getDataById = async (id) => {
-  const query = "SELECT * FROM customers WHERE account_id = ?";
+  const query = "SELECT * FROM customers WHERE customerid = ?";
   const [rows] = await pool.query(query, [id]);
   return rows;
 };

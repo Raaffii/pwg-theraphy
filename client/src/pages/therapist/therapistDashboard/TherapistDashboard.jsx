@@ -15,6 +15,7 @@ export default function TherapistDashboard() {
   const [openModalForm, setOpenModalForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
   let itemsPerPage = 10;
 
   useEffect(() => {
@@ -135,17 +136,9 @@ export default function TherapistDashboard() {
       </div>
       {showModal && selectedItem && (
         <Modal title={"Customer Detail"} setIsOpen={setShowModal} big={true}>
-          <h2 className='text-lg font-bold mb-2'>Detail Customer</h2>
-          <p>{selectedItem.name}</p>
-          <p>Customer ID: {selectedItem.customerid}</p>
-          <p>Therapist ID: {selectedItem.therapistid}</p>
-          <p>Country : {selectedItem.country}</p>
-          <p>Health Issue</p>
-          <p>{selectedItem.implantbreast != 0 && "implant breast"}</p>
-          <p>{selectedItem.implantelecmon != 0 && "implant electron monitor"}</p>
-          <p>{selectedItem.implanteyslens != 0 && "implant eye lens"}</p>
-          <p>{selectedItem.implantmetal != 0 && "implant metal"}</p>
-          {/* Tambahkan field lain sesuai kebutuhan */}
+          <div className='max-h-[600px] overflow-y-auto'>
+            <CustomerConsentForm role={"therapist"} idCustomer={selectedItem.customerid} />
+          </div>
           <Button onClick={() => setShowModal(false)} className='mt-4 bg-blue-500 text-white px-4 py-2 rounded'>
             Close
           </Button>

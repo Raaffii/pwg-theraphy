@@ -26,7 +26,7 @@ import Signature from "./consentspart/Signature";
 import TherapistAndRating from "./consentspart/TherapistAndRating";
 import { useAuth } from "@/context/AuthContext";
 
-const CustomerConsentForm = ({ role = "customer" }) => {
+const CustomerConsentForm = ({ role = "customer", idCustomer = 0 }) => {
   const [extended, setExtended] = useState(false);
   // const [loading, setLoading] = useState(false);
   const [therapistsList, setTherapistsList] = useState([]);
@@ -174,10 +174,17 @@ const CustomerConsentForm = ({ role = "customer" }) => {
         setTherapistsList(dataTherapist);
         const dataDevice = await interestsService.interestestsList();
         setInterestsList(dataDevice);
-        const data = await customerService.getCustomerData();
-        setPersonalData(data);
-        const dataex = await consentService.getConsentByid(user.customerId);
-        setDataExist(dataex);
+        if (idCustomer == 0) {
+          const data = await customerService.getCustomerData(user.customerId);
+          setPersonalData(data);
+          const dataex = await consentService.getConsentByid(user.customerId);
+          setDataExist(dataex);
+        } else {
+          const data = await customerService.getCustomerData(idCustomer);
+          setPersonalData(data);
+          const dataex = await consentService.getConsentByid(idCustomer);
+          setDataExist(dataex);
+        }
       } catch (err) {
         // setError("Fail To gain data");
       } finally {

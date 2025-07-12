@@ -69,7 +69,7 @@ const getCustomerData = async (req, res) => {
 
 const getCustomerDataByid = async (req, res) => {
   try {
-    const id = req.user.userId;
+    const id = req.params.id;
     const data = await customerService.getDataByid(id);
     res.status(200).json(data);
   } catch (error) {

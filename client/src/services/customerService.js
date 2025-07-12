@@ -35,10 +35,10 @@ export const customerService = {
     }
   },
 
-  getCustomerData: async () => {
+  getCustomerData: async (id) => {
     const token = authService.getToken();
     try {
-      const response = await api.get(`${API_BASE_URL}/api/customer/byid`, {
+      const response = await api.get(`${API_BASE_URL}/api/customer/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

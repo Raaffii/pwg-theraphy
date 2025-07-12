@@ -8,7 +8,7 @@ const router = express.Router();
 // Registration route
 router.post("/:id", authenticateToken, registration);
 router.get("/", authenticateToken, getCustomerData);
-router.get("/byid", authenticateToken, getCustomerDataByid);
+router.get("/:id", authenticateToken, getCustomerDataByid);
 router.get("/joininterest/:id", authenticateToken, getJoinInterest);
 router.put("/:id", authenticateToken, update);
 
