@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { consentService } from "@/services/consentService";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Modal from "../../Shared/Modal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -15,6 +15,7 @@ export default function TherapistDashboard() {
   const [openModalForm, setOpenModalForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const consentRef = useRef();
 
   let itemsPerPage = 10;
 
@@ -61,6 +62,12 @@ export default function TherapistDashboard() {
       currentItems = consentList.slice(indexOfFirsItem, indexOfLastItem);
     } catch (err) {
       console.log("error deleting", err);
+    }
+  };
+
+  const handleExternalClick = () => {
+    if (consentRef.current) {
+      consentRef.current.triggerClick();
     }
   };
 
@@ -137,8 +144,11 @@ export default function TherapistDashboard() {
       {showModal && selectedItem && (
         <Modal title={"Customer Detail"} setIsOpen={setShowModal} big={true}>
           <div className='max-h-[600px] overflow-y-auto'>
-            <CustomerConsentForm role={"therapist"} idCustomer={selectedItem.customerid} />
+            <CustomerConsentForm ref={consentRef} role={"therapist"} idCustomer={selectedItem.customerid} />
           </div>
+          <Button onClick={handleExternalClick} className='mt-4 bg-blue-500 text-white px-4 py-2 rounded'>
+            Save
+          </Button>
           <Button onClick={() => setShowModal(false)} className='mt-4 bg-blue-500 text-white px-4 py-2 rounded'>
             Close
           </Button>

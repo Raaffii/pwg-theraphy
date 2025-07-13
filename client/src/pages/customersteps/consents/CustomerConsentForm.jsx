@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { devices, healthConditions } from "@/utils/Hardcodeddata";
@@ -26,7 +26,8 @@ import Signature from "./consentspart/Signature";
 import TherapistAndRating from "./consentspart/TherapistAndRating";
 import { useAuth } from "@/context/AuthContext";
 
-const CustomerConsentForm = ({ role = "customer", idCustomer = 0 }) => {
+const CustomerConsentForm = forwardRef((props, ref) => {
+  const { role = "customer", idCustomer = 0 } = props;
   const [extended, setExtended] = useState(false);
   // const [loading, setLoading] = useState(false);
   const [therapistsList, setTherapistsList] = useState([]);
@@ -47,7 +48,7 @@ const CustomerConsentForm = ({ role = "customer", idCustomer = 0 }) => {
       try {
         const check = await consentService.getConsentByid(user.customerId);
 
-        const isDataExist = await customerService.getCustomerData();
+        const isDataExist = await customerService.getCustomerData(user.customerId);
 
         if (isDataExist.length > 0) {
           await customerService.updateRegistration(user.customerId, formPersonalData);
@@ -56,6 +57,7 @@ const CustomerConsentForm = ({ role = "customer", idCustomer = 0 }) => {
         }
         let status;
         if (check.length > 0) {
+          console.log("in hereeeeeeeeee");
           status = await consentService.consentUpdate(user.customerId, formData);
         } else {
           status = await consentService.consentRegistration(user.customerId, formData);
@@ -74,8 +76,15 @@ const CustomerConsentForm = ({ role = "customer", idCustomer = 0 }) => {
       }
     } else {
       try {
-        const resp = await customerService.customerRegistration(0, formPersonalData);
-        const status = await consentService.consentRegistration(resp.data.data, formData);
+        const isDataExist = await customerService.getCustomerData(idCustomer);
+        let status;
+        if (isDataExist.length > 0) {
+          await customerService.updateRegistration(idCustomer, formPersonalData);
+          status = await consentService.consentUpdate(idCustomer, formData);
+        } else {
+          const resp = await customerService.customerRegistration(0, formPersonalData);
+          status = await consentService.consentRegistration(resp.data.data, formData);
+        }
         if (status.response && status.response.status === 500) {
           toast.error("Someting Is Miss");
           navigate("/therapist");
@@ -212,6 +221,10 @@ const CustomerConsentForm = ({ role = "customer", idCustomer = 0 }) => {
 
   useInitializeCustomerForm(personalData, setFormPersonalData);
 
+  useImperativeHandle(ref, () => ({
+    triggerClick: handleNext,
+  }));
+
   console.log(formData);
   return (
     <div className='p-6 space-y-3'>
@@ -244,6 +257,6 @@ const CustomerConsentForm = ({ role = "customer", idCustomer = 0 }) => {
       </div>
     </div>
   );
-};
+});
 
 export default CustomerConsentForm;
