@@ -58,8 +58,8 @@ const Navbar = () => {
   }
 
   return (
-    <nav className='bg-gradient-to-r from-black to-black border-b border-gray-800 shadow-xl'>
-      <div className='max-w-[1920px] mx-auto px-4'>
+    <nav className='bg-white border-b border-gray-200 shadow-l'>
+      <div className='max-w-[1920px] mx-auto px-10'>
         <div className='flex items-center justify-between h-16 md:h-20'>
           {/* Logo */}
           <div className='flex-shrink-0 transition-transform hover:scale-105'>
@@ -80,14 +80,14 @@ const Navbar = () => {
                   </button>
                   <div className='absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 right-0 mt-1 w-48 bg-black rounded-md shadow-lg transition-all duration-200 z-50'>
                     {item.dropdown.map((subItem) => (
-                      <Link key={subItem.path} to={subItem.path} className={`block px-4 py-2 text-md transition-colors rounded-md duration-200 ${location.pathname === subItem.path ? "text-emerald-400 bg-black" : "text-gray-200 hover:text-emerald-400"}`}>
+                      <Link key={subItem.path} to={subItem.path} className={`block px-4 py-2 text-md transition-colors rounded-md duration-200 ${location.pathname === subItem.path ? "text-white bg-prime-color" : "text-gray-200 hover:text-emerald-400"}`}>
                         {subItem.label}
                       </Link>
                     ))}
                   </div>
                 </div>
               ) : (
-                <Link key={item.path} to={item.path} className={`flex items-center px-4 py-2 rounded-md text-md font-medium transition-all duration-200 ${location.pathname === item.path ? "text-emerald-400 bg-black" : "text-gray-200 hover:text-emerald-400"}`}>
+                <Link key={item.path} to={item.path} className={`flex items-center px-4 py-2 rounded-md text-md font-medium transition-all duration-200 ${location.pathname === item.path ? "text-white bg-prime-color" : "text-gray-200 hover:text-emerald-400"}`}>
                   {item.label}
                 </Link>
               )
@@ -105,7 +105,7 @@ const Navbar = () => {
                 </Avatar>
               </div>
               {isDropdownOpen && (
-                <div className='absolute right-0 mt-2 w-48 bg-black rounded-md shadow-lg z-50 border border-gray-800'>
+                <div className='absolute right-0 mt-2 w-48 bg-blue-200 rounded-md shadow-lg z-50 border border-gray-800'>
                   <Button variant='ghost' className='w-full flex items-center space-x-2 justify-start text-gray-200 hover:text-emerald-400' onClick={() => navigate("/profile")}>
                     <User size={16} className='shrink-0' />
                     <span>Profile</span>

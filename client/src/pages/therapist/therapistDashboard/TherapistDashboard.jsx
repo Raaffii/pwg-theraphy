@@ -177,7 +177,7 @@ export default function TherapistDashboard() {
       {modalActionChoose && (
         <Modal setIsOpen={setModalActionChoose}>
           <div className='grid grid-rows-3  gap-2'>
-            <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer' onClick={() => navigate("/therapist/evaluation")}>
+            <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer' onClick={() => navigate("/therapist/evaluation/3")}>
               <ClipboardPlus className='w-7 h-7' />
               <p className='text-base font-semibold'>Evaluation</p>
             </div>
