@@ -4,9 +4,13 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { attention } from "@/utils/Hardcodeddata";
 import SignatureCanvas from "react-signature-canvas";
+import { customerService } from "@/services/customerService";
+import { consentService } from "@/services/consentService";
 
-const CustomerEvaluationForm = () => {
+const CustomerEvaluationForm = ({ role = "customer", id = 0, setTriggerKey }) => {
   const [MedicationType, setMedicationType] = useState("");
+  const [personalData, setPersonalData] = useState({});
+  const [consentData, setConsentData] = useState({});
   const navigate = useNavigate();
   const handleNext = () => {
     navigate("/steps/review");
@@ -35,6 +39,28 @@ const CustomerEvaluationForm = () => {
   };
   //---------------------------- Signature Set Up End
 
+  useEffect(() => {
+    const fetch = async () => {
+      if (role == "customer") {
+      } else {
+        const data = await customerService.getCustomerData(id);
+        setPersonalData(data);
+        const dataex = await consentService.getConsentByid(id);
+        setConsentData(dataex);
+      }
+    };
+
+    fetch();
+  }, []);
+
+  const [form, setForm] = useState({
+    name: "",
+    no_medication: "",
+    medication: "",
+    medication_name: "",
+    pain: "",
+  });
+
   return (
     <div className=' p-6'>
       {/* Header */}
@@ -44,7 +70,7 @@ const CustomerEvaluationForm = () => {
       <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mb-4'>
         <div>
           <label className='block text-sm font-medium'>Customer Name</label>
-          <input type='text' className='mt-1 w-full border rounded px-2 py-1' />
+          <input type='text' className='mt-1 w-full border rounded px-2 py-1' value={personalData[0]?.name || ""} />
         </div>
         <div>
           <label className='block text-sm font-medium'>Date</label>
@@ -56,7 +82,7 @@ const CustomerEvaluationForm = () => {
       <p className='font-semibold text-sm mb-2'>ARE YOU ON ANY MEDICATION?</p>
       <div className='mb-4'>
         <label className='inline-flex items-center mr-4'>
-          <input type='radio' name='no medication' value='no medication' checked={MedicationType === "no medication"} onChange={() => setMedicationType("no medication")} className='mr-2' />
+          <input type='radio' name='no_medication' value='no medication' checked={MedicationType === "no medication"} onChange={() => setMedicationType("no medication")} className='mr-2' />
           No Medication
         </label>
         <label className='inline-flex items-center'>
@@ -66,13 +92,13 @@ const CustomerEvaluationForm = () => {
 
         {MedicationType === "medication" && (
           <div className='mt-2 grid grid-cols-2 gap-4'>
-            <input type='text' placeholder='If, yes which one' className='border rounded px-2 py-1' />
+            <input type='text' name='medication_name' placeholder='If, yes which one' className='border rounded px-2 py-1' />
           </div>
         )}
       </div>
 
       <div className='mt-2 grid grid-cols-2 gap-4 mb-2'>
-        <input type='text' placeholder='Where is your uncomfortable pain' className='border rounded px-2 py-1' />
+        <input type='text' placeholder='Where is your uncomfortable pain' name='pain' className='border rounded px-2 py-1' />
       </div>
 
       {/*Parts Need to Give Attention */}
@@ -88,9 +114,9 @@ const CustomerEvaluationForm = () => {
       {/* Therapy / Duration / Therapist */}
       <div className='bg-gray p-4 rounded '>
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-          <input type='text' placeholder='Therapy' className='border rounded px-2 py-1' />
-          <input type='text' placeholder='Duration' className='border rounded px-2 py-1' />
-          <input type='text' placeholder='Therapist' className='border rounded px-2 py-1' />
+          <input type='text' placeholder='Therapy' name='theraphy' className='border rounded px-2 py-1' value={consentData[0]?.device_used || ""} />
+          <input type='text' placeholder='Duration' name='duration' className='border rounded px-2 py-1' />
+          <input type='text' placeholder='Therapist' name='therapist' className='border rounded px-2 py-1' value={consentData[0]?.therapistid || ""} />
         </div>
       </div>
 

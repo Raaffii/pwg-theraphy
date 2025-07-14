@@ -5,13 +5,14 @@ const registration = async (req, res) => {
 
   // make the id 0 if the customer are not login and do a regisration throught therapist
   let idUser = req.user.userId;
+  const idUser2 = req.user.userId;
   if (idCustomer == 0) {
     console.log(idCustomer);
     idUser = null;
   }
   //---------------------------------------------------------------------------------
   try {
-    const result = await customerService.createRegistration(req.body, idUser, idCustomer);
+    const result = await customerService.createRegistration(req.body, idUser, idCustomer, idUser2);
 
     res.status(200).json({
       success: true,
@@ -34,12 +35,13 @@ const update = async (req, res) => {
 
   // make the id 0 if the customer are not login and do a regisration throught therapist
   let idUser = req.user.userId;
+  const idUser2 = req.user.userId;
   if (idCustomer == 0) {
     console.log(idCustomer);
     idUser = null;
   }
   try {
-    const result = await customerService.updateRegistration(req.body, idUser, idCustomer);
+    const result = await customerService.updateRegistration(req.body, idUser, idCustomer, idUser2);
 
     res.status(200).json({
       success: true,

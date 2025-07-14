@@ -1,6 +1,6 @@
 const customer = require("../models/customerModel");
 
-const createRegistration = async (data, idAccount, idCustomer) => {
+const createRegistration = async (data, idAccount, idCustomer, idUser2) => {
   try {
     await customer.deleteCustomerInterests(idCustomer);
     // const isCustomerExist = await customer.getCustomerByAccountId(idAccount);
@@ -8,7 +8,7 @@ const createRegistration = async (data, idAccount, idCustomer) => {
     //   console.log(idCustomer);
     // await customer.updateCustomer(data.data1, idCustomer);
     // } else {
-    const result = await customer.insertCustomer(data.data1, idAccount);
+    const result = await customer.insertCustomer(data.data1, idAccount, idUser2);
     // }
     if (data.data2 && data.data2.length > 0) {
       for (const idInterests of data.data2) {
@@ -23,11 +23,11 @@ const createRegistration = async (data, idAccount, idCustomer) => {
   }
 };
 
-const updateRegistration = async (data, idAccount, idCustomer) => {
+const updateRegistration = async (data, idAccount, idCustomer, idUser2) => {
   try {
     await customer.deleteCustomerInterests(idCustomer);
 
-    await customer.updateCustomer(data.data1, idCustomer);
+    await customer.updateCustomer(data.data1, idCustomer, idUser2);
     if (data.data2 && data.data2.length > 0) {
       for (const idInterests of data.data2) {
         const intId = parseInt(idInterests); // cause idInterest came as char

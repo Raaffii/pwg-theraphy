@@ -30,7 +30,7 @@ const initiate = async (account_id) => {
   await pool.query(query, [account_id]);
 };
 
-const insertCustomer = async (data, idaccount = 0) => {
+const insertCustomer = async (data, idaccount = 0, idUser2) => {
   console.log("boy");
   console.log(idaccount);
   const {
@@ -48,15 +48,15 @@ const insertCustomer = async (data, idaccount = 0) => {
     editedby, // tambahan
   } = data;
 
-  const query = `INSERT INTO customers (name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, registration_date, account_id, dateofbirth, referred_other) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+  const query = `INSERT INTO customers (name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, registration_date, account_id, dateofbirth, referred_other, entereddate, enteredby) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
-  const [result] = await pool.query(query, [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, new Date(), idaccount, dateOfBirth, referred_other]);
+  const [result] = await pool.query(query, [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, new Date(), idaccount, dateOfBirth, referred_other, new Date(), idUser2]);
   console.log("idd");
   console.log(result.insertId);
   return result.insertId;
 };
 
-const updateCustomer = async (updateData, id) => {
+const updateCustomer = async (updateData, id, idUser2) => {
   const {
     name,
     email,
@@ -88,9 +88,11 @@ const updateCustomer = async (updateData, id) => {
       emergency_contact_name = ?, 
       emergency_contact_no = ?,
       dateofbirth=?,
-      referred_other=?
+      referred_other=?,
+      editedby=?,
+      editeddate=?
      WHERE customerid = ?`,
-    [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, dateOfBirth, referred_other, id]
+    [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, dateOfBirth, referred_other, idUser2, new Date(), id]
   );
 
   return result.affectedRows > 0;

@@ -67,7 +67,7 @@ const CustomerRegistrationForm = () => {
       } catch (error) {
         toast.error(error.message || "Login failed");
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     }
   };

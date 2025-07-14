@@ -16,6 +16,7 @@ import SignupPage from "@/pages/SignupPage";
 import TherapistDashboard from "@/pages/therapist/therapistDashboard/TherapistDashboard";
 import Logout from "@/pages/auth/Logout";
 import ConsentsList from "@/pages/therapist/ConsentsList";
+import TherapistEvaluation from "@/pages/therapist/TherapistEvaluation";
 
 const privateRoutes = {
   path: "/",
@@ -57,6 +58,7 @@ const therapistRoutes = {
   children: [
     { path: "", element: <TherapistDashboard /> },
     { path: "consentslist", element: <ConsentsList /> },
+    { path: "evaluation/:id", element: <TherapistEvaluation /> },
   ],
 };
 

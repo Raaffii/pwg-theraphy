@@ -27,9 +27,9 @@ import TherapistAndRating from "./consentspart/TherapistAndRating";
 import { useAuth } from "@/context/AuthContext";
 
 const CustomerConsentForm = forwardRef((props, ref) => {
-  const { role = "customer", idCustomer = 0 } = props;
+  const { role = "customer", idCustomer = 0, outsave = false, setTriggerKey } = props;
   const [extended, setExtended] = useState(false);
-  // const [loading, setLoading] = useState(false);
+  const [loadings, setLoadings] = useState(false);
   const [therapistsList, setTherapistsList] = useState([]);
   const [interestsList, setInterestsList] = useState();
   const [personalData, setPersonalData] = useState([]);
@@ -72,7 +72,7 @@ const CustomerConsentForm = forwardRef((props, ref) => {
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false);
+        setLoadings(false);
       }
     } else {
       try {
@@ -95,7 +95,8 @@ const CustomerConsentForm = forwardRef((props, ref) => {
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false);
+        setLoadings(false);
+        setTriggerKey((prev) => prev + 1);
       }
     }
   };
@@ -197,7 +198,7 @@ const CustomerConsentForm = forwardRef((props, ref) => {
       } catch (err) {
         // setError("Fail To gain data");
       } finally {
-        // setLoading(false);
+        // setLoadings(false);
       }
     };
 
@@ -250,10 +251,15 @@ const CustomerConsentForm = forwardRef((props, ref) => {
       <Signature formData={formData} handleChange={handleChange} sig={{ saveSignature, clearSignature, sigCanvas, SignatureCanvas }} Button={Button} />
       <TherapistAndRating formData={formData} handleChange={handleChange} therapistsList={therapistsList} />
       <div className='flex justify-between my-10'>
-        <Button variant='secondary' onClick={handlePrev}>
-          Prev
-        </Button>
-        <Button onClick={handleNext}>Save</Button>
+        {!outsave && (
+          <>
+            {" "}
+            <Button variant='secondary' onClick={handlePrev}>
+              Prev
+            </Button>
+            <Button onClick={handleNext}>Save</Button>
+          </>
+        )}
       </div>
     </div>
   );

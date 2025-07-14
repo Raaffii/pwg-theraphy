@@ -1,6 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer utilities {
+  .bg-prime-color {
+    @apply bg-gradient-to-br from-[#544B71] via-[#5C476C] to-[#674165] text-white;
+  }
+
+   .bg-prime-color-hover {
+    @apply bg-gradient-to-br from-[#544B71] via-blue-700 to-red-500 text-white ;
+  }
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -80,3 +89,4 @@
     @apply bg-background text-foreground;
   }
 }
+
