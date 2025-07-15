@@ -24,6 +24,7 @@ export default function TherapistDashboard() {
   const [triggerKey, setTriggerKey] = useState(0);
   const [selectedEvaluation, setSelectedEvaluation] = useState();
   const [modalActionChoose, setModalActionChoose] = useState(false);
+  const [selectedChoose, setSelectedChoose] = useState();
 
   const consentRef = useRef();
 
@@ -86,11 +87,9 @@ export default function TherapistDashboard() {
     }
   };
 
-  const handleExternalClick = () => {
-    if (consentRef.current) {
-      consentRef.current.triggerClick();
-      setTriggerKey((prev) => prev + 1);
-    }
+  const handleChoose = async (id) => {
+    setSelectedChoose(id);
+    setModalActionChoose(true);
   };
 
   return (
@@ -120,7 +119,7 @@ export default function TherapistDashboard() {
         )}
       </div>
       {openModal && (
-        <Modal title={"Confirm Delete"} setIsOpen={setOpenModal}>
+        <Modal title={"Confirm Delete"} setIsOpen={setOpenModal} small={true}>
           <Button variant='destructive' onClick={confirmDelete}>
             Delete {selectedDelete}
           </Button>
@@ -144,7 +143,7 @@ export default function TherapistDashboard() {
         </TableHeader>
         <TableBody>
           {currentItems.map((item, index) => (
-            <TableRow key={index} className='rounded-xl hover:bg-prime-color cursor-pointer ' onClick={() => setModalActionChoose(true)}>
+            <TableRow key={index} className='rounded-xl hover:bg-prime-color cursor-pointer '>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.contact_no}</TableCell>
               <TableCell>{item.gender == "Male" ? "M" : "F"}</TableCell>
@@ -158,7 +157,7 @@ export default function TherapistDashboard() {
                 <Trash2 onClick={() => handleDelete(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5 ' />
               </TableCell>
               <TableCell className='items-center justify-center gap-2'>
-                <ClipboardPlus onClick={() => setModalActionChoose(true)} className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' />
+                <ClipboardPlus onClick={() => handleChoose(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' />
               </TableCell>
             </TableRow>
           ))}
@@ -169,15 +168,15 @@ export default function TherapistDashboard() {
         <Modal title={"Customer Detail"} setIsOpen={setShowModal} big={true}>
           <div className='max-h-[600px] overflow-y-auto'>
             <h2>View</h2>
-            <ConsentForm ref={consentRef} role={"therapist"} idCustomer={selectedItem.customerid} setTriggerKey={setTriggerKey} />
+            <CustomerConsentForm ref={consentRef} role={"therapist"} idCustomer={selectedItem.customerid} setTriggerKey={setTriggerKey} />
           </div>
         </Modal>
       )}
 
       {modalActionChoose && (
-        <Modal setIsOpen={setModalActionChoose}>
+        <Modal setIsOpen={setModalActionChoose} small={true}>
           <div className='grid grid-rows-3  gap-2'>
-            <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer' onClick={() => navigate("/therapist/evaluation/3")}>
+            <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer' onClick={() => navigate(`/therapist/evaluation/${selectedChoose}`)}>
               <ClipboardPlus className='w-7 h-7' />
               <p className='text-base font-semibold'>Evaluation</p>
             </div>

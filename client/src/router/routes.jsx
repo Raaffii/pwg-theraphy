@@ -16,7 +16,8 @@ import SignupPage from "@/pages/SignupPage";
 import TherapistDashboard from "@/pages/therapist/therapistDashboard/TherapistDashboard";
 import Logout from "@/pages/auth/Logout";
 import ConsentsList from "@/pages/therapist/ConsentsList";
-import TherapistEvaluation from "@/pages/therapist/TherapistEvaluation";
+import TherapistEvaluation from "@/pages/therapist/therapistEvaluation/TherapistEvaluation";
+import EvaluationForm from "@/pages/customersteps/EvaluationForm";
 
 const privateRoutes = {
   path: "/",
@@ -45,6 +46,7 @@ const stepsRoutes = {
     { path: "evaluation", element: <CustomerEvaluationForm /> },
     { path: "review", element: <CustomerReview /> },
     { path: "feedback", element: <CustomerFeedbackForm /> },
+    { path: "evaluation/dev", element: <EvaluationForm /> },
   ],
 };
 

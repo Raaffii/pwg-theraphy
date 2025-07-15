@@ -58,7 +58,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className='bg-white border-b border-gray-200 shadow-l'>
+    <nav className='bg-white border-b border-gray-200 shadow-sm sticky top-0 z-50'>
       <div className='max-w-[1920px] mx-auto px-10'>
         <div className='flex items-center justify-between h-16 md:h-20'>
           {/* Logo */}
@@ -73,21 +73,21 @@ const Navbar = () => {
               item.dropdown ? (
                 <div className='relative group' key={item.label}>
                   <button
-                    className={`flex items-center space-x-1 px-4 py-2 rounded-md text-md font-medium transition-all duration-200 ${location.pathname.startsWith(item.dropdown[0].path.split("/").slice(0, -1).join("/")) ? "text-emerald-400 bg-black" : "text-gray-200 hover:text-emerald-400"}`}
+                    className={`flex items-center space-x-1 px-4 py-2 rounded-md text-md font-medium text-black transition-all duration-200 ${location.pathname.startsWith(item.dropdown[0].path.split("/").slice(0, -1).join("/")) ? "text-emerald-400 bg-black" : "text-black hover:text-emerald-400"}`}
                     onClick={() => (item.label === "Education" ? setEducationDropdownOpen(!educationDropdownOpen) : setSetupDropdownOpen(!setupDropdownOpen))}>
                     <span>{item.label}</span>
                     <ChevronDown size={16} className='ml-1' />
                   </button>
                   <div className='absolute invisible group-hover:visible opacity-0 group-hover:opacity-100 right-0 mt-1 w-48 bg-black rounded-md shadow-lg transition-all duration-200 z-50'>
                     {item.dropdown.map((subItem) => (
-                      <Link key={subItem.path} to={subItem.path} className={`block px-4 py-2 text-md transition-colors rounded-md duration-200 ${location.pathname === subItem.path ? "text-white bg-prime-color" : "text-gray-200 hover:text-emerald-400"}`}>
+                      <Link key={subItem.path} to={subItem.path} className={`block px-4  py-2 text-md transition-colors rounded-md duration-200 ${location.pathname === subItem.path ? "text-white bg-prime-color" : "text-white hover:text-emerald-400"}`}>
                         {subItem.label}
                       </Link>
                     ))}
                   </div>
                 </div>
               ) : (
-                <Link key={item.path} to={item.path} className={`flex items-center px-4 py-2 rounded-md text-md font-medium transition-all duration-200 ${location.pathname === item.path ? "text-white bg-prime-color" : "text-gray-200 hover:text-emerald-400"}`}>
+                <Link key={item.path} to={item.path} className={`flex items-center px-4 text-black py-2 rounded-full text-md font-medium transition-all duration-200 ${location.pathname === item.path ? "text-black bg-prime-color" : "text-black hover:text-emerald-400"}`}>
                   {item.label}
                 </Link>
               )
