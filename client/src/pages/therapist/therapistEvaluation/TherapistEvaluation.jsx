@@ -1,42 +1,57 @@
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Eye, Trash2, ClipboardPlus, Package } from "lucide-react";
 import Modal from "@/pages/Shared/Modal";
 import { Button } from "@/components/ui/button";
 import SearcBar from "../../Shared/SearchBar";
-import EvaluationForm from "@/pages/customersteps/EvaluationForm";
-import useInitializeCustomerForm from "@/hooks/useInitializeCustomerForm";
+import EvaluationForm from "@/pages/customersteps/evaluation/EvaluationForm";
+import { useNavigate } from "react-router-dom";
+
+//service
 import { customerService } from "@/services/customerService";
+import { consentService } from "@/services/consentService";
+
 import { calculateAge } from "@/utils/calculateAges";
+import { evaluationService } from "@/services/evaluationService";
 
 export default function TherapistEvaluation() {
+  const navigate = useNavigate();
+
   const [modalPlus, setModalPlus] = useState(false);
-  const [dataExist, setDataExist] = useState({});
+  const [customerData, setCustomerData] = useState({});
+  const [consentData, setConsentData] = useState({});
+  const [evaluationSessionList, setEvaluationSessionList] = useState([]);
   const [age, setAge] = useState();
   const { id } = useParams();
 
   useEffect(() => {
     const fetchData = async (id) => {
-      const isDataExist = await customerService.getCustomerData(id);
-      setDataExist(isDataExist);
-      const yearsold = await calculateAge(isDataExist[0]?.dateofbirth);
-
+      const DataExistCustomer = await customerService.getCustomerData(id);
+      setCustomerData(DataExistCustomer);
+      const DataExistConsent = await consentService.getConsentByid(id);
+      setConsentData(DataExistConsent);
+      const yearsold = calculateAge(DataExistCustomer[0]?.dateofbirth);
       setAge(yearsold);
+      const evaluationSessionData = await evaluationService.getEvaluationData(id);
+      setEvaluationSessionList(evaluationSessionData.data.data);
     };
 
     fetchData(id);
   }, []);
-
+  console.log(evaluationSessionList);
   return (
     <div>
+      <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
+        &larr; Back
+      </p>
       <div className='grid lg:grid-cols-2 gap-5'>
         <SearcBar />
         <div className='border border-gray-300 shadow-md rounded-2xl p-2 '>
           <div className='grid grid-cols-3'>
-            <p>Name : {dataExist[0]?.name || ""}</p>
+            <p>Name : {customerData[0]?.name || ""}</p>
             <p>Age : {age || ""}</p>
-            <p>Contact : {dataExist[0]?.contact_no || ""}</p>
+            <p>Contact : {customerData[0]?.contact_no || ""}</p>
           </div>
         </div>
       </div>
@@ -84,7 +99,7 @@ export default function TherapistEvaluation() {
         <Modal setIsOpen={setModalPlus} big={true}>
           {" "}
           <div className='max-h-[600px] overflow-y-auto'>
-            <EvaluationForm data={dataExist} />
+            <EvaluationForm customerData={customerData} consentData={consentData} setModal={setModalPlus} />
           </div>
         </Modal>
       )}

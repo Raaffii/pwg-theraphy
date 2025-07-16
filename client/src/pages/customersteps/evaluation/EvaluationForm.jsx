@@ -1,14 +1,40 @@
 import { Note } from "@react-pdf/renderer";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { evaluationService } from "@/services/evaluationService";
+import { interestsService } from "@/services/interestsService";
+import toast from "react-hot-toast";
+import BodyPartSelection from "./evaluationpart/BodyPartSelection";
 
-export default function EvaluationForm({ data }) {
+export default function EvaluationForm({ customerData, consentData, setModal }) {
+  const [interestsList, setInterestsList] = useState();
+  const [coordsFront, setCoordsFront] = useState({ x: 0, y: 0 });
+  const [coordsBack, setCoordsBack] = useState({ x: 0, y: 0 });
+
   const [formData, setFormData] = useState({
     medication: 0,
     medication_detail: "",
     uncomfortable_pain: "",
     note_session: "",
+    therapist: consentData[0]?.therapistid || "",
+    theraphy: consentData[0]?.device_used || "",
+    date: consentData[0].consentfrmdate ? new Date(consentData[0].consentfrmdate).toISOString().split("T")[0] : "",
+    duration: "",
+    frontx: coordsFront.x,
+    fronty: coordsFront.y,
+    backx: coordsBack.x,
+    backy: coordsBack.y,
   });
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      frontx: coordsFront.x,
+      fronty: coordsFront.y,
+      backx: coordsBack.x,
+      backy: coordsBack.y,
+    }));
+  }, [coordsFront, coordsBack]);
 
   const handleChangeEvaluations = (e) => {
     const { name, value } = e.target;
@@ -18,17 +44,36 @@ export default function EvaluationForm({ data }) {
     }));
   };
 
-  const handleSave = () => {};
+  const handleSave = async (id) => {
+    try {
+      console.log(formData);
+      const status = await evaluationService.addEvaluation(id, formData);
+      if (status.response && status.response.status === 500) {
+        toast.error("Someting Is Miss");
+      } else {
+        toast.success("Data Saved");
+        setModal(false);
+      }
+    } catch (error) {
+      toast.error(error.message || "Eror Save Evaluation");
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const dataDevice = await interestsService.interestestsList();
+      setInterestsList(dataDevice);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div className='w-full'>
       <div className=' h-full  mx-auto'>
-        <div className='grid grid-cols-3 my-5 mx-5'>
-          <div className='flex justify-center'>
-            <img src='/body/front.png' alt='' className='m-2' />
-            <img src='/body/back.png' alt='' className='m-2' />
-          </div>
-          <div className='col-span-2'>
+        <div className='grid lg:grid-cols-3 my-5 mx-5'>
+          <BodyPartSelection setCoordsBack={setCoordsBack} setCoordsFront={setCoordsFront} />
+          <div className='col-span-2 mt-5 lg:mt-0'>
             {/* PROFILE ? */}
             <div className='grid grid-cols-2'>
               <div className='flex items-center'>
@@ -36,7 +81,7 @@ export default function EvaluationForm({ data }) {
                   <p>Name</p>
                   <p>姓名</p>
                 </div>
-                <div className='border-b-2 border-blue-500 w-full'>{data[0]?.name}</div>
+                <div className='border-b-2 border-blue-500 w-full'>{customerData[0]?.name}</div>
               </div>
 
               <div className='flex items-center'>
@@ -44,11 +89,11 @@ export default function EvaluationForm({ data }) {
                   <p>DATE</p>
                   <p>日期</p>
                 </div>
-                <div className='border-b-2 border-blue-500 w-full'>{data[0].dateofbirth ? new Date(data[0].dateofbirth).toISOString().split("T")[0] : ""}</div>
+                <div className='border-b-2 border-blue-500 w-full'>{consentData[0].consentfrmdate ? new Date(consentData[0].consentfrmdate).toISOString().split("T")[0] : ""}</div>
               </div>
             </div>
             {/* LINE SEPARATION ? */}
-            <div className='bg-prime-color w-full h-2 my-2'></div>
+            <div className='bg-prime-color-two w-full h-2 my-2'></div>
             {/* ANY MEDICATION ? */}
             <div className='grid grid-cols-4 my-2'>
               <div className='flex items-center col-span-3'>
@@ -95,11 +140,13 @@ export default function EvaluationForm({ data }) {
           </div>
         </div>
         <div className=' mx-5 mb-5'>
-          <div className='bg-prime-color h-2 my-5'></div>
+          <div className='bg-prime-color-two h-2 my-5'></div>
           <div className='flex my-5 gap-10'>
-            <p>Therapy 理疗 : 7 Wonder</p>
-            <p>Duration 时长 : 90 Minute</p>
-            <p>Therapist 理疗师 : Tomiyasu</p>
+            <p>Therapy 理疗 : {consentData[0]?.device_used}</p>
+            <div className='flex'>
+              <p>Duration 时长 : </p> <input type='number' name='duration' id='' placeholder='Minute' className='mx-2 focus:outline-none border-b-2 border-blue-500' onChange={handleChangeEvaluations} />
+            </div>
+            <p>Therapist 理疗师 : {consentData[0]?.therapistid}</p>
           </div>
           <textarea placeholder='Session' className='w-full h-56 bg-gray-100 rounded-3xl px-4 py-2 focus:outline-none resize-none' name='note_session' value={formData.note_session} onChange={handleChangeEvaluations} />
           <div className='flex my-5 gap-10 justify-between'>
@@ -107,7 +154,7 @@ export default function EvaluationForm({ data }) {
               <p>Created At : 20/9/2030</p>
               <p>Last Updated : 29/9/2030</p>
             </div>
-            <Button className='bg-prime-color' onClick={handleSave}>
+            <Button className='bg-prime-color' onClick={() => handleSave(customerData[0]?.customerid)}>
               Save
             </Button>
           </div>

@@ -13,8 +13,8 @@
     @apply bg-gradient-to-br from-[#544B71] via-red-700 to-red-500 text-white ;
   }
 
-   .bg-prime-color {
-    @apply bg-gradient-to-br from-blue-700 via-purple-800 to-red-800 text-white;
+   .bg-prime-color-two {
+    @apply bg-gradient-to-br from-blue-700 via-purple-800 to-red-900 text-white;
   }
 }
 @layer base {

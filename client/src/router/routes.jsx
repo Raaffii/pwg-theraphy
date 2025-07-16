@@ -17,7 +17,7 @@ import TherapistDashboard from "@/pages/therapist/therapistDashboard/TherapistDa
 import Logout from "@/pages/auth/Logout";
 import ConsentsList from "@/pages/therapist/ConsentsList";
 import TherapistEvaluation from "@/pages/therapist/therapistEvaluation/TherapistEvaluation";
-import EvaluationForm from "@/pages/customersteps/EvaluationForm";
+import EvaluationForm from "@/pages/customersteps/evaluation/EvaluationForm";
 
 const privateRoutes = {
   path: "/",
