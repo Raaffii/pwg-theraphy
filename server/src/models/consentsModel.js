@@ -81,7 +81,7 @@ const getConsentById = async (customer_id) => {
   const query = `
     SELECT * 
     FROM consentfrm 
-    JOIN customers ON consentfrm.customerid = customers.customerid 
+    JOIN customers ON consentfrm.customerid = customers.customerid JOIN therapists ON consentfrm.therapistid=therapists.therapistsid
     WHERE consentfrm.customerid = ?`;
   const [rows] = await pool.query(query, [customer_id]);
   return rows;

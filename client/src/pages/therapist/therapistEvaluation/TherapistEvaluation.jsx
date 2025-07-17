@@ -1,13 +1,13 @@
 import { Navigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Eye, Trash2, ClipboardPlus, Package } from "lucide-react";
+import { Eye, Trash2, ClipboardPlus, Package, Pencil } from "lucide-react";
 import Modal from "@/pages/Shared/Modal";
 import { Button } from "@/components/ui/button";
 import SearcBar from "../../Shared/SearchBar";
 import EvaluationForm from "@/pages/customersteps/evaluation/EvaluationForm";
 import { useNavigate } from "react-router-dom";
-
+import CustomerConsentForm from "@/pages/customersteps/consents/CustomerConsentForm";
 import Pagination from "@/pages/Shared/Pagination";
 
 //service
@@ -24,10 +24,12 @@ export default function TherapistEvaluation() {
   const [modalPlus, setModalPlus] = useState(false);
   const [modalView, setModalView] = useState(false);
   const [modalDelete, setModalDelete] = useState(false);
+  const [modalEditConsent, setModalEditConsent] = useState(false);
   const [customerData, setCustomerData] = useState({});
   const [consentData, setConsentData] = useState({});
   const [viewData, setViewData] = useState({});
   const [deleteData, setDeleteData] = useState();
+  const [selectedCustomer, setSelectedCustomer] = useState();
   const [currentPage, setCurrentPage] = useState(1);
   const [evaluationSessionList, setEvaluationSessionList] = useState([]);
   const [reloadFlag, setReloadFlag] = useState(false);
@@ -66,6 +68,11 @@ export default function TherapistEvaluation() {
     setDeleteData(id);
   };
 
+  const handleConsent = (id) => {
+    setModalEditConsent(true);
+    setSelectedCustomer(id);
+  };
+
   const confirmDelete = async (id) => {
     await evaluationService.deleteEvaluationData(id);
     setModalDelete(false);
@@ -80,10 +87,13 @@ export default function TherapistEvaluation() {
       <div className='grid lg:grid-cols-2 gap-5'>
         <SearcBar />
         <div className='border border-gray-300 shadow-md rounded-2xl p-2 '>
-          <div className='grid grid-cols-3'>
-            <p>Name : {customerData[0]?.name || ""}</p>
-            <p>Age : {age || ""}</p>
-            <p>Contact : {customerData[0]?.contact_no || ""}</p>
+          <div className='flex justify-between'>
+            <div className='whitespace-nowrap flex gap-5'>
+              <label htmlFor=''> Name : {customerData[0]?.name || ""}</label>
+              <label htmlFor=''>Age : {age || ""}</label>
+              <label htmlFor=''> Contact : {customerData[0]?.contact_no || ""}</label>
+            </div>
+            <Pencil className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5 ' onClick={() => handleConsent(customerData[0]?.customerid)} />
           </div>
         </div>
       </div>
@@ -148,6 +158,13 @@ export default function TherapistEvaluation() {
           <Button variant='destructive' onClick={() => confirmDelete(deleteData)}>
             Delete {deleteData}
           </Button>
+        </Modal>
+      )}
+      {modalEditConsent && (
+        <Modal setIsOpen={setModalEditConsent} big={true}>
+          <div className='max-h-[600px] overflow-y-auto'>
+            <CustomerConsentForm role={"therapist"} idCustomer={selectedCustomer} />
+          </div>
         </Modal>
       )}
     </div>

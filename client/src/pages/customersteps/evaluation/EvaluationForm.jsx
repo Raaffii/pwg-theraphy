@@ -159,7 +159,7 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
             <div className='flex'>
               <p>Duration 时长 : </p> <input type='number' name='duration' id='' placeholder='Minute' className='mx-2 focus:outline-none border-b-2 border-blue-500' onChange={handleChangeEvaluations} value={formData.duration} />
             </div>
-            <p>Therapist : {consentData[0]?.therapistid}</p>
+            <p>Therapist : {consentData[0]?.therapistname}</p>
           </div>
           <textarea placeholder='Session' className='w-full h-56 bg-gray-100 rounded-3xl px-4 py-2 focus:outline-none resize-none' name='note_session' value={formData.note_session} onChange={handleChangeEvaluations} />
           <div className='flex my-5 gap-10 justify-between'>

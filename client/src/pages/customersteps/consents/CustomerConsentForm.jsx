@@ -57,7 +57,6 @@ const CustomerConsentForm = forwardRef((props, ref) => {
         }
         let status;
         if (check.length > 0) {
-          console.log("in hereeeeeeeeee");
           status = await consentService.consentUpdate(user.customerId, formData);
         } else {
           status = await consentService.consentRegistration(user.customerId, formData);
@@ -83,6 +82,7 @@ const CustomerConsentForm = forwardRef((props, ref) => {
         if (isDataExist.length > 0) {
           await customerService.updateRegistration(idCustomer, formPersonalData);
           status = await consentService.consentUpdate(idCustomer, formData);
+          id = idCustomer;
         } else {
           const resp = await customerService.customerRegistration(0, formPersonalData);
           status = await consentService.consentRegistration(resp.data.data, formData);
@@ -229,7 +229,6 @@ const CustomerConsentForm = forwardRef((props, ref) => {
     triggerClick: handleNext,
   }));
 
-  console.log(formData);
   return (
     <div className='p-6 space-y-3'>
       {/* Header */}
