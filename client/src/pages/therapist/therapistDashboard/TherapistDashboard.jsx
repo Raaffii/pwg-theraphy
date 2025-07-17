@@ -10,6 +10,7 @@ import CustomerEvaluationForm from "@/pages/customersteps/CustomerEvaluationForm
 import { Eye, Trash2, ClipboardPlus, Package } from "lucide-react";
 import Pagination from "@/pages/Shared/Pagination";
 import { useNavigate } from "react-router-dom";
+import { paginate } from "@/utils/paginate";
 
 export default function TherapistDashboard() {
   const navigate = useNavigate();
@@ -28,20 +29,11 @@ export default function TherapistDashboard() {
 
   const consentRef = useRef();
 
-  const menuItems = [
-    { label: "Evaluation", color: "bg-purple-600" },
-    { label: "Buy Package", color: "bg-blue-600" },
-    { label: "Cashier", color: "bg-red-600" },
-  ];
-
-  let itemsPerPage = 10;
-
   useEffect(() => {
     const fetch = async () => {
       try {
         const data = await consentService.getConsent();
         setConsentList(data);
-        console.log(data);
       } catch (err) {
         // setError("Fail To gain data");
       } finally {
@@ -52,16 +44,12 @@ export default function TherapistDashboard() {
     fetch();
   }, [openModalForm, showModal]);
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirsItem = indexOfLastItem - itemsPerPage;
-  let currentItems = consentList.slice(indexOfFirsItem, indexOfLastItem);
-
-  const pagesChange = (page) => {
+  const HandlepagesChange = (page) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
   };
-  const totalPages = Math.ceil(consentList.length / itemsPerPage);
+  const { currentItems, totalPages } = paginate(consentList, currentPage, 10);
 
   const handleDelete = async (id) => {
     setSelectedDelete(id);
@@ -163,11 +151,10 @@ export default function TherapistDashboard() {
           ))}
         </TableBody>
       </Table>
-      <Pagination totalPages={totalPages} pagesChange={pagesChange} currentPage={currentPage} />
+      <Pagination totalPages={totalPages} HandlepagesChange={HandlepagesChange} currentPage={currentPage} />
       {showModal && selectedItem && (
-        <Modal title={"Customer Detail"} setIsOpen={setShowModal} big={true}>
+        <Modal setIsOpen={setShowModal} big={true}>
           <div className='max-h-[600px] overflow-y-auto'>
-            <h2>View</h2>
             <CustomerConsentForm ref={consentRef} role={"therapist"} idCustomer={selectedItem.customerid} setTriggerKey={setTriggerKey} />
           </div>
         </Modal>

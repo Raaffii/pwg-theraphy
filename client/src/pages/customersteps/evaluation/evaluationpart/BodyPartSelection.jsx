@@ -1,7 +1,7 @@
 import { set } from "date-fns";
 import { useEffect, useState, useRef } from "react";
 
-export default function BodyPartSelection({ setCoordsBack, setCoordsFront }) {
+export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coordsFront, coordsBack, data }) {
   const canvasRefFront = useRef(null);
   const canvasRefBack = useRef(null);
 
@@ -25,12 +25,22 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront }) {
       const centerX = (canvasFront.width - imgWidth) / 2;
       const centerY = (canvasFront.height - imgHeight) / 2;
       ctxFront.drawImage(imgFront, centerX, centerY, imgWidth, imgHeight);
+
+      ctxFront.beginPath();
+      ctxFront.arc(data.bodyfrontx_percent, data.bodyfronty_percent, 4, 0, 2 * Math.PI);
+      ctxFront.fillStyle = "red";
+      ctxFront.fill();
     };
 
     imgBack.onload = () => {
       const centerX = (canvasBack.width - imgWidth) / 2;
       const centerY = (canvasBack.height - imgHeight) / 2;
       ctxBack.drawImage(imgBack, centerX, centerY, imgWidth, imgHeight);
+
+      ctxBack.beginPath();
+      ctxBack.arc(data.bodybackx_percent, data.bodybacky_percent, 4, 0, 2 * Math.PI); // radius 4px
+      ctxBack.fillStyle = "red";
+      ctxBack.fill();
     };
   }, []);
 

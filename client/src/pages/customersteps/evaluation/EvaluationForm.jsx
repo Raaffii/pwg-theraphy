@@ -6,52 +6,60 @@ import { interestsService } from "@/services/interestsService";
 import toast from "react-hot-toast";
 import BodyPartSelection from "./evaluationpart/BodyPartSelection";
 
-export default function EvaluationForm({ customerData, consentData, setModal }) {
+export default function EvaluationForm({ customerData, consentData, setModal, data = null, setReloadFlag }) {
   const [interestsList, setInterestsList] = useState();
   const [coordsFront, setCoordsFront] = useState({ x: 0, y: 0 });
   const [coordsBack, setCoordsBack] = useState({ x: 0, y: 0 });
 
   const [formData, setFormData] = useState({
-    medication: 0,
-    medication_detail: "",
-    uncomfortable_pain: "",
-    note_session: "",
+    medication: data?.on_medication || 0,
+    medication_detail: data?.medication_details || "",
+    uncomfortable_pain: data?.pain_area || "",
+    note_session: data?.therapist_note || "",
     therapist: consentData[0]?.therapistid || "",
     theraphy: consentData[0]?.device_used || "",
     date: consentData[0].consentfrmdate ? new Date(consentData[0].consentfrmdate).toISOString().split("T")[0] : "",
-    duration: "",
-    frontx: coordsFront.x,
-    fronty: coordsFront.y,
-    backx: coordsBack.x,
-    backy: coordsBack.y,
+    duration: data?.duration_minutes || "",
+    frontx: data?.bodyfrontx_percent || coordsFront.x,
+    fronty: data?.bodyfronty_percent || coordsFront.y,
+    backx: data?.bodybackx_percent || coordsBack.x,
+    backy: data?.bodybacky_percent || coordsBack.y,
+    backnote: data?.bodybacknotes || "",
+    frontnote: data?.bodyfrontnotes || "",
   });
 
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
-      frontx: coordsFront.x,
-      fronty: coordsFront.y,
-      backx: coordsBack.x,
-      backy: coordsBack.y,
+      frontx: coordsFront.x || data?.bodyfrontx_percent,
+      fronty: coordsFront.y || data?.bodyfronty_percent,
+      backx: coordsBack.x || data?.bodybackx_percent,
+      backy: coordsBack.y || data?.bodybacky_percent,
     }));
   }, [coordsFront, coordsBack]);
 
   const handleChangeEvaluations = (e) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleSave = async (id) => {
+  const handleSave = async (id = 0, evaluationId = 0) => {
     try {
-      console.log(formData);
-      const status = await evaluationService.addEvaluation(id, formData);
+      let status;
+      if (!data) {
+        status = await evaluationService.addEvaluation(id, formData);
+      } else {
+        status = await evaluationService.updateEvaluation(evaluationId, formData);
+      }
       if (status.response && status.response.status === 500) {
         toast.error("Someting Is Miss");
       } else {
         toast.success("Data Saved");
+        setReloadFlag((prev) => !prev);
         setModal(false);
       }
     } catch (error) {
@@ -67,19 +75,18 @@ export default function EvaluationForm({ customerData, consentData, setModal }) 
 
     fetchData();
   }, []);
-
+  console.log(data);
   return (
     <div className='w-full'>
       <div className=' h-full  mx-auto'>
-        <div className='grid lg:grid-cols-3 my-5 mx-5'>
-          <BodyPartSelection setCoordsBack={setCoordsBack} setCoordsFront={setCoordsFront} />
-          <div className='col-span-2 mt-5 lg:mt-0'>
+        <div className='grid lg:grid-cols-3 my-5 mx-5 gap-2'>
+          <BodyPartSelection setCoordsBack={setCoordsBack} setCoordsFront={setCoordsFront} data={data} />
+          <div className='col-span-2 mt-5 lg:mt-0 gap-3'>
             {/* PROFILE ? */}
             <div className='grid grid-cols-2'>
               <div className='flex items-center'>
                 <div className='mr-7'>
                   <p>Name</p>
-                  <p>姓名</p>
                 </div>
                 <div className='border-b-2 border-blue-500 w-full'>{customerData[0]?.name}</div>
               </div>
@@ -87,7 +94,6 @@ export default function EvaluationForm({ customerData, consentData, setModal }) 
               <div className='flex items-center'>
                 <div className='mx-7'>
                   <p>DATE</p>
-                  <p>日期</p>
                 </div>
                 <div className='border-b-2 border-blue-500 w-full'>{consentData[0].consentfrmdate ? new Date(consentData[0].consentfrmdate).toISOString().split("T")[0] : ""}</div>
               </div>
@@ -99,7 +105,6 @@ export default function EvaluationForm({ customerData, consentData, setModal }) 
               <div className='flex items-center col-span-3'>
                 <div className='mr-7'>
                   <p>Are You In Any Medication ?</p>
-                  <p>您正在服用任何药物吗？</p>
                 </div>
               </div>
 
@@ -120,7 +125,6 @@ export default function EvaluationForm({ customerData, consentData, setModal }) 
                 <div className='flex items-center my-5'>
                   <div className='mr-7 w-80'>
                     <p>IF YES WHICH ONES </p>
-                    <p>如果有，是哪些</p>
                   </div>
                   <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='medication_detail' placeholder='Medication Detail' value={formData.medication_detail} onChange={handleChangeEvaluations} />
                 </div>
@@ -128,13 +132,22 @@ export default function EvaluationForm({ customerData, consentData, setModal }) 
               <div className='flex items-center my-5'>
                 <div className='mr-7 w-80'>
                   <p>WHERE IS YOUR UNCOMFORTABLE PAIN? </p>
-                  <p>你不舒服的疼痛在哪里？</p>
                 </div>
                 <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='uncomfortable_pain' placeholder='Unconfortable Pain' value={formData.uncomfortable_pain} onChange={handleChangeEvaluations} />
               </div>
               <div className='flex items-center my-5'>
                 All customer are requested to conduct a brief health assesment before the treatment. Your information will be used to provide you with more customized services, and, we guarantee you the security and confidentiality of the information <br />
-                所有顾客请务必在疗程开始前进行简短的健康评估，您的信息将被用于我们为您提供更加定制化的服务，并且我们 向您保证信息的安全性和隐秘性。
+              </div>
+              <div className='bg-prime-color-two w-full h-2 my-2'></div>
+              <div className=' gap-2 h-full justify-center my-5 '>
+                <div className='flex my-5'>
+                  <h2 className='whitespace-nowrap mr-2'>Body Front Note</h2>
+                  <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='frontnote' placeholder='Front Note' value={formData.frontnote} onChange={handleChangeEvaluations} />
+                </div>
+                <div className='flex my-5'>
+                  <h2 className='whitespace-nowrap  mr-2'>Body Back Note</h2>
+                  <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='backnote' placeholder='Back Note' value={formData.backnote} onChange={handleChangeEvaluations} />
+                </div>
               </div>
             </div>
           </div>
@@ -142,11 +155,11 @@ export default function EvaluationForm({ customerData, consentData, setModal }) 
         <div className=' mx-5 mb-5'>
           <div className='bg-prime-color-two h-2 my-5'></div>
           <div className='flex my-5 gap-10'>
-            <p>Therapy 理疗 : {consentData[0]?.device_used}</p>
+            <p>Therapy : {consentData[0]?.device_used}</p>
             <div className='flex'>
-              <p>Duration 时长 : </p> <input type='number' name='duration' id='' placeholder='Minute' className='mx-2 focus:outline-none border-b-2 border-blue-500' onChange={handleChangeEvaluations} />
+              <p>Duration 时长 : </p> <input type='number' name='duration' id='' placeholder='Minute' className='mx-2 focus:outline-none border-b-2 border-blue-500' onChange={handleChangeEvaluations} value={formData.duration} />
             </div>
-            <p>Therapist 理疗师 : {consentData[0]?.therapistid}</p>
+            <p>Therapist : {consentData[0]?.therapistid}</p>
           </div>
           <textarea placeholder='Session' className='w-full h-56 bg-gray-100 rounded-3xl px-4 py-2 focus:outline-none resize-none' name='note_session' value={formData.note_session} onChange={handleChangeEvaluations} />
           <div className='flex my-5 gap-10 justify-between'>
@@ -154,7 +167,7 @@ export default function EvaluationForm({ customerData, consentData, setModal }) 
               <p>Created At : 20/9/2030</p>
               <p>Last Updated : 29/9/2030</p>
             </div>
-            <Button className='bg-prime-color' onClick={() => handleSave(customerData[0]?.customerid)}>
+            <Button className='bg-prime-color' onClick={() => handleSave(customerData[0]?.customerid, data?.evaluation_id)}>
               Save
             </Button>
           </div>

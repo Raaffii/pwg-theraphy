@@ -76,21 +76,24 @@ const CustomerConsentForm = forwardRef((props, ref) => {
       }
     } else {
       try {
+        console.log("we are here");
         const isDataExist = await customerService.getCustomerData(idCustomer);
         let status;
+        let id;
         if (isDataExist.length > 0) {
           await customerService.updateRegistration(idCustomer, formPersonalData);
           status = await consentService.consentUpdate(idCustomer, formData);
         } else {
           const resp = await customerService.customerRegistration(0, formPersonalData);
           status = await consentService.consentRegistration(resp.data.data, formData);
+          id = resp.data.data;
         }
         if (status.response && status.response.status === 500) {
           toast.error("Someting Is Miss");
           navigate("/therapist");
         } else {
           toast.success("Data Saved");
-          navigate("/therapist");
+          navigate(`/therapist/evaluation/${id}`);
         }
       } catch (error) {
         console.log(error);

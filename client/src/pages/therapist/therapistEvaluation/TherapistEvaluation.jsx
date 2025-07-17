@@ -8,20 +8,29 @@ import SearcBar from "../../Shared/SearchBar";
 import EvaluationForm from "@/pages/customersteps/evaluation/EvaluationForm";
 import { useNavigate } from "react-router-dom";
 
+import Pagination from "@/pages/Shared/Pagination";
+
 //service
 import { customerService } from "@/services/customerService";
 import { consentService } from "@/services/consentService";
-
-import { calculateAge } from "@/utils/calculateAges";
 import { evaluationService } from "@/services/evaluationService";
+//utils
+import { calculateAge } from "@/utils/calculateAges";
+import { paginate } from "@/utils/paginate";
 
 export default function TherapistEvaluation() {
   const navigate = useNavigate();
 
   const [modalPlus, setModalPlus] = useState(false);
+  const [modalView, setModalView] = useState(false);
+  const [modalDelete, setModalDelete] = useState(false);
   const [customerData, setCustomerData] = useState({});
   const [consentData, setConsentData] = useState({});
+  const [viewData, setViewData] = useState({});
+  const [deleteData, setDeleteData] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
   const [evaluationSessionList, setEvaluationSessionList] = useState([]);
+  const [reloadFlag, setReloadFlag] = useState(false);
   const [age, setAge] = useState();
   const { id } = useParams();
 
@@ -38,8 +47,31 @@ export default function TherapistEvaluation() {
     };
 
     fetchData(id);
-  }, []);
-  console.log(evaluationSessionList);
+  }, [reloadFlag]);
+
+  const HandlepagesChange = (page) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+    }
+  };
+  const { currentItems, totalPages } = paginate(evaluationSessionList, currentPage, 10);
+
+  const handleView = (data) => {
+    setModalView(true);
+    setViewData(data);
+  };
+
+  const handleDelete = (id) => {
+    setModalDelete(true);
+    setDeleteData(id);
+  };
+
+  const confirmDelete = async (id) => {
+    await evaluationService.deleteEvaluationData(id);
+    setModalDelete(false);
+    setReloadFlag((prev) => !prev);
+  };
+
   return (
     <div>
       <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
@@ -65,33 +97,32 @@ export default function TherapistEvaluation() {
         <Table>
           <TableHeader>
             <TableRow className='text-center'>
-              <TableHead className='text-center'>Date</TableHead>
-              <TableHead className='text-center'>Theraphy</TableHead>
-              <TableHead className='text-center'></TableHead>
-              <TableHead className='text-center'>Duration</TableHead>
-              <TableHead className='text-center'></TableHead>
-              <TableHead className='text-center'>Session Notes</TableHead>
-              <TableHead className='text-center'>Created</TableHead>
-              <TableHead className='text-center'>Updated</TableHead>
-              <TableHead className='text-center'>Action</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Theraphy</TableHead>
+              <TableHead></TableHead>
+              <TableHead>Duration</TableHead>
+              <TableHead></TableHead>
+              <TableHead>Session Notes</TableHead>
+              <TableHead>Created</TableHead>
+              <TableHead>Updated</TableHead>
+              <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow className='rounded-xl hover:bg-prime-color cursor-pointer ' onClick={() => setModalActionChoose(true)}>
-              <TableCell>20/20/2039</TableCell>
-              <TableCell colSpan={2}>7 Wonder</TableCell>
-              <TableCell colSpan={2}>900 minute</TableCell>
-              <TableCell>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestias similique, dignissimos numquam ullam optio possimus molestiae ipsa provident perferendis autem! Esse sed tempore voluptates aperiam ipsam similique magni ab debitis! Lorem ipsum dolor sit, amet consectetur
-                adipisicing elit. Molestias similique, dignissimos numquam ullam optio possimus molestiae ipsa provident perferendis autem! Esse sed tempore voluptates aperiam ipsam similique magni ab debitis!
-              </TableCell>
-              <TableCell>20/20/2039</TableCell>
-              <TableCell>20/20/2039</TableCell>
-              <TableCell className='flex gap-2 h-full items-center'>
-                <Eye className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5 ' />
-                <Trash2 className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5 ' />
-              </TableCell>
-            </TableRow>
+            {currentItems.map((data, index) => (
+              <TableRow className='rounded-xl hover:bg-prime-color cursor-pointer' key={index}>
+                <TableCell>{data.date ? new Date(data.date).toLocaleString().split(" ")[0] : ""}</TableCell>
+                <TableCell colSpan={2}>{data.therapy_type}</TableCell>
+                <TableCell colSpan={2}>{data.duration_minutes} minute</TableCell>
+                <TableCell>{data.therapist_note}</TableCell>
+                <TableCell>{data.entereddate ? new Date(data.entereddate).toLocaleString() : ""}</TableCell>
+                <TableCell> {data.editeddate ? new Date(data.editeddate).toLocaleString() : "-"}</TableCell>
+                <TableCell className='flex gap-2 h-full items-center'>
+                  <Eye className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5 ' onClick={() => handleView(data)} />
+                  <Trash2 className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5  ' onClick={() => handleDelete(data.id)} />
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
@@ -99,8 +130,24 @@ export default function TherapistEvaluation() {
         <Modal setIsOpen={setModalPlus} big={true}>
           {" "}
           <div className='max-h-[600px] overflow-y-auto'>
-            <EvaluationForm customerData={customerData} consentData={consentData} setModal={setModalPlus} />
+            <EvaluationForm customerData={customerData} consentData={consentData} setModal={setModalPlus} setReloadFlag={setReloadFlag} />
           </div>
+        </Modal>
+      )}{" "}
+      {modalView && (
+        <Modal setIsOpen={setModalView} big={true}>
+          {" "}
+          <div className='max-h-[600px] overflow-y-auto'>
+            <EvaluationForm customerData={customerData} consentData={consentData} setModal={setModalView} data={viewData} setReloadFlag={setReloadFlag} />
+          </div>
+        </Modal>
+      )}
+      <Pagination totalPages={totalPages} HandlepagesChange={HandlepagesChange} currentPage={currentPage} />
+      {modalDelete && (
+        <Modal title={"Confirm Delete"} setIsOpen={setModalDelete} small={true}>
+          <Button variant='destructive' onClick={() => confirmDelete(deleteData)}>
+            Delete {deleteData}
+          </Button>
         </Modal>
       )}
     </div>
