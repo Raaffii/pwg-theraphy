@@ -57,7 +57,7 @@ const updateDataEvalanotate = async (id, idUser, data) => {
       bodyfrontnotes=?,
       bodybacknotes=?
      WHERE evaluationid = ?`,
-    [backx, backy, frontx, fronty, idUser, new Date(), frontnote, backnote, id]
+    [frontx, fronty, backx, backy, idUser, new Date(), frontnote, backnote, id]
   );
 
   return result;

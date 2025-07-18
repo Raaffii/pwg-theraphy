@@ -1,7 +1,11 @@
 import { set } from "date-fns";
 import { useEffect, useState, useRef } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Dot, Eraser, X } from "lucide-react";
 
 export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coordsFront, coordsBack, data }) {
+  const [frontModal, setFrontModal] = useState([]);
+
   const canvasRefFront = useRef(null);
   const canvasRefBack = useRef(null);
 
@@ -70,29 +74,29 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
 
     const ctx = canvas.getContext("2d");
     const rect = canvas.getBoundingClientRect();
-    // Clear Canvas
-    await ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const imgWidth = 150;
-    const imgHeight = 350;
-    const centerX = (canvas.width - imgWidth) / 2;
-    const centerY = (canvas.height - imgHeight) / 2;
-    await ctx.drawImage(img, centerX, centerY, imgWidth, imgHeight);
 
     // Hitung posisi klik relatif terhadap canvas
     const x = Math.floor(e.clientX - rect.left);
     const y = Math.floor(e.clientY - rect.top);
 
     // Draw Red Dot
-    ctx.beginPath();
-    ctx.arc(x, y, 4, 0, 2 * Math.PI); // radius 4px
-    ctx.fillStyle = "red";
-    ctx.fill();
+    // ctx.beginPath();
+    // ctx.arc(x, y, 4, 0, 2 * Math.PI); // radius 4px
+    // ctx.fillStyle = "red";
+    // ctx.fill();
 
     if (position == "front") {
-      setCoordsFront({ x, y });
+      const newCoords = { x: x, y: y };
+      setCoordsFront((prev) => [...prev, newCoords]);
     } else if (position == "back") {
-      setCoordsBack({ x, y });
+      const newCoords = { x: x, y: y };
+      setCoordsFront((prev) => [...prev, newCoords]);
+    }
+  };
+
+  const handleChangeKet = (index, newKet, pic) => {
+    if (pic == "front") {
+      setCoordsFront((prev) => prev.map((coord, i) => (i === index ? { ...coord, ket: newKet } : coord)));
     }
   };
 
@@ -100,8 +104,66 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
     <div className='flex justify-center gap-2 border border-bg-prime-color'>
       {/* <img src='/body/front.png' alt='' className='m-2' /> */}
       {/* <img src='/body/back.png' alt='' className='m-2' /> */}
-      <canvas ref={canvasRefFront} width={160} height={360} className='border border-gray-400 w-[160px] h-[360px] border-none' onMouseMove={handleMouseMove} onClick={(e) => handleClick(e, "front")} />
-      <canvas ref={canvasRefBack} width={160} height={360} className='border border-gray-400 w-[160px] h-[360px] border-none' onMouseMove={handleMouseMove} onClick={(e) => handleClick(e, "back")} />
+      <div className='flex'>
+        <div className='relative transform -translate-x-1/2'>
+          {coordsFront.map((coord, index) => (
+            <div key={index}>
+              <button
+                style={{ left: `${coord.x}px`, top: `${coord.y}px` }}
+                className={`bg-slate-600 h-3 w-3 border-2 border-red-700 rounded-full absolute `}
+                onClick={() =>
+                  setFrontModal((prev) => {
+                    const updated = [...prev];
+                    updated[index] = !updated[index];
+                    return updated;
+                  })
+                }></button>
+
+              {frontModal[index] && (
+                <div style={{ left: `${coord.x + 5}px`, top: `${coord.y + 5}px` }} className={`absolute  bg-red-400 px-2 rounded-xl text-xs`}>
+                  <div className='flex justify-between items-center'>
+                    <p className=''>Note</p>
+                    <X
+                      className='w-[15px]'
+                      onClick={() =>
+                        setFrontModal((prev) => {
+                          const updated = [...prev];
+                          updated[index] = !updated[index];
+                          return updated;
+                        })
+                      }
+                    />
+                  </div>
+                  <input type='text' className='border border-red-500' onChange={(e) => handleChangeKet(index, e.target.value, "front")} value={coordsFront[index].ket || ""} />
+
+                  <div className='flex justify-end'>
+                    <Eraser className='w-[15px]' onClick={() => setCoordsFront((prev) => prev.filter((_, i) => i !== index))} />
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <canvas ref={canvasRefFront} width={160} height={360} className='border border-gray-400 w-[160px] h-[360px] border-none' onMouseMove={handleMouseMove} onClick={(e) => handleClick(e, "front")} />
+      </div>
+      <div className='flex'>
+        {" "}
+        <div className='relative transform -translate-x-1/2'>
+          {/* Tombol kecil bulat */}
+          <button className='bg-slate-600 h-3 w-3 border-2 border-red-700 rounded-full absolute left-[90px] top-[90px]'></button>
+
+          {/* Kotak teks + eraser */}
+          <div className='absolute left-[95px] top-[95px] bg-red-400 p-2  rounded-xl text-xs'>
+            <p className='w-max break-words'>Halo man agak sakit</p>
+            {/* Icon Eraser kecil di pojok kanan bawah */}
+            <div className='flex justify-end'>
+              <Eraser className='w-[15px]' />
+              <Eraser className='w-[15px]' />
+            </div>
+          </div>
+        </div>
+        <canvas ref={canvasRefBack} width={160} height={360} className='border border-gray-400 w-[160px] h-[360px] border-none' onMouseMove={handleMouseMove} onClick={(e) => handleClick(e, "back")} />
+      </div>
     </div>
   );
 }

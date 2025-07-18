@@ -8,8 +8,8 @@ import BodyPartSelection from "./evaluationpart/BodyPartSelection";
 
 export default function EvaluationForm({ customerData, consentData, setModal, data = null, setReloadFlag }) {
   const [interestsList, setInterestsList] = useState();
-  const [coordsFront, setCoordsFront] = useState({ x: 0, y: 0 });
-  const [coordsBack, setCoordsBack] = useState({ x: 0, y: 0 });
+  const [coordsFront, setCoordsFront] = useState([]);
+  const [coordsBack, setCoordsBack] = useState([]);
 
   const [formData, setFormData] = useState({
     medication: data?.on_medication || 0,
@@ -75,12 +75,13 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
 
     fetchData();
   }, []);
-  console.log(data);
+
+  console.log(coordsFront);
   return (
     <div className='w-full'>
       <div className=' h-full  mx-auto'>
         <div className='grid lg:grid-cols-3 my-5 mx-5 gap-2'>
-          <BodyPartSelection setCoordsBack={setCoordsBack} setCoordsFront={setCoordsFront} data={data} />
+          <BodyPartSelection setCoordsBack={setCoordsBack} setCoordsFront={setCoordsFront} data={data} coordsFront={coordsFront} coordsBack={coordsBack} />
           <div className='col-span-2 mt-5 lg:mt-0 gap-3'>
             {/* PROFILE ? */}
             <div className='grid grid-cols-2'>
