@@ -30,23 +30,26 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
       const centerX = (canvasFront.width - imgWidth) / 2;
       const centerY = (canvasFront.height - imgHeight) / 2;
       ctxFront.drawImage(imgFront, centerX, centerY, imgWidth, imgHeight);
-
-      ctxFront.beginPath();
-      ctxFront.arc(data.bodyfrontx_percent, data.bodyfronty_percent, 4, 0, 2 * Math.PI);
-      ctxFront.fillStyle = "red";
-      ctxFront.fill();
     };
 
     imgBack.onload = () => {
       const centerX = (canvasBack.width - imgWidth) / 2;
       const centerY = (canvasBack.height - imgHeight) / 2;
       ctxBack.drawImage(imgBack, centerX, centerY, imgWidth, imgHeight);
-
-      ctxBack.beginPath();
-      ctxBack.arc(data.bodybackx_percent, data.bodybacky_percent, 4, 0, 2 * Math.PI); // radius 4px
-      ctxBack.fillStyle = "red";
-      ctxBack.fill();
     };
+  }, []);
+
+  useEffect(() => {
+    data?.anotate.forEach((item, index) => {
+      if (item.bodyimageid == 1) {
+        console.log("muassooook");
+        const newCoords = { x: item.x_percent, y: item.y_percent, ket: item.bodyimagenotes };
+        setCoordsFront((prev) => [...prev, newCoords]);
+      } else if (item.bodyimageid == 0) {
+        const newCoords = { x: item.x_percent, y: item.y_percent, ket: item.bodyimagenotes };
+        setCoordsBack((prev) => [...prev, newCoords]);
+      }
+    });
   }, []);
 
   const handleMouseMove = (e) => {
@@ -102,6 +105,8 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
       setCoordsBack((prev) => prev.map((coord, i) => (i === index ? { ...coord, ket: newKet } : coord)));
     }
   };
+
+  console.log("front", coordsFront);
 
   return (
     <div className='flex justify-center gap-2 border border-bg-prime-color'>

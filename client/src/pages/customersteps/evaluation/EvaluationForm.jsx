@@ -23,7 +23,7 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     front: data?.bodyfrontx_percent || coordsFront,
     back: data?.bodybacky_percent || coordsBack,
     backnote: data?.bodybacknotes || "",
-    frontnote: data?.bodyfrontnotes || "",
+    anotate: data?.anotate || "",
   });
 
   useEffect(() => {
@@ -71,8 +71,6 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
 
     fetchData();
   }, []);
-
-  console.log("form daata", data);
 
   return (
     <div className='w-full'>

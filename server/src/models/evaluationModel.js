@@ -34,6 +34,12 @@ const getEvaluation = async (id) => {
         session_notesid: item.session_notesid,
         customer_id: item.customer_id,
         evaluation_id: item.evaluation_id,
+        duration: item.duration,
+        therapist_note: item.therapist_note,
+        therapy_type: item.therapy_type,
+        pain_area: item.pain_area,
+        date: item.date,
+        entereddate: item.entereddate,
         anotate: [],
       };
     }
@@ -47,8 +53,8 @@ const getEvaluation = async (id) => {
   });
 
   console.log(Object.values(therapistEvaluation));
-
-  return rows;
+  return (oriRows = Object.values(therapistEvaluation));
+  // return rows;
 };
 
 const updateDataEvaluation = async (id, idUser, data) => {
