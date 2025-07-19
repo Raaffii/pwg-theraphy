@@ -5,6 +5,7 @@ import { Dot, Eraser, X } from "lucide-react";
 
 export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coordsFront, coordsBack, data }) {
   const [frontModal, setFrontModal] = useState([]);
+  const [backModal, setBackModal] = useState([]);
 
   const canvasRefFront = useRef(null);
   const canvasRefBack = useRef(null);
@@ -90,16 +91,19 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
       setCoordsFront((prev) => [...prev, newCoords]);
     } else if (position == "back") {
       const newCoords = { x: x, y: y };
-      setCoordsFront((prev) => [...prev, newCoords]);
+      setCoordsBack((prev) => [...prev, newCoords]);
     }
   };
 
   const handleChangeKet = (index, newKet, pic) => {
     if (pic == "front") {
       setCoordsFront((prev) => prev.map((coord, i) => (i === index ? { ...coord, ket: newKet } : coord)));
+    } else {
+      setCoordsBack((prev) => prev.map((coord, i) => (i === index ? { ...coord, ket: newKet } : coord)));
     }
   };
 
+  console.log(coordsBack);
   return (
     <div className='flex justify-center gap-2 border border-bg-prime-color'>
       {/* <img src='/body/front.png' alt='' className='m-2' /> */}
@@ -138,6 +142,7 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
 
                   <div className='flex justify-end'>
                     <Eraser className='w-[15px]' onClick={() => setCoordsFront((prev) => prev.filter((_, i) => i !== index))} />
+                    {/* setFrontModal((prev) => prev.map(() => false)); */}
                   </div>
                 </div>
               )}
@@ -147,20 +152,45 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
         <canvas ref={canvasRefFront} width={160} height={360} className='border border-gray-400 w-[160px] h-[360px] border-none' onMouseMove={handleMouseMove} onClick={(e) => handleClick(e, "front")} />
       </div>
       <div className='flex'>
-        {" "}
         <div className='relative transform -translate-x-1/2'>
-          {/* Tombol kecil bulat */}
-          <button className='bg-slate-600 h-3 w-3 border-2 border-red-700 rounded-full absolute left-[90px] top-[90px]'></button>
+          {coordsBack.map((coord, index) => (
+            <div key={index}>
+              <button
+                style={{ left: `${coord.x}px`, top: `${coord.y}px` }}
+                className={`bg-slate-600 h-3 w-3 border-2 border-red-700 rounded-full absolute `}
+                onClick={() =>
+                  setBackModal((prev) => {
+                    const updated = [...prev];
+                    updated[index] = !updated[index];
+                    return updated;
+                  })
+                }></button>
 
-          {/* Kotak teks + eraser */}
-          <div className='absolute left-[95px] top-[95px] bg-red-400 p-2  rounded-xl text-xs'>
-            <p className='w-max break-words'>Halo man agak sakit</p>
-            {/* Icon Eraser kecil di pojok kanan bawah */}
-            <div className='flex justify-end'>
-              <Eraser className='w-[15px]' />
-              <Eraser className='w-[15px]' />
+              {backModal[index] && (
+                <div style={{ left: `${coord.x + 5}px`, top: `${coord.y + 5}px` }} className={`absolute  bg-red-400 px-2 rounded-xl text-xs`}>
+                  <div className='flex justify-between items-center'>
+                    <p className=''>Note</p>
+                    <X
+                      className='w-[15px]'
+                      onClick={() =>
+                        setBackModal((prev) => {
+                          const updated = [...prev];
+                          updated[index] = !updated[index];
+                          return updated;
+                        })
+                      }
+                    />
+                  </div>
+                  <input type='text' className='border border-red-500' onChange={(e) => handleChangeKet(index, e.target.value, "back")} value={coordsBack[index].ket || ""} />
+
+                  <div className='flex justify-end'>
+                    <Eraser className='w-[15px]' onClick={() => setCoordsBack((prev) => prev.filter((_, i) => i !== index))} />
+                    {/* setFrontModal((prev) => prev.map(() => false)); */}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          ))}
         </div>
         <canvas ref={canvasRefBack} width={160} height={360} className='border border-gray-400 w-[160px] h-[360px] border-none' onMouseMove={handleMouseMove} onClick={(e) => handleClick(e, "back")} />
       </div>
