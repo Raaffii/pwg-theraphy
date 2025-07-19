@@ -45,6 +45,7 @@ export default function TherapistEvaluation() {
       const yearsold = calculateAge(DataExistCustomer[0]?.dateofbirth);
       setAge(yearsold);
       const evaluationSessionData = await evaluationService.getEvaluationData(id);
+      console.log(evaluationSessionData.data.data);
       setEvaluationSessionList(evaluationSessionData.data.data);
     };
 

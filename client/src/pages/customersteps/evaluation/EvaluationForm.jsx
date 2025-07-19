@@ -72,7 +72,7 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     fetchData();
   }, []);
 
-  console.log("form daata", formData);
+  console.log("form daata", data);
 
   return (
     <div className='w-full'>
