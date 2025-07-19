@@ -48,7 +48,6 @@ const editEvaluation = async (req, res) => {
 
 const getEvaluation = async (req, res) => {
   try {
-    console.log("here");
     const id = req.params.id;
     const result = await evaluationService.getEvaluationData(id);
 

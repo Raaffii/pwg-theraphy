@@ -26,6 +26,28 @@ const getEvaluation = async (id) => {
     SELECT * FROM session_notes JOIN evaluations ON session_notes.evaluation_id = evaluations.id  JOIN evalannotate ON evaluations.id=evalannotate.evaluationid LEFT JOIN evaluation_pain_areas ON evaluations.id=evaluation_pain_areas.evaluation_id  WHERE evaluations.customer_id = ? ORDER BY evaluations.entereddate DESC`;
   const [rows] = await pool.query(query, [id]);
 
+  const therapistEvaluation = {};
+
+  rows.forEach((item, index) => {
+    if (!therapistEvaluation[item.evaluation_id]) {
+      therapistEvaluation[item.evaluation_id] = {
+        session_notesid: item.session_notesid,
+        customer_id: item.customer_id,
+        evaluation_id: item.evaluation_id,
+        anotate: [],
+      };
+    }
+
+    therapistEvaluation[item.evaluation_id].anotate.push({
+      x_percent: item.x_percent,
+      y_percent: item.y_percent,
+      bodyimagenotes: item.bodyimagenotes,
+      bodyimageid: item.bodyimageid,
+    });
+  });
+
+  console.log(Object.values(therapistEvaluation));
+
   return rows;
 };
 
