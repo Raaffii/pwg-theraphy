@@ -20,10 +20,8 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     theraphy: consentData[0]?.device_used || "",
     date: consentData[0].consentfrmdate ? new Date(consentData[0].consentfrmdate).toISOString().split("T")[0] : "",
     duration: data?.duration_minutes || "",
-    frontx: data?.bodyfrontx_percent || coordsFront.x,
-    fronty: data?.bodyfronty_percent || coordsFront.y,
-    backx: data?.bodybackx_percent || coordsBack.x,
-    backy: data?.bodybacky_percent || coordsBack.y,
+    front: data?.bodyfrontx_percent || coordsFront,
+    back: data?.bodybacky_percent || coordsBack,
     backnote: data?.bodybacknotes || "",
     frontnote: data?.bodyfrontnotes || "",
   });
@@ -31,10 +29,8 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
-      frontx: coordsFront.x || data?.bodyfrontx_percent,
-      fronty: coordsFront.y || data?.bodyfronty_percent,
-      backx: coordsBack.x || data?.bodybackx_percent,
-      backy: coordsBack.y || data?.bodybacky_percent,
+      front: coordsFront || data?.bodyfrontx_percent,
+      back: coordsBack || data?.bodybackx_percent,
     }));
   }, [coordsFront, coordsBack]);
 
@@ -76,7 +72,8 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     fetchData();
   }, []);
 
-  console.log(coordsFront);
+  console.log("form daata", formData);
+
   return (
     <div className='w-full'>
       <div className=' h-full  mx-auto'>

@@ -11,7 +11,15 @@ const addNewEvaluation = async (id, idUser, data) => {
 };
 const addNewEvalanotate = async (id, idUser, evaluationId, data) => {
   try {
-    const result = evaluation.addEvalanotate(id, idUser, evaluationId, data);
+    const { front, back } = data;
+    console.log(data);
+    let result;
+    front.forEach((item) => {
+      result = evaluation.addEvalanotate(id, idUser, evaluationId, item, "1");
+    });
+    back.forEach((item) => {
+      result = evaluation.addEvalanotate(id, idUser, evaluationId, item, "0");
+    });
     return result;
   } catch (error) {
     console.error("Service error:", error);

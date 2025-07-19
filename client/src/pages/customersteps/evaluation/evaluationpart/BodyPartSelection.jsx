@@ -103,7 +103,6 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
     }
   };
 
-  console.log(coordsBack);
   return (
     <div className='flex justify-center gap-2 border border-bg-prime-color'>
       {/* <img src='/body/front.png' alt='' className='m-2' /> */}

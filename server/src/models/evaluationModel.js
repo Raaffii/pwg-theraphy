@@ -9,10 +9,10 @@ const addEvaluation = async (id, idUser, data) => {
   return result.insertId;
 };
 
-const addEvalanotate = async (id, idUser, evaluatioId, data) => {
-  const { frontx, fronty, backx, backy, backnote, frontnote } = data;
-  const query = "INSERT INTO evalannotate (bodyfrontx_percent, bodyfronty_percent, bodybackx_percent, bodybacky_percent,customerid, entereddate, enteredby, evaluationid,bodyfrontnotes,bodybacknotes) VALUES (?,?,?,?,?,?,?,?,?,?)";
-  await pool.query(query, [frontx, fronty, backx, backy, id, new Date(), idUser, evaluatioId, frontnote, backnote]);
+const addEvalanotate = async (id, idUser, evaluatioId, data, imageid) => {
+  const { x, y, ket } = data;
+  const query = "INSERT INTO evalannotate (evaluationid,x_percent, y_percent, bodyimageid, bodyimagenotes, enteredby, entereddate) VALUES (?,?,?,?,?,?,?)";
+  await pool.query(query, [evaluatioId, x, y, imageid, ket, idUser, new Date()]);
 };
 
 const addSessionNotes = async (id, idUser, evaluatioId, data) => {
