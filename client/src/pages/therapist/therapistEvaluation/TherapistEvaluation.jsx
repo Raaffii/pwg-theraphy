@@ -79,7 +79,7 @@ export default function TherapistEvaluation() {
     setModalDelete(false);
     setReloadFlag((prev) => !prev);
   };
-  console.log(currentItems);
+
   return (
     <div>
       <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>

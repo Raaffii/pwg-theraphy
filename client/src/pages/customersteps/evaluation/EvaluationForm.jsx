@@ -24,7 +24,7 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     back: data?.bodybacky_percent || coordsBack,
     backnote: data?.bodybacknotes || "",
     anotate: data?.anotate || "",
-    enteredby: data?.enteredby || "",
+    enteredby: data?.enteredby || null,
     entereddate: data?.entereddate || "",
   });
 
@@ -75,6 +75,7 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     fetchData();
   }, []);
 
+  console.log("data daata", data);
   return (
     <div className='w-full'>
       <div className=' h-full  mx-auto'>

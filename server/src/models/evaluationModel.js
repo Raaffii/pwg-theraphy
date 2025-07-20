@@ -15,13 +15,26 @@ const addEvalanotate = async (id, idUser, evaluatioId, data, imageid) => {
 
 const addSessionNotes = async (id, idUser, evaluatioId, data) => {
   const { duration, medication, medication_detail, uncomfortable_pain, therapist, note_session } = data;
-  const query = "INSERT INTO session_notes (customer_id,therapists_id, evaluation_id, duration_minutes, on_medication, medication_details, therapist_note, enteredby, entereddate) VALUES (?,?,?,?,?,?,?,?,?) ";
+  const query = `INSERT INTO 
+  session_notes (customer_id,therapists_id, evaluation_id, duration_minutes, on_medication, medication_details, therapist_note, enteredby, entereddate) 
+  VALUES (?,?,?,?,?,?,?,?,?) `;
   await pool.query(query, [id, therapist, evaluatioId, duration, medication, medication_detail, note_session, idUser, new Date()]);
 };
 
 const getEvaluation = async (id) => {
-  const query = `
-    SELECT * FROM session_notes JOIN evaluations ON session_notes.evaluation_id = evaluations.id  JOIN evalannotate ON evaluations.id=evalannotate.evaluationid LEFT JOIN evaluation_pain_areas ON evaluations.id=evaluation_pain_areas.evaluation_id  WHERE evaluations.customer_id = ? ORDER BY evaluations.entereddate DESC`;
+  const query = `SELECT 
+  evaluations.entereddate AS evaluation_entereddate,
+   evaluations.enteredby AS evaluation_enteredby,
+  session_notes.*,
+  evaluations.*,
+  evalannotate.*,
+  evaluation_pain_areas.*
+  FROM session_notes 
+  JOIN evaluations ON session_notes.evaluation_id = evaluations.id 
+  LEFT JOIN evalannotate ON evaluations.id = evalannotate.evaluationid 
+  LEFT JOIN evaluation_pain_areas ON evaluations.id = evaluation_pain_areas.evaluation_id  
+  WHERE evaluations.customer_id = ? 
+  ORDER BY evaluations.entereddate DESC`;
   const [rows] = await pool.query(query, [id]);
 
   const therapistEvaluation = {};
@@ -32,17 +45,18 @@ const getEvaluation = async (id) => {
         session_notesid: item.session_notesid,
         customer_id: item.customer_id,
         evaluation_id: item.evaluation_id,
-        duration: item.duration,
+        duration: item.duration_minutes,
         therapist_note: item.therapist_note,
         therapy_type: item.therapy_type,
         pain_area: item.pain_area,
         date: item.date,
         duration: item.duration_minutes,
-        entereddate: item.entereddate,
         anotate: [],
         enteredby: item.enteredby,
-        entereddate: item.entereddate,
+        entereddate: item.evaluation_entereddate,
         editeddate: item.editeddate,
+        medication: item.medication,
+        medication_detail: item.medication_detail,
       };
     }
 
@@ -55,8 +69,9 @@ const getEvaluation = async (id) => {
     });
   });
 
-  return (oriRows = Object.values(therapistEvaluation));
-  // return rows;
+  const result = Object.values(therapistEvaluation).sort((a, b) => new Date(b.entereddate) - new Date(a.entereddate));
+
+  return result;
 };
 
 const updateDataEvaluation = async (id, idUser, data) => {

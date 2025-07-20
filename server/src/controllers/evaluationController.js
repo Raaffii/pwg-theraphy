@@ -25,6 +25,8 @@ const addEvaluation = async (req, res) => {
 
 const editEvaluation = async (req, res) => {
   try {
+    console.log("entered by : " + req.body.enteredby);
+
     const id = req.params.id;
     const idUser = req.user.userId;
     const evaluationId = await evaluationService.updateEvaluation(id, idUser, req.body);
