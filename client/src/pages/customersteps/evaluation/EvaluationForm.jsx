@@ -12,8 +12,8 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
   const [coordsBack, setCoordsBack] = useState([]);
 
   const [formData, setFormData] = useState({
-    medication: data?.on_medication || 0,
-    medication_detail: data?.medication_details || "",
+    medication: data?.medication || 0,
+    medication_detail: data?.medication_detail || "",
     uncomfortable_pain: data?.pain_area || "",
     note_session: data?.therapist_note || "",
     therapist: consentData[0]?.therapistid || "",
@@ -101,52 +101,43 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
             {/* LINE SEPARATION ? */}
             <div className='bg-prime-color-two w-full h-2 my-2'></div>
             {/* ANY MEDICATION ? */}
-            <div className='grid grid-cols-4 my-2'>
-              <div className='flex items-center col-span-3'>
-                <div className='mr-7'>
-                  <p>Are You In Any Medication ?</p>
+            <div className='lg:my-10 my-5'>
+              <div className='grid grid-cols-4 '>
+                <div className='flex items-center col-span-3'>
+                  <div className='mr-7'>
+                    <p>Are You In Any Medication ?</p>
+                  </div>
+                </div>
+
+                <div className='flex items-center'>
+                  <div className='flex mx-3'>
+                    <input type='checkbox' name='medications' value={1} onChange={(e) => setFormData({ ...formData, medication: e.target.checked ? 1 : 0 })} checked={formData.medication == 1} />
+                    <p>Yes</p>
+                  </div>
+                  <div className='flex mx-3'>
+                    <input type='checkbox' name='medications' value={0} onChange={(e) => setFormData({ ...formData, medication: e.target.checked ? 0 : 1 })} checked={formData.medication == 0} />
+                    <p>No</p>
+                  </div>
                 </div>
               </div>
 
-              <div className='flex items-center'>
-                <div className='flex mx-3'>
-                  <input type='checkbox' name='medications' value={1} onChange={(e) => setFormData({ ...formData, medication: e.target.checked ? 1 : 0 })} checked={formData.medication == 1} />
-                  <p>Yes</p>
-                </div>
-                <div className='flex mx-3'>
-                  <input type='checkbox' name='medications' value={0} onChange={(e) => setFormData({ ...formData, medication: e.target.checked ? 0 : 1 })} checked={formData.medication == 0} />
-                  <p>No</p>
-                </div>
-              </div>
-            </div>
-
-            <div className='my-2'>
-              {formData.medication == 1 && (
+              <div className='my-2'>
+                {formData.medication == 1 && (
+                  <div className='flex items-center my-5'>
+                    <div className='mr-7 w-80'>
+                      <p>IF YES WHICH ONES </p>
+                    </div>
+                    <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='medication_detail' placeholder='Medication Detail' value={formData.medication_detail} onChange={handleChangeEvaluations} />
+                  </div>
+                )}
                 <div className='flex items-center my-5'>
                   <div className='mr-7 w-80'>
-                    <p>IF YES WHICH ONES </p>
+                    <p>WHERE IS YOUR UNCOMFORTABLE PAIN? </p>
                   </div>
-                  <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='medication_detail' placeholder='Medication Detail' value={formData.medication_detail} onChange={handleChangeEvaluations} />
+                  <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='uncomfortable_pain' placeholder='Unconfortable Pain' value={formData.uncomfortable_pain} onChange={handleChangeEvaluations} />
                 </div>
-              )}
-              <div className='flex items-center my-5'>
-                <div className='mr-7 w-80'>
-                  <p>WHERE IS YOUR UNCOMFORTABLE PAIN? </p>
-                </div>
-                <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='uncomfortable_pain' placeholder='Unconfortable Pain' value={formData.uncomfortable_pain} onChange={handleChangeEvaluations} />
-              </div>
-              <div className='flex items-center my-5'>
-                All customer are requested to conduct a brief health assesment before the treatment. Your information will be used to provide you with more customized services, and, we guarantee you the security and confidentiality of the information <br />
-              </div>
-              <div className='bg-prime-color-two w-full h-2 my-2'></div>
-              <div className=' gap-2 h-full justify-center my-5 '>
-                <div className='flex my-5'>
-                  <h2 className='whitespace-nowrap mr-2'>Body Front Note</h2>
-                  <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='frontnote' placeholder='Front Note' value={formData.frontnote} onChange={handleChangeEvaluations} />
-                </div>
-                <div className='flex my-5'>
-                  <h2 className='whitespace-nowrap  mr-2'>Body Back Note</h2>
-                  <input type='text' className='border-b-2 border-blue-500 w-full  focus:outline-none' name='backnote' placeholder='Back Note' value={formData.backnote} onChange={handleChangeEvaluations} />
+                <div className='flex items-center my-5'>
+                  All customer are requested to conduct a brief health assesment before the treatment. Your information will be used to provide you with more customized services, and, we guarantee you the security and confidentiality of the information <br />
                 </div>
               </div>
             </div>

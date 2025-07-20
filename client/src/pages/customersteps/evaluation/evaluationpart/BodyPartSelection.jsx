@@ -118,12 +118,12 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
       {/* <img src='/body/front.png' alt='' className='m-2' /> */}
       {/* <img src='/body/back.png' alt='' className='m-2' /> */}
       <div className='flex'>
-        <div className='relative transform -translate-x-1/2'>
+        <div className='relative transform -translate-x-1/2 z-20'>
           {coordsFront.map((coord, index) => (
             <div key={index}>
               <button
                 style={{ left: `${coord.x}px`, top: `${coord.y}px` }}
-                className={`bg-slate-600 h-3 w-3 border-2 border-red-700 rounded-full absolute `}
+                className={`bg-slate-600 h-3 w-3 border-2 border-red-700 rounded-full absolute z-10 hover:bg-purple-600`}
                 onClick={() =>
                   setFrontModal((prev) => {
                     const updated = [...prev];
@@ -133,7 +133,7 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
                 }></button>
 
               {frontModal[index] && (
-                <div style={{ left: `${coord.x + 5}px`, top: `${coord.y + 5}px` }} className={`absolute  bg-red-400 px-2 rounded-xl text-xs`}>
+                <div style={{ left: `${coord.x + 5}px`, top: `${coord.y + 5}px` }} className={`absolute  bg-gray-500/90 px-2 rounded-md text-xs z-20 text-white shadow-xl`}>
                   <div className='flex justify-between items-center'>
                     <p className=''>Note</p>
                     <X
@@ -147,7 +147,7 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
                       }
                     />
                   </div>
-                  <input type='text' className='border border-red-500' onChange={(e) => handleChangeKet(index, e.target.value, "front")} value={coordsFront[index].ket || ""} />
+                  <input type='text' className='border-b-2 outline-none bg-purple-500/10  text-white' placeholder='Type the note' onChange={(e) => handleChangeKet(index, e.target.value, "front")} value={coordsFront[index].ket || ""} />
 
                   <div className='flex justify-end'>
                     <Eraser className='w-[15px]' onClick={() => setCoordsFront((prev) => prev.filter((_, i) => i !== index))} />
@@ -161,12 +161,12 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
         <canvas ref={canvasRefFront} width={160} height={360} className='border border-gray-400 w-[160px] h-[360px] border-none' onMouseMove={handleMouseMove} onClick={(e) => handleClick(e, "front")} />
       </div>
       <div className='flex'>
-        <div className='relative transform -translate-x-1/2'>
+        <div className='relative transform -translate-x-1/2 z-10'>
           {coordsBack.map((coord, index) => (
             <div key={index}>
               <button
                 style={{ left: `${coord.x}px`, top: `${coord.y}px` }}
-                className={`bg-slate-600 h-3 w-3 border-2 border-red-700 rounded-full absolute `}
+                className={`bg-slate-600 h-3 w-3 border-2 border-red-700 rounded-full absolute hover:bg-purple-600`}
                 onClick={() =>
                   setBackModal((prev) => {
                     const updated = [...prev];
@@ -176,7 +176,7 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
                 }></button>
 
               {backModal[index] && (
-                <div style={{ left: `${coord.x + 5}px`, top: `${coord.y + 5}px` }} className={`absolute  bg-red-400 px-2 rounded-xl text-xs`}>
+                <div style={{ left: `${coord.x + 5}px`, top: `${coord.y + 5}px` }} className={`absolute  bg-gray-500/90 px-2 rounded-md text-xs z-20 text-white`}>
                   <div className='flex justify-between items-center'>
                     <p className=''>Note</p>
                     <X
@@ -190,7 +190,7 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
                       }
                     />
                   </div>
-                  <input type='text' className='border border-red-500' onChange={(e) => handleChangeKet(index, e.target.value, "back")} value={coordsBack[index].ket || ""} />
+                  <input type='text' className='border-b-2 outline-none bg-purple-500/10  text-white' placeholder='Type the note' onChange={(e) => handleChangeKet(index, e.target.value, "back")} value={coordsBack[index].ket || ""} />
 
                   <div className='flex justify-end'>
                     <Eraser className='w-[15px]' onClick={() => setCoordsBack((prev) => prev.filter((_, i) => i !== index))} />

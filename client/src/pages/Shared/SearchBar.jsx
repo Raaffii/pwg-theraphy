@@ -1,6 +1,6 @@
 export default function SearcBar() {
   return (
-    <div className='flex flex-col sm:flex-row w-full gap-2'>
+    <div className='flex flex-col sm:flex-row w-30 gap-2'>
       <div className='flex w-full max-w-xl'>
         <input type='text' placeholder='Search' className='flex-1 border border-gray-400 border-r-0 rounded-l-2xl px-3 py-2 focus:outline-none' />
         <select className='border border-gray-400 border-l-0 rounded-r-2xl px-3 py-2 focus:outline-none bg-white'>

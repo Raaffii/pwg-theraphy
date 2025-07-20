@@ -87,14 +87,14 @@ export default function TherapistEvaluation() {
       </p>
       <div className='grid lg:grid-cols-2 gap-5'>
         <SearcBar />
-        <div className='border border-gray-300 shadow-md rounded-2xl p-2 '>
-          <div className='flex justify-between'>
-            <div className='whitespace-nowrap flex gap-5'>
-              <label htmlFor=''> Name : {customerData[0]?.name || ""}</label>
-              <label htmlFor=''>Age : {age || ""}</label>
-              <label htmlFor=''> Contact : {customerData[0]?.contact_no || ""}</label>
+        <div className='border border-gray-300 shadow-md rounded-2xl p-2'>
+          <div className='flex flex-col sm:flex-row justify-between gap-2 sm:items-center'>
+            <div className='flex flex-wrap gap-x-4 gap-y-1 text-sm'>
+              <p>Name: {customerData[0]?.name || ""}</p>
+              <p>Age: {age || ""}</p>
+              <p>Contact: {customerData[0]?.contact_no || ""}</p>
             </div>
-            <Pencil className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5 ' onClick={() => handleConsent(customerData[0]?.customerid)} />
+            <Pencil className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' onClick={() => handleConsent(customerData[0]?.customerid)} />
           </div>
         </div>
       </div>

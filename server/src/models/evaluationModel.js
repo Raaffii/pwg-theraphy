@@ -55,8 +55,8 @@ const getEvaluation = async (id) => {
         enteredby: item.enteredby,
         entereddate: item.evaluation_entereddate,
         editeddate: item.editeddate,
-        medication: item.medication,
-        medication_detail: item.medication_detail,
+        medication: item.on_medication,
+        medication_detail: item.medication_details,
       };
     }
 
@@ -70,7 +70,7 @@ const getEvaluation = async (id) => {
   });
 
   const result = Object.values(therapistEvaluation).sort((a, b) => new Date(b.entereddate) - new Date(a.entereddate));
-
+  console.log(result);
   return result;
 };
 
