@@ -40,16 +40,23 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
   }, []);
 
   useEffect(() => {
-    data?.anotate.forEach((item, index) => {
+    setFrontModal([]);
+    setBackModal([]);
+
+    const frontData = [];
+    const backData = [];
+
+    data?.anotate.forEach((item) => {
+      const newCoords = { x: item.x_percent, y: item.y_percent, ket: item.bodyimagenotes };
       if (item.bodyimageid == 1) {
-        console.log("muassooook");
-        const newCoords = { x: item.x_percent, y: item.y_percent, ket: item.bodyimagenotes };
-        setCoordsFront((prev) => [...prev, newCoords]);
+        frontData.push(newCoords);
       } else if (item.bodyimageid == 0) {
-        const newCoords = { x: item.x_percent, y: item.y_percent, ket: item.bodyimagenotes };
-        setCoordsBack((prev) => [...prev, newCoords]);
+        backData.push(newCoords);
       }
     });
+
+    setCoordsFront(frontData);
+    setCoordsBack(backData);
   }, []);
 
   const handleMouseMove = (e) => {
@@ -105,8 +112,6 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
       setCoordsBack((prev) => prev.map((coord, i) => (i === index ? { ...coord, ket: newKet } : coord)));
     }
   };
-
-  console.log("front", coordsFront);
 
   return (
     <div className='flex justify-center gap-2 border border-bg-prime-color'>

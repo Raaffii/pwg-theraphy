@@ -58,9 +58,19 @@ const updateEvaluation = async (id, idUser, data) => {
   }
 };
 
-const updateEvalanotate = async (id, idUser, data) => {
+const updateEvalanotate = async (id, idUser, data, entereddate) => {
   try {
-    const result = evaluation.updateDataEvalanotate(id, idUser, data);
+    const { front, back, enteredby } = data;
+    console.log("hero");
+    console.log(data);
+
+    let result;
+    front.forEach((item) => {
+      result = evaluation.updateDataEvalanotate(id, idUser, item, "1", enteredby, entereddate);
+    });
+    back.forEach((item) => {
+      result = evaluation.updateDataEvalanotate(id, idUser, item, "0", enteredby, entereddate);
+    });
     return result;
   } catch (error) {
     console.error("Service error:", error);

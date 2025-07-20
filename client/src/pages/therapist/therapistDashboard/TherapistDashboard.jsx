@@ -49,7 +49,7 @@ export default function TherapistDashboard() {
       setCurrentPage(page);
     }
   };
-  const { currentItems, totalPages } = paginate(consentList, currentPage, 10);
+  let { currentItems, totalPages } = paginate(consentList, currentPage, 10);
 
   const handleDelete = async (id) => {
     setSelectedDelete(id);

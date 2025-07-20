@@ -45,7 +45,7 @@ export default function TherapistEvaluation() {
       const yearsold = calculateAge(DataExistCustomer[0]?.dateofbirth);
       setAge(yearsold);
       const evaluationSessionData = await evaluationService.getEvaluationData(id);
-      console.log(evaluationSessionData.data.data);
+
       setEvaluationSessionList(evaluationSessionData.data.data);
     };
 
@@ -79,7 +79,7 @@ export default function TherapistEvaluation() {
     setModalDelete(false);
     setReloadFlag((prev) => !prev);
   };
-
+  console.log(currentItems);
   return (
     <div>
       <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
@@ -124,13 +124,13 @@ export default function TherapistEvaluation() {
               <TableRow className='rounded-xl hover:bg-prime-color cursor-pointer' key={index}>
                 <TableCell>{data.date ? new Date(data.date).toLocaleString().split(" ")[0] : ""}</TableCell>
                 <TableCell colSpan={2}>{data.therapy_type}</TableCell>
-                <TableCell colSpan={2}>{data.duration_minutes} minute</TableCell>
+                <TableCell colSpan={2}>{data.duration} minute</TableCell>
                 <TableCell>{data.therapist_note}</TableCell>
                 <TableCell>{data.entereddate ? new Date(data.entereddate).toLocaleString() : ""}</TableCell>
                 <TableCell> {data.editeddate ? new Date(data.editeddate).toLocaleString() : "-"}</TableCell>
                 <TableCell className='flex gap-2 h-full items-center'>
                   <Eye className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5 ' onClick={() => handleView(data)} />
-                  <Trash2 className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5  ' onClick={() => handleDelete(data.id)} />
+                  <Trash2 className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5  ' onClick={() => handleDelete(data.evaluation_id)} />
                 </TableCell>
               </TableRow>
             ))}

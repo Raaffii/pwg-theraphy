@@ -19,11 +19,13 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     therapist: consentData[0]?.therapistid || "",
     theraphy: consentData[0]?.device_used || "",
     date: consentData[0].consentfrmdate ? new Date(consentData[0].consentfrmdate).toISOString().split("T")[0] : "",
-    duration: data?.duration_minutes || "",
+    duration: data?.duration || "",
     front: data?.bodyfrontx_percent || coordsFront,
     back: data?.bodybacky_percent || coordsBack,
     backnote: data?.bodybacknotes || "",
     anotate: data?.anotate || "",
+    enteredby: data?.enteredby || "",
+    entereddate: data?.entereddate || "",
   });
 
   useEffect(() => {
@@ -50,6 +52,7 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
         status = await evaluationService.addEvaluation(id, formData);
       } else {
         status = await evaluationService.updateEvaluation(evaluationId, formData);
+        console.log(formData);
       }
       if (status.response && status.response.status === 500) {
         toast.error("Someting Is Miss");

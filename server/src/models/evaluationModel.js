@@ -2,9 +2,7 @@ const pool = require("../config/db");
 
 const addEvaluation = async (id, idUser, data) => {
   const { medication, medication_detail, uncomfortable_pain, note_session, therapist, theraphy, duration, date } = data;
-  console.log(new Date());
   const query = "INSERT INTO evaluations (customer_id,  therapist_id,therapy_type,  date, enteredby, entereddate, active) VALUES (?,?,?,?,?,?,?)";
-  console.log(idUser);
   const [result] = await pool.query(query, [id, therapist, theraphy, date, idUser, new Date(), true]);
   return result.insertId;
 };
@@ -39,8 +37,12 @@ const getEvaluation = async (id) => {
         therapy_type: item.therapy_type,
         pain_area: item.pain_area,
         date: item.date,
+        duration: item.duration_minutes,
         entereddate: item.entereddate,
         anotate: [],
+        enteredby: item.enteredby,
+        entereddate: item.entereddate,
+        editeddate: item.editeddate,
       };
     }
 
@@ -49,10 +51,10 @@ const getEvaluation = async (id) => {
       y_percent: item.y_percent,
       bodyimagenotes: item.bodyimagenotes,
       bodyimageid: item.bodyimageid,
+      evalannotateid: item.evalannotateid,
     });
   });
 
-  console.log(Object.values(therapistEvaluation));
   return (oriRows = Object.values(therapistEvaluation));
   // return rows;
 };
@@ -72,21 +74,12 @@ const updateDataEvaluation = async (id, idUser, data) => {
   return result;
 };
 
-const updateDataEvalanotate = async (id, idUser, data) => {
-  const { backx, backy, frontx, fronty, backnote, frontnote } = data;
-  const [result] = await pool.query(
-    `UPDATE evalannotate SET 
-      bodyfrontx_percent = ?, 
-      bodyfronty_percent = ?, 
-      bodybackx_percent = ?, 
-      bodybacky_percent = ?,
-      editedby=?,
-      editeddate=?,
-      bodyfrontnotes=?,
-      bodybacknotes=?
-     WHERE evaluationid = ?`,
-    [frontx, fronty, backx, backy, idUser, new Date(), frontnote, backnote, id]
-  );
+const updateDataEvalanotate = async (id, idUser, data, imageid, enteredby, entereddate) => {
+  const { x, y, ket } = data;
+  // const sqlDate = entereddate.toISOString().slice(0, 19).replace("T", " ");
+
+  const query = "INSERT INTO evalannotate (evaluationid,x_percent, y_percent, bodyimageid, bodyimagenotes, enteredby, entereddate, editedby, editeddate) VALUES (?,?,?,?,?,?,?,?,?)";
+  const [result] = await pool.query(query, [id, x, y, imageid, ket, enteredby, entereddate, idUser, new Date()]);
 
   return result;
 };
@@ -104,7 +97,10 @@ const updateDataSessionNotes = async (id, idUser, data) => {
      WHERE evaluation_id = ?`,
     [duration, medication, medication_detail, note_session, idUser, new Date(), id]
   );
-  return result;
+
+  const [rows] = await pool.query(`SELECT entereddate FROM session_notes WHERE evaluation_id = ?`, [id]);
+
+  return rows[0]?.entereddate ?? null;
 };
 
 const addDataEvaluationPainArea = async (evaluationId, data) => {

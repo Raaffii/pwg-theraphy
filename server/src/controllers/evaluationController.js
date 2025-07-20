@@ -28,8 +28,10 @@ const editEvaluation = async (req, res) => {
     const id = req.params.id;
     const idUser = req.user.userId;
     const evaluationId = await evaluationService.updateEvaluation(id, idUser, req.body);
-    await evaluationService.updateEvalanotate(id, idUser, req.body);
-    await evaluationService.updateSessionNotes(id, idUser, req.body);
+
+    await evaluationService.deleteDataEvalanotate(id);
+    const entereddate = await evaluationService.updateSessionNotes(id, idUser, req.body);
+    await evaluationService.updateEvalanotate(id, idUser, req.body, entereddate);
     await evaluationService.updateEvaluationPainArea(id, req.body);
     res.status(200).json({
       success: true,
