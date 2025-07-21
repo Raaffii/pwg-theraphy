@@ -70,7 +70,7 @@ const getEvaluation = async (id) => {
   });
 
   const result = Object.values(therapistEvaluation).sort((a, b) => new Date(b.entereddate) - new Date(a.entereddate));
-  console.log(result);
+
   return result;
 };
 

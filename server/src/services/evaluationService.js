@@ -61,8 +61,6 @@ const updateEvaluation = async (id, idUser, data) => {
 const updateEvalanotate = async (id, idUser, data, entereddate) => {
   try {
     const { front, back, enteredby } = data;
-    console.log("hero");
-    console.log(data);
 
     let result;
     front.forEach((item) => {
