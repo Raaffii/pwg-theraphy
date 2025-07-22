@@ -5,9 +5,9 @@ import { Eye, Trash2, ClipboardPlus, Package, Pencil } from "lucide-react";
 import Modal from "@/pages/Shared/Modal";
 import { Button } from "@/components/ui/button";
 import SearcBar from "../../Shared/SearchBar";
-import EvaluationForm from "@/pages/customersteps/evaluation/EvaluationForm";
+import EvaluationForm from "@/pages/form/evaluation/EvaluationForm";
 import { useNavigate } from "react-router-dom";
-import CustomerConsentForm from "@/pages/customersteps/consents/CustomerConsentForm";
+import CustomerConsentForm from "@/pages/form/consents/CustomerConsentForm";
 import Pagination from "@/pages/Shared/Pagination";
 
 //service

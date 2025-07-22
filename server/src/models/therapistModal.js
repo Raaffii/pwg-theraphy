@@ -7,7 +7,7 @@ const getData = async () => {
 };
 
 const getDataByEmail = async (email) => {
-  const query = `SELECT * FROM therapists JOIN accounts ON therapists.account_id = accounts.id WHERE accounts.email = ?`;
+  const query = `SELECT * FROM therapists JOIN userac ON therapists.account_id = userac.useracid WHERE userac.email = ?`;
   const [rows] = await pool.query(query, [email]);
   return rows[0];
 };

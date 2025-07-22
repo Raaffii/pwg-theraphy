@@ -4,8 +4,8 @@ const createUser = async (userData) => {
   const { email, password } = userData;
   console.log(userData);
   const [result] = await pool.query(
-    `INSERT INTO accounts (email, password) 
-     VALUES (?, ?)`,
+    `INSERT INTO userac (email, password, role) 
+     VALUES (?, ?, 'Therapist')`,
     [email, password]
   );
   return result.insertId;
@@ -13,8 +13,8 @@ const createUser = async (userData) => {
 
 const findUserByEmail = async (email) => {
   const [rows] = await pool.query(
-    `SELECT id, email, password, role 
-     FROM accounts WHERE email = ? `,
+    `SELECT useracid, email, password, role 
+     FROM userac WHERE email = ? `,
     [email]
   );
   return rows[0];

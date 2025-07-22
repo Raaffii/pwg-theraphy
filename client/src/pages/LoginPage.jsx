@@ -97,7 +97,10 @@ const LoginPage = () => {
 
           <div className='mt-6 text-center'>
             <p className='text-sm text-gray-600'>
-              Don&lsquo;t have an account? <button className='text-blue-600 hover:text-blue-800 font-medium'>Sign up</button>
+              Don&lsquo;t have an account?{" "}
+              <button className='text-blue-600 hover:text-blue-800 font-medium' onClick={() => navigate("/signup")}>
+                Sign up
+              </button>
             </p>
           </div>
 

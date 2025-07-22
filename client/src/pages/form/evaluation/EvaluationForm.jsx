@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 import BodyPartSelection from "./evaluationpart/BodyPartSelection";
 
 export default function EvaluationForm({ customerData, consentData, setModal, data = null, setReloadFlag }) {
-  const [interestsList, setInterestsList] = useState();
   const [coordsFront, setCoordsFront] = useState([]);
   const [coordsBack, setCoordsBack] = useState([]);
 
@@ -20,8 +19,8 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     theraphy: consentData[0]?.device_used || "",
     date: consentData[0].consentfrmdate ? new Date(consentData[0].consentfrmdate).toISOString().split("T")[0] : "",
     duration: data?.duration || "",
-    front: data?.bodyfrontx_percent || coordsFront,
-    back: data?.bodybacky_percent || coordsBack,
+    front: data?.bodyfrontx_percent || coordsFront, //for the input
+    back: data?.bodybacky_percent || coordsBack, //for the input
     backnote: data?.bodybacknotes || "",
     anotate: data?.anotate || "",
     enteredby: data?.enteredby || null,
@@ -66,16 +65,6 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const dataDevice = await interestsService.interestestsList();
-      setInterestsList(dataDevice);
-    };
-
-    fetchData();
-  }, []);
-
-  console.log("data daata", data);
   return (
     <div className='w-full'>
       <div className=' h-full  mx-auto'>
@@ -155,8 +144,8 @@ export default function EvaluationForm({ customerData, consentData, setModal, da
           <textarea placeholder='Session' className='w-full h-56 bg-gray-100 rounded-3xl px-4 py-2 focus:outline-none resize-none' name='note_session' value={formData.note_session} onChange={handleChangeEvaluations} />
           <div className='flex my-5 gap-10 justify-between'>
             <div className='flex gap-10'>
-              <p>Created At : 20/9/2030</p>
-              <p>Last Updated : 29/9/2030</p>
+              <p>Created At : {data?.entereddate ? new Date(data.entereddate).toLocaleString() : "-"}</p>
+              <p>Last Updated : {data?.editeddate ? new Date(data.editeddate).toLocaleString() : "-"}</p>
             </div>
             <Button className='bg-prime-color' onClick={() => handleSave(customerData[0]?.customerid, data?.evaluation_id)}>
               Save

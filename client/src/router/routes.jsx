@@ -6,18 +6,18 @@ import Layout from "@/components/Layout";
 import StepsLayout from "@/components/StepsLayout";
 import DashboardPage from "@/pages/DashboardPage";
 import ProfilePage from "@/pages/ProfilePage";
-import CustomerRegistrationForm from "@/pages/customersteps/personalData/CustomerRegistrationForm";
-import CustomerConsentForm from "@/pages/customersteps/consents/CustomerConsentForm";
-import CustomerEvaluationForm from "@/pages/customersteps/CustomerEvaluationForm";
-import CustomerFeedbackForm from "@/pages/customersteps/CustomerFeedbackForm";
-import CustomerReview from "@/pages/customersteps/CustomerReviewForm";
+import CustomerRegistrationForm from "@/pages/form/personalData/CustomerRegistrationForm";
+import CustomerConsentForm from "@/pages/form/consents/CustomerConsentForm";
+import CustomerEvaluationForm from "@/pages/form/CustomerEvaluationForm";
+import CustomerFeedbackForm from "@/pages/form/CustomerFeedbackForm";
+import CustomerReview from "@/pages/form/CustomerReviewForm";
 import CustomerSteps from "@/pages/CustomerSteps";
 import SignupPage from "@/pages/SignupPage";
 import TherapistDashboard from "@/pages/therapist/therapistDashboard/TherapistDashboard";
 import Logout from "@/pages/auth/Logout";
 import ConsentsList from "@/pages/therapist/ConsentsList";
 import TherapistEvaluation from "@/pages/therapist/therapistEvaluation/TherapistEvaluation";
-import EvaluationForm from "@/pages/customersteps/evaluation/EvaluationForm";
+import EvaluationForm from "@/pages/form/evaluation/EvaluationForm";
 
 const privateRoutes = {
   path: "/",

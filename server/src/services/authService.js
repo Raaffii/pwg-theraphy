@@ -42,30 +42,29 @@ const loginUser = async (email, password) => {
   let token;
 
   if (user.role == "Customer") {
-    let customer = await Customer.getCustomerByAccountId(user.id);
+    let customer = await Customer.getCustomerByAccountId(user.useracid);
 
     if (!customer) {
       console.log("here");
       await Customer.initiate(user.id);
-      customer = await Customer.getCustomerByAccountId(user.id);
+      customer = await Customer.getCustomerByAccountId(user.useracid);
     }
     // Generate JWT token
 
     token = generateAuthToken({
-      userId: user.id,
+      userId: user.useracid,
       email: user.email,
       customerId: customer.customerid,
       role: "Customer",
     });
   } else {
     let therapist = await Therapist.getDataByEmail(email);
-    console.log(therapist);
-    console.log(therapist.therapistsid);
+
     //Genereate JWT token
     token = generateAuthToken({
-      userId: user.id,
+      userId: user.useracid,
       email: user.email,
-      therapist: therapist.therapistsid,
+      therapist: therapist?.therapistsid || null,
       role: "Therapist",
     });
   }
