@@ -33,6 +33,7 @@ const editEvaluation = async (req, res) => {
 
     await evaluationService.deleteDataEvalanotate(id);
     const entereddate = await evaluationService.updateSessionNotes(id, idUser, req.body);
+
     await evaluationService.updateEvalanotate(id, idUser, req.body, entereddate);
     await evaluationService.updateEvaluationPainArea(id, req.body);
     res.status(200).json({

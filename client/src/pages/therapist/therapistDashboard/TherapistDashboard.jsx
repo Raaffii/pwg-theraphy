@@ -3,11 +3,10 @@ import { consentService } from "@/services/consentService";
 import { useState, useEffect, useRef } from "react";
 import Modal from "../../Shared/Modal";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+
 import CustomerConsentForm from "@/pages/form/consents/CustomerConsentForm";
-import CustomerEvaluationForm from "@/pages/form/CustomerEvaluationForm";
-import { Eye, Trash2, ClipboardPlus, Package } from "lucide-react";
+
+import { Eye, Trash2, ClipboardPlus, Package, Computer } from "lucide-react";
 import Pagination from "@/pages/Shared/Pagination";
 import { useNavigate } from "react-router-dom";
 import { paginate } from "@/utils/paginate";
@@ -141,11 +140,11 @@ export default function TherapistDashboard() {
               <TableCell>{item.emergency_contact_no}</TableCell>
               <TableCell className={item.active ? "text-green-600" : "text-red-600"}>{item.active ? "Active" : "Inactive"}</TableCell>
               <TableCell className='flex gap-2'>
-                <Eye onClick={() => handleView(item)} className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' />
-                <Trash2 onClick={() => handleDelete(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5 ' />
+                <Eye onClick={() => handleView(item)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5' />
+                <Trash2 onClick={() => handleDelete(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5 ' />
               </TableCell>
               <TableCell className='items-center justify-center gap-2'>
-                <ClipboardPlus onClick={() => handleChoose(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' />
+                <ClipboardPlus onClick={() => handleChoose(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5' />
               </TableCell>
             </TableRow>
           ))}
@@ -167,12 +166,12 @@ export default function TherapistDashboard() {
               <ClipboardPlus className='w-7 h-7' />
               <p className='text-base font-semibold'>Evaluation</p>
             </div>
-            <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer'>
-              <Package className='w-7 h-7' />
-              <p className='text-base font-semibold'>Package Buy</p>
+            <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer' onClick={() => navigate("/therapist/pos")}>
+              <Computer className='w-7 h-7' />
+              <p className='text-base font-semibold'>Point Of Sales</p>
             </div>
             <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer'>
-              <ClipboardPlus className='w-7 h-7' />
+              <Package className='w-7 h-7' />
               <p className='text-base font-semibold'>Evaluation</p>
             </div>
           </div>

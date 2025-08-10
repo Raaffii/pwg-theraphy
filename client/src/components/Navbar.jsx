@@ -65,7 +65,7 @@ const Navbar = () => {
           <div className='flex-shrink-0 transition-transform hover:scale-105'>
             {/* <img src={Logo} alt="Tatheer Logo" className="h-10 md:h-12 w-auto" /> */}
             <div className='flex-shrink-0 transition-transform hover:scale-105 flex items-center space-x-2'>
-              <img src='pwglogo.svg' alt='Tatheer Logo' className='h-10 md:h-12 w-auto' />
+              <img src='/pwglogo.svg' alt='Tatheer Logo' className='h-10 md:h-12 w-auto' />
               <p className='text-blue-900 font-bold'>PRIFE WELLNESS GALLERY</p>
             </div>
           </div>

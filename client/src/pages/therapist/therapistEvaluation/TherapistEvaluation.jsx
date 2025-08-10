@@ -100,7 +100,7 @@ export default function TherapistEvaluation() {
       </div>
       <div className='border border-gray-300 shadow-md rounded-2xl mt-5 '>
         <div className='justify-between w-full flex'>
-          <h2 className='m-5'>Evalution</h2>{" "}
+          <h2 className='m-5'>Evaluation</h2>{" "}
           <Button className='bg-prime-color hover:bg-prime-color-hover m-5' onClick={() => setModalPlus(true)}>
             +{" "}
           </Button>
