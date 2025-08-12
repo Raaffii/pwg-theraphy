@@ -1,61 +1,86 @@
+// hooks
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+
+//component
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+//pages
 import PosCard from "./PosPartialComponent/PosCard";
 import PosSelectedItem from "./PosPartialComponent/PosSelectedItem";
-import { useNavigate } from "react-router-dom";
+import Inventory from "./PosPartialPage/Inventory";
+import TotalPriceSelected from "./PosPartialComponent/TotalPriceSelected";
+
+// service
+import { customerService } from "@/services/customerService";
 
 export default function Pos() {
   const navigate = useNavigate();
+  const [selectedData, setSelectedData] = useState([]);
+  const [inventoryType, setInventoryType] = useState();
+  const [customerData, setCustomerData] = useState();
+  const { id } = useParams();
+
+  useEffect(() => {
+    const fetchData = async (id) => {
+      const DataExistCustomer = await customerService.getCustomerData(id);
+      setCustomerData(DataExistCustomer[0]);
+      console.log("customer", DataExistCustomer);
+    };
+    fetchData(id);
+  }, []);
+
+  console.log("selected data", selectedData);
+  console.log("id selected", id);
+  console.log("customer data", customerData);
+
   return (
-    <div className='grid grid-cols-3 gap-2'>
-      <div className='border border-gray-300 shadow-md rounded-2xl col-span-2 gap-2 p-2'>
-        <Input className='mb-2' placeholder='Search' />
-        <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
-          <PosCard />
-          <PosCard />
-          <PosCard />
-          <PosCard />
-          <PosCard />
-          <PosCard />
+    <>
+      <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
+        &larr; Back
+      </p>
+      <div className='grid grid-cols-3 gap-2'>
+        {/* Inventory */}
+        <Inventory selectedData={selectedData} setSelectedData={setSelectedData} inventoryType={inventoryType} setInventoryType={setInventoryType} />
+
+        {/* selected item */}
+        <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5'>
+          <div className='lg:flex justify-between'>
+            <p className='font-semibold'>Customer Name</p>
+            <p className='text-purple-600'>{customerData?.name}</p>
+          </div>
+          <hr />
+          <div className='space-y-1'>
+            {selectedData.map((item, index) => (
+              <PosSelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} />
+            ))}
+            {selectedData.length == 0 && (
+              <>
+                <p className='text-center'>No item adde yet</p>
+              </>
+            )}
+
+            {!selectedData.length == 0 && (
+              <>
+                <br />
+                <br />
+                <br />
+                <TotalPriceSelected selectedData={selectedData} setSelectedData={setSelectedData} />
+                <Button
+                  className='w-full my-6 bg-purple-700'
+                  onClick={() =>
+                    navigate("/therapist/receipt", {
+                      state: { selectedData },
+                    })
+                  }>
+                  Save
+                </Button>
+              </>
+            )}
+          </div>
         </div>
       </div>
-      <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5'>
-        <div className='flex justify-between'>
-          <p>Nama Pelanggan Here</p>
-          <p>ce</p>
-        </div>
-
-        <div className='space-y-1'>
-          <PosSelectedItem />
-          <PosSelectedItem />
-          <PosSelectedItem />
-          <PosSelectedItem />
-        </div>
-
-        <div>
-          <div className='flex justify-between font-semibold'>
-            <p>Subtotal</p>
-            <p>$25.00</p>
-          </div>
-          <div className='flex justify-between text-sm'>
-            <p>Tax(10%)</p>
-            <p>$25.00</p>
-          </div>
-          <div className='flex justify-between text-sm'>
-            <p>Discount</p>
-            <p>$25.00</p>
-          </div>
-        </div>
-        <hr />
-        <div className='flex justify-between font-semibold '>
-          <p>Total</p>
-          <p>$25.00</p>
-        </div>
-
-        <Button className='w-full my-6' onClick={() => navigate("/therapist/invoice")}>
-          Save
-        </Button>
-      </div>
-    </div>
+    </>
   );
 }

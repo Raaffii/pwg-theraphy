@@ -30,9 +30,9 @@ const getEvaluation = async (id) => {
   evalannotate.*,
   evaluation_pain_areas.*
   FROM session_notes 
-  JOIN evaluations ON session_notes.evaluation_id = evaluations.id 
-  LEFT JOIN evalannotate ON evaluations.id = evalannotate.evaluationid 
-  LEFT JOIN evaluation_pain_areas ON evaluations.id = evaluation_pain_areas.evaluation_id  
+  JOIN evaluations ON session_notes.evaluation_id = evaluations.evaluationid 
+  LEFT JOIN evalannotate ON evaluations.evaluationid = evalannotate.evaluationid 
+  LEFT JOIN evaluation_pain_areas ON evaluations.evaluationid = evaluation_pain_areas.evaluation_id  
   WHERE evaluations.customer_id = ? 
   ORDER BY evaluations.entereddate DESC`;
   const [rows] = await pool.query(query, [id]);
@@ -82,7 +82,7 @@ const updateDataEvaluation = async (id, idUser, data) => {
       therapy_type = ?, 
       editedby = ?, 
       editeddate = ?
-     WHERE id = ?`,
+     WHERE evaluationid = ?`,
     [therapist, theraphy, idUser, new Date(), id]
   );
 

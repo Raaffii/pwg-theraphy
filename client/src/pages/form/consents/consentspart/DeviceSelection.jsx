@@ -5,8 +5,8 @@ export default function DeviceSelection({ formData, handleChange, interestsList 
       <div className='grid grid-cols-2 md:grid-cols-3 gap-2'>
         {interestsList?.map((item) => (
           <label key={item.id} className='inline-flex items-center'>
-            <input type='checkbox' className='mr-2' name='selectedDevices' value={item.productName} checked={formData.selectedDevices == item.productName} onChange={handleChange} />
-            {item.productName}
+            <input type='checkbox' className='mr-2' name='selectedDevices' value={item.name} checked={formData.selectedDevices == item.name} onChange={handleChange} />
+            {item.name}
           </label>
         ))}
       </div>

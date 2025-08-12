@@ -6,6 +6,7 @@ const interestsRoute = require("./interestsRoutes");
 const consentRoute = require("./consentRoute");
 const therapistRoute = require("./therapistRoute");
 const evaluationRoute = require("./evaluationRoute");
+const productsRoute = require("./productsRoute");
 
 const Router = express.Router();
 
@@ -17,5 +18,6 @@ Router.use("/interests", interestsRoute);
 Router.use("/consent", consentRoute);
 Router.use("/therapist", therapistRoute);
 Router.use("/evaluation", evaluationRoute);
+Router.use("/products", productsRoute);
 
 module.exports = Router;

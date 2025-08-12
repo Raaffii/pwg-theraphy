@@ -186,6 +186,7 @@ const CustomerConsentForm = forwardRef((props, ref) => {
         const dataTherapist = await therapistsService.therapistsList();
         setTherapistsList(dataTherapist);
         const dataDevice = await interestsService.interestestsList();
+
         setInterestsList(dataDevice);
         if (idCustomer == 0) {
           const data = await customerService.getCustomerData(user.customerId);

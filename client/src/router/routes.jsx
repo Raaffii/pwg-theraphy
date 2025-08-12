@@ -20,6 +20,8 @@ import TherapistEvaluation from "@/pages/therapist/therapistEvaluation/Therapist
 import EvaluationForm from "@/pages/form/evaluation/EvaluationForm";
 import Pos from "@/pages/Pos/Pos";
 import Invoice from "@/pages/Pos/Invoice";
+import Receipt from "@/pages/Pos/Receipt";
+import PrintReceipt from "@/pages/Pos/PrintReceipt";
 
 const privateRoutes = {
   path: "/",
@@ -62,8 +64,10 @@ const therapistRoutes = {
   children: [
     { path: "", element: <TherapistDashboard /> },
     { path: "consentslist", element: <ConsentsList /> },
-    { path: "pos", element: <Pos /> },
+    { path: "pos/:id", element: <Pos /> },
     { path: "invoice", element: <Invoice /> },
+    { path: "receipt", element: <Receipt /> },
+    { path: "printreceipt", element: <PrintReceipt /> },
     { path: "evaluation/:id", element: <TherapistEvaluation /> },
   ],
 };

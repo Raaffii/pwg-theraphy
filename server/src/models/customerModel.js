@@ -32,6 +32,7 @@ const initiate = async (account_id) => {
 
 const insertCustomer = async (data, idaccount = 0, idUser2) => {
   console.log("boy");
+
   console.log(idaccount);
   const {
     name,
