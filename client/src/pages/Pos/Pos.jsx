@@ -26,20 +26,16 @@ export default function Pos() {
     const fetchData = async (id) => {
       const DataExistCustomer = await customerService.getCustomerData(id);
       setCustomerData(DataExistCustomer[0]);
-      console.log("customer", DataExistCustomer);
     };
     fetchData(id);
   }, []);
-
-  console.log("selected data", selectedData);
-  console.log("id selected", id);
-  console.log("customer data", customerData);
 
   return (
     <>
       <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
         &larr; Back
       </p>
+      {/* <h1>{customerData?.name}</h1> */}
       <div className='grid grid-cols-3 gap-2'>
         {/* Inventory */}
         <Inventory selectedData={selectedData} setSelectedData={setSelectedData} inventoryType={inventoryType} setInventoryType={setInventoryType} />
@@ -71,7 +67,7 @@ export default function Pos() {
                   className='w-full my-6 bg-purple-700'
                   onClick={() =>
                     navigate("/therapist/receipt", {
-                      state: { selectedData },
+                      state: { selectedData, customerData },
                     })
                   }>
                   Save

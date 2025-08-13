@@ -64,7 +64,7 @@ const loginUser = async (email, password) => {
     token = generateAuthToken({
       userId: user.useracid,
       email: user.email,
-      therapist: therapist?.therapistsid || null,
+      therapistId: therapist?.therapistsid || null,
       role: "Therapist",
     });
   }

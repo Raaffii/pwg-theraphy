@@ -16,7 +16,7 @@ export default function PosCard({ name, price, type, selectedData, setSelectedDa
   };
   return (
     <Card className='p-2 flex-row hover:scale-105 transition-transform duration-300' onClick={() => cardClick(productid, name, price, type)}>
-      <img src='/wonder.png' alt='' className='w-full h-30 object-cover rounded-lg' />
+      <img src='/wonder.png' alt='' className='w-full h-24 object-cover rounded-lg' />
       <p className='my-2'>{name}</p>
       <div className='flex justify-between'>
         <p className='text-xs text-gray-500'>{price}</p>

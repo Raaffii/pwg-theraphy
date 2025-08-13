@@ -38,17 +38,14 @@ export default function Inventory({ selectedData, setSelectedData, inventoryType
   return (
     <div className='border border-gray-300 shadow-md rounded-2xl col-span-2 gap-2 p-2'>
       <div className='w-full grid grid-cols-3 gap-2'>
-        <Card className={`p-4 hover:scale-105 transition-transform duration-300 ${inventoryType == "Product" && "bg-purple-100/90 border border-purple-500"}`} onClick={() => handleFilter("Product")}>
+        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Product" && "bg-purple-100/90 border border-purple-500"} cursor-pointer`} onClick={() => handleFilter("Product")}>
           <p>Product</p>
-          <p className='text-sm text-gray-500'>5 Product</p>
         </Card>
-        <Card className={`p-4 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-500"}`} onClick={() => handleFilter("Service")}>
+        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-500"} cursor-pointer`} onClick={() => handleFilter("Service")}>
           <p>Service</p>
-          <p className='text-sm text-gray-500'>5 Product</p>
         </Card>
-        <Card className='p-4 hover:scale-105 transition-transform duration-300'>
+        <Card className='p-3 hover:scale-105 transition-transform duration-300 cursor-pointer'>
           <p>Package</p>
-          <p className='text-sm text-gray-500'>5 Product</p>
         </Card>
       </div>
       <Input className='my-2' placeholder='Search' />

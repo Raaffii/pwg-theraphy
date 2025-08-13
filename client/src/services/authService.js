@@ -74,6 +74,7 @@ export const authService = {
         email: decoded.email,
         role: decoded.role,
         customerId: decoded.customerId,
+        therapistId: decoded.therapistId,
       };
     } catch {
       return null;
