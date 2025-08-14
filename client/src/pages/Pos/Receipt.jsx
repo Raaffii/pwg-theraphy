@@ -17,7 +17,7 @@ export default function Receipt({ selectedData, personData }) {
 
   const location = useLocation();
 
-  const totalPrice = selectedData.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2);
+  const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * item.amount, 0).toFixed(2);
 
   const handlePrint = () => {
     window.print();
@@ -82,7 +82,7 @@ export default function Receipt({ selectedData, personData }) {
           <hr className='flex-1 border-t-4 border-gray-400 ml-2' />
         </div>
         <label className='inline-flex items-center bg-gray-300 p-1 my-1 rounded-sm w-40'>
-          <input type='radio' name='discountShow' value='1' onClick={() => setDiscountShow(!discountShow)} checked={discountShow} className='form-radio text-blue-600' />
+          <input type='radio' name='discountShow' value='1' onChange={() => setDiscountShow(!discountShow)} onClick={() => setDiscountShow(!discountShow)} checked={discountShow} className='form-radio text-blue-600' />
           <span className='ml-2'>Print Discount</span>
         </label>
         <table className='w-full border border-gray-300 text-sm mb-6 shadow-sm rounded-lg overflow-hidden'>
@@ -100,15 +100,17 @@ export default function Receipt({ selectedData, personData }) {
             </tr>
           </thead>
           <tbody>
+            {console.log("sel", selectedData)}
             {selectedData.map((item, index) => (
               <tr className='hover:bg-gray-50' key={index}>
                 <td className='border border-gray-300 px-3 py-2' colSpan={3}>
                   {item.name}
                 </td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
-                <td className='border border-gray-300 px-3 py-2 text-center'>${item.price}</td>
-                {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>90.00%</td>}
-                <td className='border border-gray-300 px-3 py-2 text-center'>${(item.amount * item.price).toFixed(2)}</td>
+                <td className='border border-gray-300 px-3 py-2 text-center'>{discountShow ? `$${item.price}` : `$${item.subPrice}`}</td>
+
+                {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>{item.discpercent ? `${item.discount}%` : `-$${(item.discount * 1).toFixed(2)}`}</td>}
+                <td className='border border-gray-300 px-3 py-2 text-center'>${(item.amount * item.subPrice).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

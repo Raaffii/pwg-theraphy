@@ -53,6 +53,12 @@ export default function Pos() {
           {/* name
           <hr /> */}
           <div className='space-y-1'>
+            <div className=' justify-between bg-slate-100  rounded-md grid lg:grid-cols-6 gap-2'>
+              <p className='col-span-3 text-center w-full bg-purple-950/10'>Item</p>
+              <p className='text-center w-full'>Amount</p>
+              <p className='text-center w-full bg-purple-950/10'>Disc</p>
+              <p className='text-center w-full'>Price</p>
+            </div>
             {selectedData.map((item, index) => (
               <PosSelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} index={index} subPrice={item.subPrice} />
             ))}
