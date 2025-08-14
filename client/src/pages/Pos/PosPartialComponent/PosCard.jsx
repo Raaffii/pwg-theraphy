@@ -10,7 +10,7 @@ export default function PosCard({ name, price, type, selectedData, setSelectedDa
       if (foundItem) {
         return prev.map((item) => (item.id === id ? { ...item, amount: item.amount + 1 } : item));
       } else {
-        return [...prev, { id, name, price, type, amount: 1 }];
+        return [...prev, { id, name, price, type, amount: 1, subPrice: price }];
       }
     });
   };

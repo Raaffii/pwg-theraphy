@@ -1,21 +1,31 @@
 import PosCard from "../PosPartialComponent/PosCard";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 //useEffect
 import { useEffect, useState } from "react";
 
 //service
 import { productsService } from "@/services/productsService";
+import { packageService } from "@/services/packageService";
 
 export default function Inventory({ selectedData, setSelectedData, inventoryType, setInventoryType }) {
   const [dataProduct, setDataProduct] = useState([]);
   const [dataProductOriginal, setDataProductOriginal] = useState([]);
+  const [listDataPackage, setListDataPackage] = useState({});
+  const [packageShow, setPackageShow] = useState(false);
 
   const handleFilter = (filter) => {
-    setInventoryType(filter);
-    const dataProducts = dataProductOriginal.filter((item) => item.productcat === filter);
-    setDataProduct(dataProducts);
+    if (filter == "Package") {
+      setInventoryType(filter);
+      setPackageShow(true);
+    } else {
+      setPackageShow(false);
+      setInventoryType(filter);
+      const dataProducts = dataProductOriginal.filter((item) => item.productcat === filter);
+      setDataProduct(dataProducts);
+    }
   };
 
   useEffect(() => {
@@ -30,30 +40,87 @@ export default function Inventory({ selectedData, setSelectedData, inventoryType
       }
       setDataProduct(dataProducts);
       setDataProductOriginal(dataProducts);
+
+      const dataPackage = await packageService.getPackage();
+      console.log("package", dataPackage);
+      setListDataPackage(dataPackage);
     };
 
     fetch();
   }, []);
-
+  const colors = ["bg-red-900", "bg-blue-900", "bg-green-900"];
   return (
     <div className='border border-gray-300 shadow-md rounded-2xl col-span-2 gap-2 p-2'>
       <div className='w-full grid grid-cols-3 gap-2'>
-        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Product" && "bg-purple-100/90 border border-purple-500"} cursor-pointer`} onClick={() => handleFilter("Product")}>
+        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Product" && "bg-purple-100/90 border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Product")}>
           <p>Product</p>
         </Card>
-        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-500"} cursor-pointer`} onClick={() => handleFilter("Service")}>
+        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Service")}>
           <p>Service</p>
         </Card>
-        <Card className='p-3 hover:scale-105 transition-transform duration-300 cursor-pointer'>
+        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Package" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Package")}>
           <p>Package</p>
         </Card>
       </div>
       <Input className='my-2' placeholder='Search' />
-      <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
-        {dataProduct.map((item, index) => (
-          <PosCard key={index} name={item.name} price={item.unitprice} type={item.productcat} selectedData={selectedData} setSelectedData={setSelectedData} productid={item.productid} />
-        ))}
-      </div>
+      {!packageShow ? (
+        <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
+          {dataProduct.map((item, index) => (
+            <PosCard key={index} name={item.name} price={item.unitprice} type={item.productcat} selectedData={selectedData} setSelectedData={setSelectedData} productid={item.productid} />
+          ))}
+        </div>
+      ) : (
+        <div className='grid lg:grid-cols-3 gap-3'>
+          {listDataPackage.map((item, index) => (
+            <Card className='w-full shadow-md flex flex-col' key={index}>
+              <div className={`w-full flex flex-col items-center p-1 rounded-t-xl text-white ${colors[index % colors.length]}`}>
+                <p className='text-lg font-semibold'>{item.packagedesc}</p>
+                <p>${item.price}</p>
+              </div>
+
+              <div className='w-full flex flex-col items-center p-3'>
+                {item.productInfo.map((itemProduct, indexProduct) => (
+                  <p key={indexProduct}>{itemProduct.description}</p>
+                ))}
+              </div>
+              <div className='w-full flex justify-center p-2 mt-auto'>
+                <Button className={`${colors[index % colors.length]} shadow-none`}>Select</Button>
+              </div>
+            </Card>
+          ))}
+
+          {/* <Card className='w-full shadow-md flex flex-col'>
+            <div className='w-full  flex flex-col items-center p-1 bg-blue-900 rounded-t-xl text-white '>
+              <p className='text-lg font-semibold'>Fourlogy</p>
+              <p>$322</p>
+            </div>
+
+            <div className='w-full flex flex-col items-center p-3'>
+              <p>7 Wonder</p>
+              <p>7 Wonder</p>
+              <p>7 Wonder</p>
+            </div>
+            <div className='w-full flex justify-center p-2 mt-auto'>
+              <Button className='bg-purple-950'>Select</Button>
+            </div>
+          </Card>
+          <Card className='w-full shadow-md flex flex-col'>
+            <div className='w-full  flex flex-col items-center p-1 bg-green-900 rounded-t-xl text-white '>
+              <p className='text-lg font-semibold'>Fourlogy</p>
+              <p>$322</p>
+            </div>
+
+            <div className='w-full flex flex-col items-center p-3'>
+              <p>7 Wonder</p>
+              <p>7 Wonder</p>
+              <p>7 Wonder</p>
+            </div>
+            <div className='w-full flex justify-center p-2 mt-auto'>
+              <Button className='bg-purple-950'>Select</Button>
+            </div>
+          </Card> */}
+        </div>
+      )}
     </div>
   );
 }

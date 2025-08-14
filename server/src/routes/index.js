@@ -8,6 +8,7 @@ const therapistRoute = require("./therapistRoute");
 const evaluationRoute = require("./evaluationRoute");
 const productsRoute = require("./productsRoute");
 const posRoute = require("./posRoute");
+const packagesRoute = require("./packagesRoute");
 
 const Router = express.Router();
 
@@ -21,5 +22,6 @@ Router.use("/therapist", therapistRoute);
 Router.use("/evaluation", evaluationRoute);
 Router.use("/products", productsRoute);
 Router.use("/pos", posRoute);
+Router.use("/package", packagesRoute);
 
 module.exports = Router;

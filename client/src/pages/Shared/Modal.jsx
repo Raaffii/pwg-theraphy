@@ -9,7 +9,7 @@ export default function Modal({ children, title, setIsOpen, small = false }) {
             x
           </button>
         </div>
-        <div className='flex justify-between m-2 '>{title && <h2 className='text-lg font-bold mb-4'>{title}</h2>}</div>
+        <div className='flex justify-between m-2  '>{title && <h2 className='text-lg font-bold mb-4'>{title}</h2>}</div>
 
         {children}
       </div>

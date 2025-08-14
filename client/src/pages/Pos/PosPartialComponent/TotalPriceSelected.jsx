@@ -1,5 +1,5 @@
 export default function TotalPriceSelected({ selectedData, setSelectedData }) {
-  const subTotalPrice = selectedData.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2);
+  const subTotalPrice = selectedData.reduce((total, item) => total + item.subPrice * item.amount, 0).toFixed(2);
   const dicountPrice = (subTotalPrice * 0.1).toFixed(2);
   const total = (Number(subTotalPrice) + Number(dicountPrice)).toFixed(2);
   return (
