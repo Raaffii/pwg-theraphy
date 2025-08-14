@@ -10,7 +10,8 @@ import { useEffect, useState } from "react";
 import { productsService } from "@/services/productsService";
 import { packageService } from "@/services/packageService";
 
-export default function Inventory({ selectedData, setSelectedData, inventoryType, setInventoryType }) {
+export default function Inventory({ selectedData, setSelectedData }) {
+  const [inventoryType, setInventoryType] = useState();
   const [dataProduct, setDataProduct] = useState([]);
   const [dataProductOriginal, setDataProductOriginal] = useState([]);
   const [listDataPackage, setListDataPackage] = useState({});

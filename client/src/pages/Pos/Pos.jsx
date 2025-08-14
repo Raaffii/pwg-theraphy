@@ -20,7 +20,7 @@ import { customerService } from "@/services/customerService";
 export default function Pos() {
   const navigate = useNavigate();
   const [selectedData, setSelectedData] = useState([]);
-  const [inventoryType, setInventoryType] = useState();
+
   const [customerData, setCustomerData] = useState();
   const [receiptModal, setReceiptModal] = useState(false);
   const { id } = useParams();
@@ -46,7 +46,7 @@ export default function Pos() {
       {/* <h1>{customerData?.name}</h1> */}
       <div className='grid grid-cols-3 gap-2 mb-8'>
         {/* Inventory */}
-        <Inventory selectedData={selectedData} setSelectedData={setSelectedData} inventoryType={inventoryType} setInventoryType={setInventoryType} />
+        <Inventory selectedData={selectedData} setSelectedData={setSelectedData} />
 
         {/* selected item */}
         <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5'>

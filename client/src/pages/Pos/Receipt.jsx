@@ -93,7 +93,7 @@ export default function Receipt({ selectedData, personData }) {
               </th>
               <th className='border border-gray-300 px-3 py-2 font-medium w-[10%] text-center'>Quantity</th>
               <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Unit Price</th>
-
+              {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Sub Total</th>}
               {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Discount</th>}
 
               <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Total</th>
@@ -108,7 +108,7 @@ export default function Receipt({ selectedData, personData }) {
                 </td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{discountShow ? `$${item.price}` : `$${item.subPrice}`}</td>
-
+                {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>${(item.price * item.amount).toFixed(2)}</td>}
                 {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>{item.discpercent ? `${item.discount}%` : `-$${(item.discount * 1).toFixed(2)}`}</td>}
                 <td className='border border-gray-300 px-3 py-2 text-center'>${(item.amount * item.subPrice).toFixed(2)}</td>
               </tr>
@@ -116,7 +116,7 @@ export default function Receipt({ selectedData, personData }) {
           </tbody>
           <tfoot>
             <tr className='bg-gray-100'>
-              <td className='border border-gray-300 px-3 py-2 text-right font-medium' colSpan={discountShow ? 6 : 5}>
+              <td className='border border-gray-300 px-3 py-2 text-right font-medium' colSpan={discountShow ? 7 : 5}>
                 Total
               </td>
               <td className='border border-gray-300 px-3 py-2 text-right font-medium'>${totalPrice}</td>
