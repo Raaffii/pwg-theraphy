@@ -11,7 +11,7 @@ import { productsService } from "@/services/productsService";
 import { packageService } from "@/services/packageService";
 
 export default function Inventory({ selectedData, setSelectedData }) {
-  const [inventoryType, setInventoryType] = useState();
+  const [inventoryType, setInventoryType] = useState("Service");
   const [dataProduct, setDataProduct] = useState([]);
   const [dataProductOriginal, setDataProductOriginal] = useState([]);
   const [listDataPackage, setListDataPackage] = useState({});
@@ -22,9 +22,11 @@ export default function Inventory({ selectedData, setSelectedData }) {
       setInventoryType(filter);
       setPackageShow(true);
     } else {
+      console.log("filter", filter);
       setPackageShow(false);
       setInventoryType(filter);
       const dataProducts = dataProductOriginal.filter((item) => item.productcat === filter);
+      console.log("data product", dataProducts);
       setDataProduct(dataProducts);
     }
   };
@@ -40,7 +42,7 @@ export default function Inventory({ selectedData, setSelectedData }) {
         dataProducts = data;
       }
       setDataProduct(dataProducts);
-      setDataProductOriginal(dataProducts);
+      setDataProductOriginal(data);
 
       const dataPackage = await packageService.getPackage();
       console.log("package", dataPackage);
@@ -53,12 +55,13 @@ export default function Inventory({ selectedData, setSelectedData }) {
   return (
     <div className='border border-gray-300 shadow-md rounded-2xl col-span-2 gap-2 p-2'>
       <div className='w-full grid grid-cols-3 gap-2'>
-        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Product" && "bg-purple-100/90 border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Product")}>
-          <p>Product</p>
-        </Card>
         <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Service")}>
           <p>Service</p>
         </Card>
+        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Product" && "bg-purple-100/90 border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Product")}>
+          <p>Product</p>
+        </Card>
+
         <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Package" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Package")}>
           <p>Package</p>
         </Card>
