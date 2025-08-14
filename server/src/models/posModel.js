@@ -1,9 +1,10 @@
 const pool = require("../config/db");
 
 const addPosHd = async (data, userId) => {
-  const { paymentMethod, receiptOption, totalPrice, email, customerId, therapistId } = data;
-  const query = "INSERT INTO poshd (transdate,  total_amount, payment_method, customerId, therapist_id, enteredby, entereddate) VALUES (?,?,?,?,?,?,?)";
-  const [result] = await pool.query(query, [new Date(), totalPrice, paymentMethod, customerId, therapistId, userId, new Date()]);
+  const { paymentMethod, receiptOption, totalPrice, email, customerId, therapistId } = data.formPaymentData;
+  const { walkinName, walkinEmail, walkinContact } = data.formWalkinData;
+  const query = "INSERT INTO poshd (transdate,  total_amount, payment_method, customerId, therapist_id,walkinname, walkinemail, walkincontactno, enteredby, entereddate) VALUES (?,?,?,?,?,?,?,?,?,?)";
+  const [result] = await pool.query(query, [new Date(), totalPrice, paymentMethod, customerId, therapistId, walkinName, walkinEmail, walkinContact, userId, new Date()]);
   return result.insertId;
 };
 

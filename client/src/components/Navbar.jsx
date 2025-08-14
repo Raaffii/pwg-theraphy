@@ -44,7 +44,7 @@ const Navbar = () => {
   } else {
     navItems = [
       { path: "/therapist", label: "Home" },
-      { path: "/profile", label: "Profile" },
+      { path: "/therapist/pos", label: "Walk In POS" },
       // Multiple dropdowns can be added here
       {
         label: "Setup",
@@ -109,9 +109,9 @@ const Navbar = () => {
               </div>
               {isDropdownOpen && (
                 <div className='absolute right-0 mt-2 w-48 bg-blue-200 rounded-md shadow-lg z-50 border border-gray-800'>
-                  <Button variant='ghost' className='w-full flex items-center space-x-2 justify-start text-gray-200 hover:text-emerald-400' onClick={() => navigate("/profile")}>
+                  <Button variant='ghost' className='w-full flex items-center space-x-2 justify-start text-gray-200 hover:text-emerald-400' onClick={() => navigate("/therapist/pos")}>
                     <User size={16} className='shrink-0' />
-                    <span>Profile</span>
+                    <span>Walkin Pos</span>
                   </Button>
                   <Button variant='ghost' className='w-full flex items-center space-x-2 justify-start text-gray-200 hover:text-red-400' onClick={handleLogout}>
                     <LogOut size={16} className='shrink-0' />

@@ -8,7 +8,7 @@ import { posService } from "@/services/posService";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 
-export default function Receipt({ selectedData, personData }) {
+export default function Receipt({ selectedData, personData, formWalkinData }) {
   const navigate = useNavigate();
 
   const { user, loading } = useAuth();
@@ -43,7 +43,8 @@ export default function Receipt({ selectedData, personData }) {
 
   const handleSave = async (e) => {
     try {
-      const result = await posService.poshdInsert(formPaymentData);
+      const posHdData = { formPaymentData, formWalkinData };
+      const result = await posService.poshdInsert(posHdData);
       const idResult = result.data.data;
 
       const posLineData = { idResult, selectedData };
@@ -57,12 +58,12 @@ export default function Receipt({ selectedData, personData }) {
   };
 
   const [formPaymentData, setFormPaymentData] = useState({
-    customerId: personData.customerid,
+    customerId: personData?.customerid || null,
     therapistId: user?.therapistId,
     paymentMethod: "",
     receiptOption: "",
     totalPrice: totalPrice,
-    email: personData.email,
+    email: personData?.email,
   });
 
   console.log("ceca", personData);
@@ -70,7 +71,7 @@ export default function Receipt({ selectedData, personData }) {
     <>
       <div className='my-3'>
         <p className='text-xl font-semibold'>Transaction Overview</p>
-        <p>Customer : {personData.name}</p>
+        <p>Customer : {personData?.name || "Walkin"}</p>
       </div>
 
       <div>

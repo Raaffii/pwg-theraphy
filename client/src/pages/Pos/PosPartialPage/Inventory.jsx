@@ -53,8 +53,9 @@ export default function Inventory({ selectedData, setSelectedData }) {
   }, []);
   const colors = ["bg-red-900", "bg-blue-900", "bg-green-900"];
   return (
-    <div className='border border-gray-300 shadow-md rounded-2xl col-span-2 gap-2 p-2'>
-      <div className='w-full grid grid-cols-3 gap-2'>
+    <div className='border-2 border-purple-900/30 shadow-md rounded-2xl col-span-2 gap-2 p-2 bg-purple-900/5'>
+      <Input className=' bg-white h-10' placeholder='Search' />
+      <div className='w-full lg:grid grid-cols-3 gap-2 my-5 space-y-2 lg:space-y-0 '>
         <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Service")}>
           <p>Service</p>
         </Card>
@@ -66,9 +67,9 @@ export default function Inventory({ selectedData, setSelectedData }) {
           <p>Package</p>
         </Card>
       </div>
-      <Input className='my-2' placeholder='Search' />
+
       {!packageShow ? (
-        <div className='grid grid-cols-2 lg:grid-cols-4 gap-3'>
+        <div className='grid grid-cols-2 lg:grid-cols-4 gap-3 p-2'>
           {dataProduct.map((item, index) => (
             <PosCard key={index} name={item.name} price={item.unitprice} type={item.productcat} selectedData={selectedData} setSelectedData={setSelectedData} productid={item.productid} />
           ))}

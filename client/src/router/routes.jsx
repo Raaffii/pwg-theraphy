@@ -65,6 +65,7 @@ const therapistRoutes = {
     { path: "", element: <TherapistDashboard /> },
     { path: "consentslist", element: <ConsentsList /> },
     { path: "pos/:id", element: <Pos /> },
+    { path: "pos/", element: <Pos /> },
     { path: "invoice", element: <Invoice /> },
     { path: "receipt", element: <Receipt /> },
     { path: "printreceipt", element: <PrintReceipt /> },

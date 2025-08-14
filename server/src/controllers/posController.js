@@ -2,6 +2,7 @@ const posService = require("../services/posService");
 
 const insertPosHd = async (req, res) => {
   try {
+    console.log("pos hd data", req.body);
     const result = await posService.posInsertHd(req.body, req.user.userId);
     console.log("serres", result);
 

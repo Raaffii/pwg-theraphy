@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 //component
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-
+import { Card } from "@/components/ui/card";
 //pages
 import PosCard from "./PosPartialComponent/PosCard";
 import PosSelectedItem from "./PosPartialComponent/PosSelectedItem";
@@ -20,7 +20,6 @@ import { customerService } from "@/services/customerService";
 export default function Pos() {
   const navigate = useNavigate();
   const [selectedData, setSelectedData] = useState([]);
-
   const [customerData, setCustomerData] = useState();
   const [receiptModal, setReceiptModal] = useState(false);
   const { id } = useParams();
@@ -33,21 +32,56 @@ export default function Pos() {
     fetchData(id);
   }, []);
 
-  console.log("price", selectedData);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormWalkinData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const [formWalkinData, setFormWalkinData] = useState({
+    walkinName: "",
+    walkinEmail: "",
+    walkinContact: "",
+  });
+
+  console.log("wwwwwwwwww", formWalkinData);
   return (
     <>
       <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
         &larr; Back
       </p>
-      <div className='lg:flex p-2 bg-white mb-2'>
-        <p className='font-semibold pr-2'>Customer Name : </p>
-        <p className=''>{customerData?.name}</p>
-      </div>
+
       {/* <h1>{customerData?.name}</h1> */}
       <div className='grid grid-cols-3 gap-2 mb-8'>
         {/* Inventory */}
-        <Inventory selectedData={selectedData} setSelectedData={setSelectedData} />
-
+        <div className='col-span-2'>
+          <div className='w-full'>
+            {id ? (
+              <Card className='lg:flex p-2 bg-white mb-2 col-span-2'>
+                <p className='font-semibold pr-2'>Customer Name : </p>
+                <p className=''>{customerData?.name}</p>
+              </Card>
+            ) : (
+              <Card className='p-2 bg-purple-950/40 mb-2  col-span-2 grid grid-cols-3 text-white gap-2'>
+                <div>
+                  <p>Walkin Name</p>
+                  <Input type='name' placeholder='Name' name='walkinName' value={formWalkinData.walkinName} onChange={handleChange} />
+                </div>
+                <div className='h-full'>
+                  <p>Walkin Contact</p>
+                  <Input type='Contact' placeholder='Contact' name='walkinContact' value={formWalkinData.walkinContact} onChange={handleChange} />
+                </div>
+                <div className='h-full'>
+                  <p>Walkin Email</p>
+                  <Input type='email' placeholder='Email' name='walkinEmail' value={formWalkinData.walkinEmail} onChange={handleChange} />
+                </div>
+              </Card>
+            )}
+          </div>
+          <Inventory selectedData={selectedData} setSelectedData={setSelectedData} />
+        </div>
         {/* selected item */}
         <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5'>
           {/* name
@@ -84,7 +118,7 @@ export default function Pos() {
               <Modal setIsOpen={setReceiptModal}>
                 {" "}
                 <div className='max-h-[600px] overflow-y-auto'>
-                  <Receipt selectedData={selectedData} personData={customerData} />
+                  <Receipt selectedData={selectedData} personData={customerData} formWalkinData={formWalkinData} />
                 </div>
               </Modal>
             )}
