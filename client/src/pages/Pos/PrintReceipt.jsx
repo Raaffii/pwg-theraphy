@@ -3,8 +3,9 @@ import { CreditCard, ScrollText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-export default function PrintReceipt({ selectedData, personData }) {
-  const totalPrice = selectedData.reduce((total, item) => total + item.price * item.amount, 0).toFixed(2);
+export default function PrintReceipt({ selectedData, personData, discountShow }) {
+  const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * item.amount, 0).toFixed(2);
+  const tax = (totalPrice * 0.1).toFixed(2);
   return (
     <>
       <div id='printreceipt' className='h-full'>
@@ -44,18 +45,24 @@ export default function PrintReceipt({ selectedData, personData }) {
                   </th>
                   <th className='border border-gray-300 px-3 py-2 font-medium w-[10%] text-center'>Quantity</th>
                   <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Unit Price</th>
+                  {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Subtotal</th>}
+                  {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Discount</th>}
+
                   <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Total</th>
                 </tr>
               </thead>
               <tbody>
                 {selectedData.map((item, index) => (
-                  <tr className='hover:bg-gray-50'>
+                  <tr className='hover:bg-gray-50' key={index}>
                     <td className='border border-gray-300 px-3 py-2' colSpan={3}>
                       {item.name}
                     </td>
                     <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
                     <td className='border border-gray-300 px-3 py-2 text-center'>${item.price}</td>
-                    <td className='border border-gray-300 px-3 py-2 text-center'>${(item.amount * item.price).toFixed(2)}</td>
+                    {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>${(item.price * item.amount).toFixed(2)}</td>}
+                    {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>{item.discpercent ? `${item.discount}%` : `-$${(item.discount * 1).toFixed(2)}`}</td>}
+
+                    <td className='border border-gray-300 px-3 py-2 text-center'>${(item.amount * item.subPrice).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -68,9 +75,9 @@ export default function PrintReceipt({ selectedData, personData }) {
               <p> Credit Card</p>
             </div>
             <div className=' w-80 text-right'>
-              <p className='border-t-2  w-full'>SubTotal : ${totalPrice}</p>
-              <p className=' w-full border-b-2'>Tax : 32.23</p>
-              <p className=' w-full border-b-2 border-purple-600 '>Total Amount : 32.12</p>
+              <p className='border-t-2  w-full'>Subtotal : ${totalPrice}</p>
+              <p className=' w-full border-b-2'>Tax : ${tax}</p>
+              <p className=' w-full border-b-2 border-purple-600 '>Total Amount : ${(Number(totalPrice) + Number(tax)).toFixed(2)}</p>
             </div>
           </div>
         </div>

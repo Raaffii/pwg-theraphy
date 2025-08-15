@@ -13,6 +13,7 @@ import Inventory from "./PosPartialPage/Inventory";
 import TotalPriceSelected from "./PosPartialComponent/TotalPriceSelected";
 import Modal from "../Shared/Modal";
 import Receipt from "./Receipt";
+import PosSelectedPackage from "./PosPartialComponent/PosSelectedPackage";
 
 // service
 import { customerService } from "@/services/customerService";
@@ -22,6 +23,7 @@ export default function Pos() {
   const [selectedData, setSelectedData] = useState([]);
   const [customerData, setCustomerData] = useState();
   const [receiptModal, setReceiptModal] = useState(false);
+  const [showWalkinInput, setShowWalkinInput] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -46,7 +48,6 @@ export default function Pos() {
     walkinContact: "",
   });
 
-  console.log("wwwwwwwwww", formWalkinData);
   return (
     <>
       <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
@@ -59,43 +60,79 @@ export default function Pos() {
         <div className='col-span-2'>
           <div className='w-full'>
             {id ? (
-              <Card className='lg:flex p-2 bg-white mb-2 col-span-2'>
-                <p className='font-semibold pr-2'>Customer Name : </p>
-                <p className=''>{customerData?.name}</p>
+              <Card className='lg:flex p-2 bg-white mb-2 col-span-2 flex-col'>
+                <div className='flex items-center'>
+                  <p className='font-semibold pr-2'>Customer Name :</p>
+                  <p>{customerData?.name || "Walk-in Customer"}</p>
+                </div>
+
+                {/* Tombol toggle */}
+                <button className='text-xs text-blue-600 underline mt-1 w-fit' onClick={() => setShowWalkinInput(!showWalkinInput)}>
+                  {showWalkinInput ? "Hide Walkin Input" : "Show Walkin Input"}
+                </button>
+
+                {/* Collapse keterangan */}
+                {showWalkinInput && (
+                  <div className='mt-2 text-sm text-gray-600 grid grid-cols-3 gap-1'>
+                    {" "}
+                    <div>
+                      <Input type='name' placeholder='Walkin name' name='walkinName' value={formWalkinData.walkinName} onChange={handleChange} />
+                    </div>
+                    <div className='h-full'>
+                      <Input type='Contact' placeholder='Walkin contact' name='walkinContact' value={formWalkinData.walkinContact} onChange={handleChange} />
+                    </div>
+                    <div className='h-full'>
+                      <Input type='email' placeholder='Walkin email' name='walkinEmail' value={formWalkinData.walkinEmail} onChange={handleChange} />
+                    </div>
+                  </div>
+                )}
               </Card>
             ) : (
-              <Card className='p-2 bg-purple-950/40 mb-2  col-span-2 grid grid-cols-3 text-white gap-2'>
-                <div>
-                  <p>Walkin Name</p>
-                  <Input type='name' placeholder='Name' name='walkinName' value={formWalkinData.walkinName} onChange={handleChange} />
-                </div>
-                <div className='h-full'>
-                  <p>Walkin Contact</p>
-                  <Input type='Contact' placeholder='Contact' name='walkinContact' value={formWalkinData.walkinContact} onChange={handleChange} />
-                </div>
-                <div className='h-full'>
-                  <p>Walkin Email</p>
-                  <Input type='email' placeholder='Email' name='walkinEmail' value={formWalkinData.walkinEmail} onChange={handleChange} />
-                </div>
+              <Card className='g:flex p-2 bg-white mb-2 col-span-2 flex-col'>
+                <button className='text-xs text-blue-600 underline mt-1 w-fit' onClick={() => setShowWalkinInput(!showWalkinInput)}>
+                  {showWalkinInput ? "Hide Walkin Input" : "Show Walkin Input"}
+                </button>
+
+                {/* Collapse keterangan */}
+                {showWalkinInput && (
+                  <div className='mt-2 text-sm text-gray-600 grid grid-cols-3 gap-1'>
+                    {" "}
+                    <div>
+                      <Input type='name' placeholder='Walkin name' name='walkinName' value={formWalkinData.walkinName} onChange={handleChange} />
+                    </div>
+                    <div className='h-full'>
+                      <Input type='Contact' placeholder='Walkin contact' name='walkinContact' value={formWalkinData.walkinContact} onChange={handleChange} />
+                    </div>
+                    <div className='h-full'>
+                      <Input type='email' placeholder='Walkin email' name='walkinEmail' value={formWalkinData.walkinEmail} onChange={handleChange} />
+                    </div>
+                  </div>
+                )}
               </Card>
             )}
           </div>
-          <Inventory selectedData={selectedData} setSelectedData={setSelectedData} />
+          <Inventory selectedData={selectedData} setSelectedData={setSelectedData} customerId={id} />
         </div>
         {/* selected item */}
         <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5'>
           {/* name
           <hr /> */}
           <div className='space-y-1'>
-            <div className=' justify-between bg-slate-100  rounded-md grid lg:grid-cols-6 gap-2'>
-              <p className='col-span-3 text-center w-full bg-purple-950/10'>Item</p>
-              <p className='text-center w-full'>Amount</p>
-              <p className='text-center w-full bg-purple-950/10'>Disc</p>
-              <p className='text-center w-full'>Price</p>
-            </div>
-            {selectedData.map((item, index) => (
-              <PosSelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} index={index} subPrice={item.subPrice} />
-            ))}
+            {selectedData.length != 0 && (
+              <div className=' justify-between bg-slate-100  rounded-md grid lg:grid-cols-6 gap-2'>
+                <p className='col-span-3 text-center w-full bg-purple-950/10'>Item</p>
+                <p className='text-center w-full'>Amount</p>
+                <p className='text-center w-full bg-purple-950/10'>Disc</p>
+                <p className='text-center w-full'>Price</p>
+              </div>
+            )}
+            {selectedData.map((item, index) =>
+              item?.packageid ? (
+                <PosSelectedPackage packagedesc={item.packagedesc} price={item.price} amount={item.amount} setSelectedData={setSelectedData} index={index} packageid={item.packageid} />
+              ) : (
+                <PosSelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} index={index} subPrice={item.subPrice} />
+              )
+            )}
             {selectedData.length == 0 && (
               <>
                 <p className='text-center'>No item adde yet</p>

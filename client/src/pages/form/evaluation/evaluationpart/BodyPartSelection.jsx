@@ -33,8 +33,8 @@ export default function BodyPartSelection({ setCoordsBack, setCoordsFront, coord
 
   return (
     <div className='flex justify-center gap-2 border border-bg-prime-color'>
-      <BodyPartCanvas coords={coordsFront} setCoords={setCoordsFront} modal={frontModal} setModal={setFrontModal} canvasRef={canvasRefFront} pic={"front"} />
-      <BodyPartCanvas coords={coordsBack} setCoords={setCoordsBack} modal={backModal} setModal={setBackModal} canvasRef={canvasRefBack} pic={"back"} />
+      <BodyPartCanvas coords={coordsFront} setCoords={setCoordsFront} modal={frontModal} setModal={setFrontModal} canvasRef={canvasRefFront} pic={"front2"} />
+      <BodyPartCanvas coords={coordsBack} setCoords={setCoordsBack} modal={backModal} setModal={setBackModal} canvasRef={canvasRefBack} pic={"back2"} />
     </div>
   );
 }

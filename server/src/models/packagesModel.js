@@ -9,6 +9,7 @@ const getData = async () => {
   rows.forEach((item, index) => {
     if (!package[item.packageid]) {
       package[item.packageid] = {
+        packageid: item.packageid,
         packagedesc: item.packagedesc,
         price: item.price,
         expiry_days: item.expiry_days,

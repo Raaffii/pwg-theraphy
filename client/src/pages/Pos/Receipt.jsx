@@ -18,6 +18,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
   const location = useLocation();
 
   const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * item.amount, 0).toFixed(2);
+  const tax = totalPrice * 0.1;
 
   const handlePrint = () => {
     window.print();
@@ -43,7 +44,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
 
   const handleSave = async (e) => {
     try {
-      const posHdData = { formPaymentData, formWalkinData };
+      const posHdData = { formPaymentData, formWalkinData, discountShow };
       const result = await posService.poshdInsert(posHdData);
       const idResult = result.data.data;
 
@@ -66,7 +67,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
     email: personData?.email,
   });
 
-  console.log("ceca", personData);
+  console.log("ceca", selectedData);
   return (
     <>
       <div className='my-3'>
@@ -94,7 +95,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
               </th>
               <th className='border border-gray-300 px-3 py-2 font-medium w-[10%] text-center'>Quantity</th>
               <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Unit Price</th>
-              {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Sub Total</th>}
+              {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Subtotal</th>}
               {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Discount</th>}
 
               <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Total</th>
@@ -105,7 +106,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
             {selectedData.map((item, index) => (
               <tr className='hover:bg-gray-50' key={index}>
                 <td className='border border-gray-300 px-3 py-2' colSpan={3}>
-                  {item.name}
+                  {item.name || `${item.packagedesc} (Package) `}
                 </td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{discountShow ? `$${item.price}` : `$${item.subPrice}`}</td>
@@ -120,7 +121,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
               <td className='border border-gray-300 px-3 py-2 text-right font-medium' colSpan={discountShow ? 7 : 5}>
                 Total
               </td>
-              <td className='border border-gray-300 px-3 py-2 text-right font-medium'>${totalPrice}</td>
+              <td className='border border-gray-300 px-3 py-2 text-center font-medium'>${totalPrice}</td>
             </tr>
           </tfoot>
         </table>
@@ -136,7 +137,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
         </div>
         <div className='flex justify-between items-center my-3 p-3 bg-gray-200 rounded-lg'>
           <p className='text-xl'>Total Due</p>
-          <p className='text-2xl font-bold'>${totalPrice}</p>
+          <p className='text-2xl font-bold'>${Number(totalPrice).toFixed(2)}</p>
         </div>
         <div className=''>
           <p className='mb-3'>Select Payment Menthod</p>
@@ -189,7 +190,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
                 </div>
               </div>
               <div className='print-only'>
-                <PrintReceipt selectedData={selectedData} personData={personData} />
+                <PrintReceipt selectedData={selectedData} personData={personData} discountShow={discountShow} />
               </div>
 
               <Button onClick={handlePrint}>Save</Button>

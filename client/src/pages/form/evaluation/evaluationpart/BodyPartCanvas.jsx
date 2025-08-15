@@ -7,7 +7,7 @@ export default function BodyPartCanvas({ coords, setCoords, modal, setModal, can
     const ctx = canvas.getContext("2d");
 
     const img = new Image();
-    img.src = `/body/${pic}.png`;
+    img.src = `/body/${pic}.jpg`;
 
     const imgWidth = 150;
     const imgHeight = 350;

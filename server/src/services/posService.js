@@ -14,7 +14,11 @@ const posInsertLine = async (idPosHd, data, userId) => {
   try {
     let result;
     data.forEach((item) => {
-      result = pos.addPosLine(idPosHd, item, userId);
+      if (item.packageid) {
+        result = pos.addPosLine(idPosHd, item, userId, item.packageid, 1);
+      } else {
+        result = pos.addPosLine(idPosHd, item, userId, item.id, 0);
+      }
     });
 
     return result;

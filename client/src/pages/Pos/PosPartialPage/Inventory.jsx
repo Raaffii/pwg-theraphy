@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { productsService } from "@/services/productsService";
 import { packageService } from "@/services/packageService";
 
-export default function Inventory({ selectedData, setSelectedData }) {
+export default function Inventory({ selectedData, setSelectedData, customerId }) {
   const [inventoryType, setInventoryType] = useState("Service");
   const [dataProduct, setDataProduct] = useState([]);
   const [dataProductOriginal, setDataProductOriginal] = useState([]);
@@ -52,10 +52,26 @@ export default function Inventory({ selectedData, setSelectedData }) {
     fetch();
   }, []);
   const colors = ["bg-red-900", "bg-blue-900", "bg-green-900"];
+
+  const handleSelectPackage = (packageid, packagedesc, packageprice) => {
+    setSelectedData((prev) => {
+      const foundItem = prev.find((item) => item.packageid === packageid);
+
+      if (foundItem) {
+        console.log("tambah satu");
+        return prev.map((item) => (item.packageid === packageid ? { ...item, amount: item.amount + 1 } : item));
+      } else {
+        return [...prev, { packageid: packageid, packagedesc: packagedesc, price: packageprice, amount: 1, subPrice: packageprice, discount: 0 }];
+      }
+    });
+  };
+
+  console.log("packagess", listDataPackage);
+
   return (
     <div className='border-2 border-purple-900/30 shadow-md rounded-2xl col-span-2 gap-2 p-2 bg-purple-900/5'>
       <Input className=' bg-white h-10' placeholder='Search' />
-      <div className='w-full lg:grid grid-cols-3 gap-2 my-5 space-y-2 lg:space-y-0 '>
+      <div className={`w-full lg:grid ${customerId ? "grid-cols-4" : "grid-cols-3"} gap-2 my-5 space-y-2 lg:space-y-0 `}>
         <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Service")}>
           <p>Service</p>
         </Card>
@@ -66,6 +82,11 @@ export default function Inventory({ selectedData, setSelectedData }) {
         <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Package" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Package")}>
           <p>Package</p>
         </Card>
+        {customerId && (
+          <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "PackageCus" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("PackageCus")}>
+            <p>Package Cus</p>
+          </Card>
+        )}
       </div>
 
       {!packageShow ? (
@@ -77,7 +98,7 @@ export default function Inventory({ selectedData, setSelectedData }) {
       ) : (
         <div className='grid lg:grid-cols-3 gap-3'>
           {listDataPackage.map((item, index) => (
-            <Card className='w-full shadow-md flex flex-col' key={index}>
+            <Card className='w-full shadow-md flex flex-col bg-red-950/10 border border-red-900' key={index}>
               <div className={`w-full flex flex-col items-center p-1 rounded-t-xl text-white ${colors[index % colors.length]}`}>
                 <p className='text-lg font-semibold'>{item.packagedesc}</p>
                 <p>${item.price}</p>
@@ -89,13 +110,15 @@ export default function Inventory({ selectedData, setSelectedData }) {
                 ))}
               </div>
               <div className='w-full flex justify-center p-2 mt-auto'>
-                <Button className={`${colors[index % colors.length]} shadow-none`}>Select</Button>
+                <Button className={`${colors[index % colors.length]} shadow-none`} onClick={() => handleSelectPackage(item.packageid, item.packagedesc, item.price)}>
+                  Select
+                </Button>
               </div>
             </Card>
           ))}
 
-          {/* <Card className='w-full shadow-md flex flex-col'>
-            <div className='w-full  flex flex-col items-center p-1 bg-blue-900 rounded-t-xl text-white '>
+          <Card className='w-full shadow-md flex flex-col bg-blue-950/10 border border-blue-900'>
+            <div className='w-full  flex flex-col items-center bg-blue-900 border rounded-t-xl text-white '>
               <p className='text-lg font-semibold'>Fourlogy</p>
               <p>$322</p>
             </div>
@@ -109,21 +132,21 @@ export default function Inventory({ selectedData, setSelectedData }) {
               <Button className='bg-purple-950'>Select</Button>
             </div>
           </Card>
-          <Card className='w-full shadow-md flex flex-col'>
+          <Card className='w-full shadow-md flex flex-col bg-green-950/10 border border-blue-900'>
             <div className='w-full  flex flex-col items-center p-1 bg-green-900 rounded-t-xl text-white '>
               <p className='text-lg font-semibold'>Fourlogy</p>
               <p>$322</p>
             </div>
 
             <div className='w-full flex flex-col items-center p-3'>
-              <p>7 Wonder</p>
+              <p>7 Wondersssssssssss</p>
               <p>7 Wonder</p>
               <p>7 Wonder</p>
             </div>
             <div className='w-full flex justify-center p-2 mt-auto'>
               <Button className='bg-purple-950'>Select</Button>
             </div>
-          </Card> */}
+          </Card>
         </div>
       )}
     </div>
