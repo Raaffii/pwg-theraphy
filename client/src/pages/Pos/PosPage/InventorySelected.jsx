@@ -50,10 +50,9 @@ export default function PosSelectedItem({ id, name, price, subPrice, amount, sel
       if (percentDiscount) {
         totalPrice = Number(price).toFixed(2);
         const dicountCut = totalPrice * (discount / 100);
-        console.log(totalPrice, selectedData[index].amount, dicountCut);
+
         totalPrice = ((totalPrice - dicountCut) * selectedData[index].amount).toFixed(2);
 
-        console.log("afte dicount", totalPrice);
         discpercent = 1;
       }
       setSelectedData((prev) => {
@@ -63,7 +62,6 @@ export default function PosSelectedItem({ id, name, price, subPrice, amount, sel
       });
 
       setTotalItemPrice(totalPrice);
-      console.log("total price", totalPrice);
     } else {
       totalPrice = Number(price).toFixed(2);
       setSelectedData((prev) => {
@@ -95,8 +93,6 @@ export default function PosSelectedItem({ id, name, price, subPrice, amount, sel
     });
     setTotalItemPrice(totalPrice);
   };
-
-  console.log("selected", selectedData);
 
   return (
     <div className=' justify-between bg-slate-100  rounded-md grid lg:grid-cols-7 gap-2'>

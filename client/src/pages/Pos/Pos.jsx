@@ -128,7 +128,7 @@ export default function Pos() {
             )}
             {selectedData.map((item, index) =>
               item?.packageid ? (
-                <PosSelectedPackage packagedesc={item.packagedesc} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} packageid={item.packageid} />
+                <PosSelectedPackage packagedesc={item.packagedesc} price={item.price} packageName={item.packageName} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} packageid={item.packageid} />
               ) : (
                 <PosSelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} subPrice={item.subPrice} />
               )

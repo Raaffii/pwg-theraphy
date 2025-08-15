@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Package } from "lucide-react";
 import { useState } from "react";
 
-export default function PosSelectedPackage({ packagedesc, price, amount, setSelectedData, selectedData, packageid, index }) {
+export default function PosSelectedPackage({ packagedesc, price, amount, setSelectedData, selectedData, packageid, index, packageName }) {
   const [percentDiscount, setPercentDiscount] = useState(false);
-  const [discountNumber, setDiscountNumber] = useState();
+  const [discountNumber, setDiscountNumber] = useState(0);
   const [totalItemPrice, setTotalItemPrice] = useState(price);
   const [amountNumber, setAmountNumber] = useState(amount);
 
@@ -105,7 +105,7 @@ export default function PosSelectedPackage({ packagedesc, price, amount, setSele
         </div>
         <Package />
         <div>
-          <p className='text-m'>{packagedesc} (Package)</p>
+          <p className='text-m'>{packageName} </p>
           <p className='text-sm'>${price}</p>
         </div>
       </div>
