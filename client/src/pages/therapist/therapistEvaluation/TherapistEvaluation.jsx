@@ -42,7 +42,8 @@ export default function TherapistEvaluation() {
       setCustomerData(DataExistCustomer);
       const DataExistConsent = await consentService.getConsentByid(id);
       setConsentData(DataExistConsent);
-      const yearsold = calculateAge(DataExistCustomer[0]?.dateofbirth);
+
+      const yearsold = calculateAge(DataExistCustomer[0]?.dateOfBirth);
       setAge(yearsold);
       const evaluationSessionData = await evaluationService.getEvaluationData(id);
 
