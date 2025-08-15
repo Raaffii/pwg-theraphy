@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Package } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function PosSelectedPackage({ packagedesc, price, amount, setSelectedData, selectedData, packageid, index, packageName }) {
   const [percentDiscount, setPercentDiscount] = useState(false);
@@ -18,29 +18,29 @@ export default function PosSelectedPackage({ packagedesc, price, amount, setSele
 
   let totalPrice;
   let discpercent;
+  useEffect(() => {
+    if (amountNumber != selectedData[index].amount) {
+      if (percentDiscount) {
+        totalPrice = Number(price).toFixed(2);
+        const dicountCut = totalPrice * (discountNumber / 100);
+        totalPrice = ((totalPrice - dicountCut) * selectedData[index].amount).toFixed(2);
+        discpercent = 1;
+      } else {
+        totalPrice = Number(price).toFixed(2);
+        totalPrice = (totalPrice * selectedData[index].amount - discountNumber).toFixed(2);
+        discpercent = 0;
+      }
 
-  if (amountNumber != selectedData[index].amount) {
-    if (percentDiscount) {
-      totalPrice = Number(price).toFixed(2);
-      const dicountCut = totalPrice * (discountNumber / 100);
-      totalPrice = ((totalPrice - dicountCut) * selectedData[index].amount).toFixed(2);
-      discpercent = 1;
-    } else {
-      totalPrice = Number(price).toFixed(2);
-      totalPrice = (totalPrice * selectedData[index].amount - discountNumber).toFixed(2);
-      discpercent = 0;
+      setSelectedData((prev) => {
+        const newArray = [...prev];
+        newArray[index] = { ...newArray[index], subPrice: totalPrice };
+        return newArray;
+      });
+
+      setTotalItemPrice(totalPrice);
+      setAmountNumber(selectedData[index].amount);
     }
-
-    setSelectedData((prev) => {
-      const newArray = [...prev];
-      newArray[index] = { ...newArray[index], subPrice: totalPrice };
-      return newArray;
-    });
-
-    setTotalItemPrice(totalPrice);
-    setAmountNumber(selectedData[index].amount);
-  }
-
+  }, [selectedData[index].amount]);
   const handleDiscount = (discount) => {
     if (discount) {
       setDiscountNumber(discount);

@@ -11,27 +11,32 @@ export default function PosSelectedItem({ id, name, price, subPrice, amount, sel
   let discpercent;
 
   //Check if thera any update in selected data because of click on card
-  if (amountNumber != selectedData[index].amount) {
-    if (percentDiscount) {
-      totalPrice = Number(price).toFixed(2);
-      const dicountCut = totalPrice * (discountNumber / 100);
-      totalPrice = ((totalPrice - dicountCut) * selectedData[index].amount).toFixed(2);
-      discpercent = 1;
-    } else {
-      totalPrice = Number(price).toFixed(2);
-      totalPrice = (totalPrice * selectedData[index].amount - discountNumber).toFixed(2);
-      discpercent = 0;
+  useEffect(() => {
+    if (amountNumber !== selectedData[index].amount) {
+      let totalPrice;
+      let discpercent;
+
+      if (percentDiscount) {
+        totalPrice = Number(price).toFixed(2);
+        const dicountCut = totalPrice * (discountNumber / 100);
+        totalPrice = ((totalPrice - dicountCut) * selectedData[index].amount).toFixed(2);
+        discpercent = 1;
+      } else {
+        totalPrice = Number(price).toFixed(2);
+        totalPrice = (totalPrice * selectedData[index].amount - discountNumber).toFixed(2);
+        discpercent = 0;
+      }
+
+      setSelectedData((prev) => {
+        const newArray = [...prev];
+        newArray[index] = { ...newArray[index], subPrice: totalPrice };
+        return newArray;
+      });
+
+      setTotalItemPrice(totalPrice);
+      setAmountNumber(selectedData[index].amount);
     }
-
-    setSelectedData((prev) => {
-      const newArray = [...prev];
-      newArray[index] = { ...newArray[index], subPrice: totalPrice };
-      return newArray;
-    });
-
-    setTotalItemPrice(totalPrice);
-    setAmountNumber(selectedData[index].amount);
-  }
+  }, [selectedData[index].amount]);
 
   const handlePlus = async (id) => {
     setSelectedData((prev) => prev.map((item) => (item.id === id ? { ...item, amount: item.amount + 1 } : item)));
