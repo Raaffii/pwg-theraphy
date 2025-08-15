@@ -5,4 +5,23 @@ const getPackagesData = async () => {
   return response;
 };
 
-module.exports = { getPackagesData };
+const getCusPackagesData = async (id) => {
+  const response = await packages.getCusPackageData(id);
+  return response;
+};
+
+const storeCusPackages = async (data, idCustomer) => {
+  try {
+    data.forEach((item) => {
+      if (item.packageid) {
+        packages.insertCusPackages(item, idCustomer);
+      }
+    });
+  } catch (error) {
+    console.error("Failed to save consent:", error.message);
+
+    throw new Error("Error while storing consent data");
+  }
+};
+
+module.exports = { getPackagesData, storeCusPackages, getCusPackagesData };

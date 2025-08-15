@@ -1,6 +1,6 @@
 export default function TotalPriceSelected({ selectedData, setSelectedData }) {
   console.log("selected", selectedData);
-  const subTotalPrice = selectedData.reduce((total, item) => total + item.subPrice * item.amount, 0).toFixed(2);
+  const subTotalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
 
   return (
     <div className='m-4'>

@@ -1,4 +1,4 @@
-import PosCard from "../PosPartialComponent/PosCard";
+import PosCard from "../PosPartialComponent/ItemCard";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,13 +14,20 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
   const [inventoryType, setInventoryType] = useState("Service");
   const [dataProduct, setDataProduct] = useState([]);
   const [dataProductOriginal, setDataProductOriginal] = useState([]);
-  const [listDataPackage, setListDataPackage] = useState({});
+  const [listDataPackage, setListDataPackage] = useState([]);
   const [packageShow, setPackageShow] = useState(false);
 
-  const handleFilter = (filter) => {
+  const handleFilter = async (filter) => {
     if (filter == "Package") {
       setInventoryType(filter);
       setPackageShow(true);
+      const dataPackage = await packageService.getPackage();
+      setListDataPackage(dataPackage);
+    } else if (filter == "PackageCus") {
+      setInventoryType(filter);
+      setPackageShow(true);
+      const dataPackage = await packageService.getCusPackage(customerId);
+      setListDataPackage(dataPackage);
     } else {
       console.log("filter", filter);
       setPackageShow(false);
@@ -43,17 +50,12 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
       }
       setDataProduct(dataProducts);
       setDataProductOriginal(data);
-
-      const dataPackage = await packageService.getPackage();
-      console.log("package", dataPackage);
-      setListDataPackage(dataPackage);
     };
 
     fetch();
   }, []);
-  const colors = ["bg-red-900", "bg-blue-900", "bg-green-900"];
 
-  const handleSelectPackage = (packageid, packagedesc, packageprice) => {
+  const handleSelectPackage = (packageid, packagedesc, packageprice, noofsession) => {
     setSelectedData((prev) => {
       const foundItem = prev.find((item) => item.packageid === packageid);
 
@@ -61,7 +63,7 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
         console.log("tambah satu");
         return prev.map((item) => (item.packageid === packageid ? { ...item, amount: item.amount + 1 } : item));
       } else {
-        return [...prev, { packageid: packageid, packagedesc: packagedesc, price: packageprice, amount: 1, subPrice: packageprice, discount: 0 }];
+        return [...prev, { packageid: packageid, packagedesc: packagedesc, price: packageprice, amount: 1, subPrice: packageprice, discount: 0, noofsession: noofsession }];
       }
     });
   };
@@ -97,56 +99,25 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
         </div>
       ) : (
         <div className='grid lg:grid-cols-3 gap-3'>
-          {listDataPackage.map((item, index) => (
-            <Card className='w-full shadow-md flex flex-col bg-red-950/10 border border-red-900' key={index}>
-              <div className={`w-full flex flex-col items-center p-1 rounded-t-xl text-white ${colors[index % colors.length]}`}>
+          {listDataPackage?.map((item, index) => (
+            <Card className='w-full shadow-md flex flex-col bg-white border-2 hover:border-2 hover:border-purple-900 border-purple-400' key={index}>
+              <div className={`w-full flex flex-col  p-3 rounded-t-xl }`}>
                 <p className='text-lg font-semibold'>{item.packagedesc}</p>
                 <p>${item.price}</p>
               </div>
 
-              <div className='w-full flex flex-col items-center p-3'>
+              <div className='w-full flex flex-col  p-3'>
                 {item.productInfo.map((itemProduct, indexProduct) => (
                   <p key={indexProduct}>{itemProduct.description}</p>
                 ))}
               </div>
-              <div className='w-full flex justify-center p-2 mt-auto'>
-                <Button className={`${colors[index % colors.length]} shadow-none`} onClick={() => handleSelectPackage(item.packageid, item.packagedesc, item.price)}>
+              <div className='w-full flex justify-center p-2 mt-auto bg-purple-300 rounded-b-xl'>
+                <Button className={` shadow-none bg-purple-800`} onClick={() => handleSelectPackage(item.packageid, item.packagedesc, item.price, item.noofsession)}>
                   Select
                 </Button>
               </div>
             </Card>
           ))}
-
-          <Card className='w-full shadow-md flex flex-col bg-blue-950/10 border border-blue-900'>
-            <div className='w-full  flex flex-col items-center bg-blue-900 border rounded-t-xl text-white '>
-              <p className='text-lg font-semibold'>Fourlogy</p>
-              <p>$322</p>
-            </div>
-
-            <div className='w-full flex flex-col items-center p-3'>
-              <p>7 Wonder</p>
-              <p>7 Wonder</p>
-              <p>7 Wonder</p>
-            </div>
-            <div className='w-full flex justify-center p-2 mt-auto'>
-              <Button className='bg-purple-950'>Select</Button>
-            </div>
-          </Card>
-          <Card className='w-full shadow-md flex flex-col bg-green-950/10 border border-blue-900'>
-            <div className='w-full  flex flex-col items-center p-1 bg-green-900 rounded-t-xl text-white '>
-              <p className='text-lg font-semibold'>Fourlogy</p>
-              <p>$322</p>
-            </div>
-
-            <div className='w-full flex flex-col items-center p-3'>
-              <p>7 Wondersssssssssss</p>
-              <p>7 Wonder</p>
-              <p>7 Wonder</p>
-            </div>
-            <div className='w-full flex justify-center p-2 mt-auto'>
-              <Button className='bg-purple-950'>Select</Button>
-            </div>
-          </Card>
         </div>
       )}
     </div>

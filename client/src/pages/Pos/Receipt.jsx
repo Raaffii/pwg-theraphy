@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { posService } from "@/services/posService";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
+import { packageService } from "@/services/packageService";
 
 export default function Receipt({ selectedData, personData, formWalkinData }) {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
 
   const location = useLocation();
 
-  const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * item.amount, 0).toFixed(2);
+  const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
   const tax = totalPrice * 0.1;
 
   const handlePrint = () => {
@@ -48,6 +49,14 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
       const result = await posService.poshdInsert(posHdData);
       const idResult = result.data.data;
 
+      //insert Package service if it is a registered customer
+
+      if (personData) {
+        await packageService.insertCusPackage(selectedData, personData.customerid);
+      } else {
+        console.log("gaada", personData);
+      }
+
       const posLineData = { idResult, selectedData };
 
       await posService.poslineInsert(posLineData);
@@ -55,6 +64,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
       setSaved(true);
     } catch (error) {
       console.log(error);
+      toast.error("Something is missing");
     }
   };
 
@@ -112,7 +122,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
                 <td className='border border-gray-300 px-3 py-2 text-center'>{discountShow ? `$${item.price}` : `$${item.subPrice}`}</td>
                 {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>${(item.price * item.amount).toFixed(2)}</td>}
                 {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>{item.discpercent ? `${item.discount}%` : `-$${(item.discount * 1).toFixed(2)}`}</td>}
-                <td className='border border-gray-300 px-3 py-2 text-center'>${(item.amount * item.subPrice).toFixed(2)}</td>
+                <td className='border border-gray-300 px-3 py-2 text-center'>${(item.subPrice * 1).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

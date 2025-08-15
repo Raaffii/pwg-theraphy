@@ -7,13 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 //pages
-import PosCard from "./PosPartialComponent/PosCard";
-import PosSelectedItem from "./PosPartialComponent/PosSelectedItem";
-import Inventory from "./PosPartialPage/Inventory";
+import PosCard from "./PosPartialComponent/ItemCard";
+import PosSelectedItem from "./PosPage/InventorySelected";
+import Inventory from "./PosPage/Inventory";
 import TotalPriceSelected from "./PosPartialComponent/TotalPriceSelected";
 import Modal from "../Shared/Modal";
 import Receipt from "./Receipt";
-import PosSelectedPackage from "./PosPartialComponent/PosSelectedPackage";
+import PosSelectedPackage from "./PosPage/InventorySelectedPackage";
 
 // service
 import { customerService } from "@/services/customerService";
@@ -55,9 +55,8 @@ export default function Pos() {
       </p>
 
       {/* <h1>{customerData?.name}</h1> */}
-      <div className='grid grid-cols-3 gap-2 mb-8'>
-        {/* Inventory */}
-        <div className='col-span-2'>
+      <div className='grid grid-cols-10 gap-2 mb-8'>
+        <div className='col-span-6'>
           <div className='w-full'>
             {id ? (
               <Card className='lg:flex p-2 bg-white mb-2 col-span-2 flex-col'>
@@ -111,26 +110,28 @@ export default function Pos() {
               </Card>
             )}
           </div>
+          {/* Inventory */}
           <Inventory selectedData={selectedData} setSelectedData={setSelectedData} customerId={id} />
         </div>
         {/* selected item */}
-        <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5'>
+        <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5 col-span-4'>
           {/* name
           <hr /> */}
           <div className='space-y-1'>
             {selectedData.length != 0 && (
               <div className=' justify-between bg-slate-100  rounded-md grid lg:grid-cols-6 gap-2'>
-                <p className='col-span-3 text-center w-full bg-purple-950/10'>Item</p>
+                <p className='col-span-2 text-center w-full bg-purple-950/10'>Item</p>
                 <p className='text-center w-full'>Amount</p>
-                <p className='text-center w-full bg-purple-950/10'>Disc</p>
-                <p className='text-center w-full'>Price</p>
+                <p className='text-center w-full bg-purple-950/10'>Normal Price</p>
+                <p className='text-center w-full col-span'>Discount</p>
+                <p className='text-center w-full col-span bg-purple-950/10'>Price</p>
               </div>
             )}
             {selectedData.map((item, index) =>
               item?.packageid ? (
-                <PosSelectedPackage packagedesc={item.packagedesc} price={item.price} amount={item.amount} setSelectedData={setSelectedData} index={index} packageid={item.packageid} />
+                <PosSelectedPackage packagedesc={item.packagedesc} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} packageid={item.packageid} />
               ) : (
-                <PosSelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} index={index} subPrice={item.subPrice} />
+                <PosSelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} subPrice={item.subPrice} />
               )
             )}
             {selectedData.length == 0 && (

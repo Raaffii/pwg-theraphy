@@ -21,4 +21,35 @@ export const packageService = {
       return error;
     }
   },
+
+  getCusPackage: async (customerId) => {
+    // const margedData = { data1, data2 };
+    const token = authService.getToken();
+    try {
+      const response = await api.get(`${API_BASE_URL}/api/package/${customerId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error registation", error);
+      return error;
+    }
+  },
+
+  insertCusPackage: async (data, id) => {
+    const token = authService.getToken();
+    try {
+      const response = await api.post(`${API_BASE_URL}/api/package/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error registation", error);
+      return error;
+    }
+  },
 };
