@@ -1,7 +1,6 @@
 import { calculateAge } from "../../../../utils/calculateAges";
 export default function PersonalParticulars({ formData, formPersonalData, handleChange, personalData, handleChangePersonal }) {
   const age = calculateAge(formPersonalData.dateOfBirth);
-
   return (
     <>
       {" "}

@@ -10,6 +10,7 @@ const Layout = () => {
           <Outlet />
         </section>
       </main>
+      <br />
     </div>
   );
 };
