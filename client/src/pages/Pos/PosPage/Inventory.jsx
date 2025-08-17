@@ -61,7 +61,7 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
   return (
     <div className='border-2 border-purple-900/30 shadow-md rounded-2xl col-span-2 gap-2 p-2 bg-purple-900/5'>
       <Input className=' bg-white h-10' placeholder='Search' />
-      <div className={`w-full lg:grid ${customerId ? "grid-cols-4" : "grid-cols-3"} gap-2 my-5 space-y-2 lg:space-y-0 `}>
+      <div className={`w-full lg:grid ${customerId ? "grid-cols-4" : "grid-cols-2"} gap-2 my-5 space-y-2 lg:space-y-0 `}>
         <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Service")}>
           <p>Service</p>
         </Card>
@@ -69,13 +69,15 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
           <p>Product</p>
         </Card>
 
-        <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Package" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Package")}>
-          <p>Package</p>
-        </Card>
         {customerId && (
-          <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "PackageCus" && "bg-blue-100/90  border border-blue-700"} cursor-pointer`} onClick={() => handleFilter("PackageCus")}>
-            <p>Package Cus</p>
-          </Card>
+          <>
+            <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Package" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Package")}>
+              <p>Package</p>
+            </Card>
+            <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "PackageCus" && "bg-blue-100/90  border border-blue-700"} cursor-pointer`} onClick={() => handleFilter("PackageCus")}>
+              <p>Package Cus</p>
+            </Card>
+          </>
         )}
       </div>
 
@@ -90,6 +92,8 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
           {listDataPackage.map((item, index) => (
             <PackageCard key={index} item={item} index={index} setSelectedData={setSelectedData} packageCusFlag={packageCusFlag} />
           ))}
+
+          {!listDataPackage.length > 0 && <p className=''>No Package</p>}
         </div>
       )}
     </div>

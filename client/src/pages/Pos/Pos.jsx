@@ -59,7 +59,7 @@ export default function Pos() {
       {/* <h1>{customerData?.name}</h1> */}
       <div className='grid grid-cols-10 gap-2 mb-8'>
         <div className='col-span-6'>
-          <CustomerDataAndWalkin showWalkinInput={showWalkinInput} setShowWalkinInput={setShowWalkinInput} handleChange={handleChange} formWalkinData={formWalkinData} id={id} />
+          <CustomerDataAndWalkin showWalkinInput={showWalkinInput} setShowWalkinInput={setShowWalkinInput} handleChange={handleChange} customerData={customerData} formWalkinData={formWalkinData} id={id} />
           <Inventory selectedData={selectedData} setSelectedData={setSelectedData} customerId={id} />
         </div>
         {/* selected item */}
@@ -68,9 +68,9 @@ export default function Pos() {
             {selectedData.length != 0 && <InventorySelectedHeader />}
             {selectedData.map((item, index) =>
               item?.packageid ? (
-                <InventorySelected packagedesc={item.packagedesc} price={item.price} packageName={item.packageName} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} packageid={item.packageid} />
+                <InventortySelectedPackage key={index} item={item} packagedesc={item.packagedesc} price={item.price} packageName={item.packageName} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} packageid={item.packageid} />
               ) : (
-                <InventortySelectedPackage key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} subPrice={item.subPrice} />
+                <InventorySelected key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} subPrice={item.subPrice} />
               )
             )}
 

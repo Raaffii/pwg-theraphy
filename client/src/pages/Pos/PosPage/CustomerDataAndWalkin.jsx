@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 export default function CustomerDataAndWalkin({ showWalkinInput, setShowWalkinInput, handleChange, formWalkinData, customerData, id }) {
   return (

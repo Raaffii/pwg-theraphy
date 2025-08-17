@@ -13,7 +13,7 @@ const getCusPackagesData = async (id) => {
 const storeCusPackages = async (data, idCustomer) => {
   try {
     data.forEach((item) => {
-      if (item.packageid) {
+      if (item.packageid && item.packageCusFlag === false) {
         packages.insertCusPackages(item, idCustomer);
       }
     });
@@ -24,4 +24,18 @@ const storeCusPackages = async (data, idCustomer) => {
   }
 };
 
-module.exports = { getPackagesData, storeCusPackages, getCusPackagesData };
+const minusCusPackages = async (data, idCustomer) => {
+  try {
+    data.forEach((item) => {
+      if (item.cusPackageId) {
+        packages.minDataCusPackages(item.cusPackageId, item.remainSessions - item.amount);
+      }
+    });
+  } catch (error) {
+    console.error("Failed to save consent:", error.message);
+
+    throw new Error("Error while storing consent data");
+  }
+};
+
+module.exports = { getPackagesData, storeCusPackages, getCusPackagesData, minusCusPackages };

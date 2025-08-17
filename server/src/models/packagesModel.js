@@ -28,7 +28,6 @@ const getData = async () => {
     });
   });
 
-  console.log("package", package);
   return Object.values(package);
 };
 
@@ -37,30 +36,36 @@ const getCusPackageData = async (id) => {
   const [rows] = await pool.query(query, [id]);
 
   const package = {};
-
+  console.log("cuscus");
   rows.forEach((item, index) => {
     if (!package[item.packageid]) {
       package[item.packageid] = {
+        custpackageid: item.custpackageid,
         packageid: item.packageid,
         packagedesc: item.packagedesc,
-        price: item.price,
+        price: 0,
         expiry_days: item.expiry_days,
         noofsession: item.noofsession,
+        origSessions: item.origsessions,
+        remainSessions: item.remainsessions,
         productInfo: [],
       };
     }
 
-    package[item.packageid].productInfo.push({
-      name: item.name,
-      productcat: item.productcat,
-      unitprice: item.unitprice,
-      baseprice: item.baseprice,
-      packageprice: item.packageprice,
-      description: item.description,
-    });
+    const exists = package[item.packageid].productInfo.some((p) => p.productid === item.productid);
+    if (!exists) {
+      package[item.packageid].productInfo.push({
+        name: item.name,
+        productid: item.productid,
+        productcat: item.productcat,
+        unitprice: item.unitprice,
+        baseprice: item.baseprice,
+        packageprice: item.packageprice,
+        description: item.description,
+      });
+    }
   });
 
-  console.log("package", package);
   return Object.values(package);
 };
 
@@ -71,4 +76,10 @@ const insertCusPackages = async (data, id) => {
   return result.insertId;
 };
 
-module.exports = { getData, insertCusPackages, getCusPackageData };
+const minDataCusPackages = async (id, remainingsession) => {
+  const query = "UPDATE custpackages SET remainsessions = ? WHERE custpackageid = ?";
+  const [result] = await pool.query(query, [remainingsession, id]);
+  return result;
+};
+
+module.exports = { getData, insertCusPackages, getCusPackageData, minDataCusPackages };

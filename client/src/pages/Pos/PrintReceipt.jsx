@@ -55,7 +55,7 @@ export default function PrintReceipt({ selectedData, personData, discountShow })
                 {selectedData.map((item, index) => (
                   <tr className='hover:bg-gray-50' key={index}>
                     <td className='border border-gray-300 px-3 py-2' colSpan={3}>
-                      {item.name}
+                      {item.name || item.packageCusFlag ? `${item.packagedesc} (Package Customer) ` : `${item.packagedesc} (Package) `}
                     </td>
                     <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
                     <td className='border border-gray-300 px-3 py-2 text-center'>${item.price}</td>

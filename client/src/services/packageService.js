@@ -38,6 +38,22 @@ export const packageService = {
     }
   },
 
+  minCusPackage: async (data) => {
+    // const margedData = { data1, data2 };
+    const token = authService.getToken();
+    try {
+      const response = await api.put(`${API_BASE_URL}/api/package/mincuspackage`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error registation", error);
+      return error;
+    }
+  },
+
   insertCusPackage: async (data, id) => {
     const token = authService.getToken();
     try {

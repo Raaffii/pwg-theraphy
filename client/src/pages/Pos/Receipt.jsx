@@ -54,7 +54,13 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
       if (personData) {
         await packageService.insertCusPackage(selectedData, personData.customerid);
       } else {
-        console.log("gaada", personData);
+        console.log("no persondata", personData);
+      }
+
+      const packageUseExist = selectedData.find((prev) => prev.packageCusFlag === true);
+      console.log("packageusage", packageUseExist);
+      if (packageUseExist) {
+        await packageService.minCusPackage(selectedData);
       }
 
       const posLineData = { idResult, selectedData };
@@ -111,12 +117,13 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
               <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Total</th>
             </tr>
           </thead>
+
           <tbody>
             {console.log("sel", selectedData)}
             {selectedData.map((item, index) => (
               <tr className='hover:bg-gray-50' key={index}>
                 <td className='border border-gray-300 px-3 py-2' colSpan={3}>
-                  {item.name || `${item.packagedesc} (Package) `}
+                  {item.name || item.packageCusFlag ? `${item.packagedesc} (Package Customer) ` : `${item.packagedesc} (Package) `}
                 </td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{discountShow ? `$${item.price}` : `$${item.subPrice}`}</td>

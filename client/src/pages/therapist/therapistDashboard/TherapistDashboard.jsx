@@ -79,6 +79,14 @@ export default function TherapistDashboard() {
     setModalActionChoose(true);
   };
 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+
+    const filtered = consentList.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()));
+
+    console.log("fil", filtered);
+  };
+
   return (
     <>
       <div className='flex justify-between items-center'>
@@ -88,7 +96,7 @@ export default function TherapistDashboard() {
             <option value=''>Consent</option>
             <option value=''>Evaluation</option>
           </select>
-          <input type='text' placeholder='search' className='border' />
+          <input type='text' placeholder='search' className='border' onChange={handleSearch} />
 
           <input type='checkbox' />
           <label htmlFor=''> Active only</label>
