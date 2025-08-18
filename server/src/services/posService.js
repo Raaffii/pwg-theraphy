@@ -28,4 +28,24 @@ const posInsertLine = async (idPosHd, data, userId) => {
   }
 };
 
-module.exports = { posInsertHd, posInsertLine };
+const getCustomerPosHd = async (id) => {
+  try {
+    const result = await pos.getPosHdCusData(id);
+    return result;
+  } catch (error) {
+    console.error("Failed to save consent:", error.message);
+    throw new Error("Error while storing consent data");
+  }
+};
+
+const getCustomerPosLine = async (id) => {
+  try {
+    const result = await pos.getPosLineCusData(id);
+    return result;
+  } catch (error) {
+    console.error("Failed to save consent:", error.message);
+    throw new Error("Error while storing consent data");
+  }
+};
+
+module.exports = { posInsertHd, posInsertLine, getCustomerPosHd, getCustomerPosLine };

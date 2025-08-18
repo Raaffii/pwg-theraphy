@@ -41,7 +41,20 @@ export const posService = {
           Authorization: `Bearer ${token}`,
         },
       });
-      return response;
+      return response.data;
+    } catch (error) {
+      console.error("Error registation", error);
+    }
+  },
+  getCustomerPosLine: async (id) => {
+    const token = authService.getToken();
+    try {
+      const response = await api.get(`${API_BASE_URL}/api/pos/posline/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
     } catch (error) {
       console.error("Error registation", error);
     }

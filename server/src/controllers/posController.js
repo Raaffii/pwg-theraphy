@@ -42,4 +42,46 @@ const insertPosLine = async (req, res) => {
   }
 };
 
-module.exports = { insertPosHd, insertPosLine };
+const getCusPosHd = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await posService.getCustomerPosHd(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Registration successful",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error Get Data:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Evaluation Error",
+      error: error.message,
+    });
+  }
+};
+
+const getCusPosLine = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await posService.getCustomerPosLine(id);
+
+    res.status(200).json({
+      success: true,
+      message: "Registration successful",
+      data: result,
+    });
+  } catch (error) {
+    console.error("Error Get Data:", error);
+
+    res.status(500).json({
+      success: false,
+      message: "Evaluation Error",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = { insertPosHd, insertPosLine, getCusPosHd, getCusPosLine };

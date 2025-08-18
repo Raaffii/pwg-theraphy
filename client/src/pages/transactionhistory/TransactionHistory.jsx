@@ -9,9 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { customerService } from "@/services/customerService";
 import { posService } from "@/services/posService";
 
+import Modal from "../Shared/Modal";
+import TrasactionCheck from "./TransactionCheck";
+
 export default function TransactionHistory() {
   const [customerData, setCustomerData] = useState([]);
   const [cusPosHdData, setCusPosHdData] = useState([]);
+  const [modalDetail, setModalDetail] = useState(false);
+  const [selectedId, setSelectedId] = useState();
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -22,11 +27,18 @@ export default function TransactionHistory() {
       setCustomerData(DataExistCustomer);
 
       const posData = await posService.getCustomerPosHd(id);
-      console.log("cusdat", DataExistCustomer);
+      setCusPosHdData(posData.data);
     };
 
     fetchData(id);
   }, []);
+
+  console.log("ssss", cusPosHdData);
+
+  const handleClick = (id) => {
+    setSelectedId(id);
+    setModalDetail((prev) => !prev);
+  };
 
   return (
     <>
@@ -35,7 +47,11 @@ export default function TransactionHistory() {
         &larr; Back
       </p>
       <div className='grid lg:grid-cols-2 gap-5'>
-        <SearcBar />
+        <div className='h-full flex items-center'>
+          {" "}
+          <p>Transaction History</p>
+        </div>
+
         <div className='border border-gray-300 shadow-md rounded-2xl p-2'>
           <div className='flex flex-col sm:flex-row justify-between gap-2 sm:items-center'>
             <div className='flex flex-wrap gap-x-4 gap-y-1 text-sm'>
@@ -49,33 +65,32 @@ export default function TransactionHistory() {
         <Table>
           <TableHeader>
             <TableRow className='text-center'>
-              <TableHead>Date</TableHead>
-              <TableHead>Theraphy</TableHead>
-              <TableHead></TableHead>
-              <TableHead>Duration</TableHead>
-              <TableHead></TableHead>
-              <TableHead>Session Notes</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead>Updated</TableHead>
-              <TableHead>Action</TableHead>
+              <TableHead className='text-center'>Date</TableHead>
+              <TableHead className='text-center'>Session Notes</TableHead>
+              <TableHead className='text-center'>Created</TableHead>
+              <TableHead className='text-center'>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow className='rounded-xl hover:bg-prime-color cursor-pointer'>
-              <TableCell>20/12/1221</TableCell>
-              <TableCell colSpan={2}>cek</TableCell>
-              <TableCell colSpan={2}>cek</TableCell>
-              <TableCell>cek2</TableCell>
-              <TableCell>cek3</TableCell>
-              <TableCell> cek4</TableCell>
-              <TableCell className='flex gap-2 h-full items-center'>
-                <Eye className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' />
-                <Trash2 className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' />
-              </TableCell>
-            </TableRow>
+            {cusPosHdData.map((item, index) => (
+              <TableRow className='rounded-xl hover:bg-prime-color cursor-pointer' key={index}>
+                {}
+                <TableCell className='text-center'>{new Date(item.transdate).toLocaleString()}</TableCell>
+                <TableCell className='text-center'>{item.payment_method}</TableCell>
+                <TableCell className='text-center'>{item.total_amount}</TableCell>
+                <TableCell className='flex gap-2 h-full items-center  justify-center'>
+                  <Eye className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' onClick={() => handleClick(item.posid)} />
+                </TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </div>
+      {modalDetail && (
+        <Modal setIsOpen={setModalDetail}>
+          <TrasactionCheck idPosHd={selectedId} />
+        </Modal>
+      )}
     </>
   );
 }
