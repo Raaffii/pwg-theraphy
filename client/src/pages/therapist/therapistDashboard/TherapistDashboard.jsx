@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 import CustomerConsentForm from "@/pages/form/consents/CustomerConsentForm";
 
-import { Eye, Trash2, ClipboardPlus, Package, Computer } from "lucide-react";
+import { Eye, Trash2, ClipboardPlus, Package, Computer, History } from "lucide-react";
 import Pagination from "@/pages/Shared/Pagination";
 import { useNavigate } from "react-router-dom";
 import { paginate } from "@/utils/paginate";
@@ -178,9 +178,9 @@ export default function TherapistDashboard() {
               <Computer className='w-7 h-7' />
               <p className='text-base font-semibold'>Point Of Sales</p>
             </div>
-            <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer'>
-              <Package className='w-7 h-7' />
-              <p className='text-base font-semibold'>Evaluation</p>
+            <div className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer' onClick={() => navigate(`/therapist/transaction/${selectedChoose}`)}>
+              <History className='w-7 h-7' />
+              <p className='text-base font-semibold'>History Of Transaction</p>
             </div>
           </div>
         </Modal>

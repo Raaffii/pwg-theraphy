@@ -12,11 +12,17 @@ const getCusPackagesData = async (id) => {
 
 const storeCusPackages = async (data, idCustomer) => {
   try {
-    data.forEach((item) => {
+    for (const item of data) {
       if (item.packageid && item.packageCusFlag === false) {
-        packages.insertCusPackages(item, idCustomer);
+        const exists = await packages.getCusPackageByPackageId(item.packageid, idCustomer);
+
+        if (exists.length > 0 || !exists) {
+          packages.updateCusPackagesRemainSession(exists, item);
+        } else {
+          packages.insertCusPackages(item, idCustomer);
+        }
       }
-    });
+    }
   } catch (error) {
     console.error("Failed to save consent:", error.message);
 

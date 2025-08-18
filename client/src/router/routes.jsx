@@ -22,6 +22,7 @@ import Pos from "@/pages/Pos/Pos";
 import Invoice from "@/pages/Pos/Invoice";
 import Receipt from "@/pages/Pos/Receipt";
 import PrintReceipt from "@/pages/Pos/PrintReceipt";
+import TransactionHistory from "@/pages/transactionhistory/TransactionHistory";
 
 const privateRoutes = {
   path: "/",
@@ -70,6 +71,7 @@ const therapistRoutes = {
     { path: "receipt", element: <Receipt /> },
     { path: "printreceipt", element: <PrintReceipt /> },
     { path: "evaluation/:id", element: <TherapistEvaluation /> },
+    { path: "transaction/:id", element: <TransactionHistory /> },
   ],
 };
 

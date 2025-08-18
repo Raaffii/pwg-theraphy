@@ -56,11 +56,11 @@ const LoginPage = () => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-50 px-4'>
-      <Card className='w-full max-w-md'>
+    <div className='min-h-screen flex items-center justify-center bg-prime-color-two px-4'>
+      <Card className='w-full max-w-md bg-white/30 backdrop-blur-lg shadow-xl border border-white/20 rounded-2xl'>
         <CardHeader className='space-y-1'>
-          <CardTitle className='text-2xl font-bold text-center'>Welcome back</CardTitle>
-          <CardDescription className='text-center'>Enter your credentials to access your account</CardDescription>
+          <CardTitle className='text-2xl font-bold text-center'>Login</CardTitle>
+          <CardDescription className='text-center text-black'>Enter your credentials to access your account</CardDescription>
         </CardHeader>
         <CardContent>
           <div className='space-y-4'>
@@ -68,7 +68,7 @@ const LoginPage = () => {
               <Label htmlFor='email'>Email</Label>
               <div className='relative'>
                 <Mail className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4' />
-                <Input id='email' name='email' type='email' placeholder='Enter your email' value={formData.email} onChange={handleChange} className='pl-10' disabled={loading} />
+                <input id='email' name='email' type='email' placeholder='Enter your email' value={formData.email} onChange={handleChange} className='pl-10 py-3 rounded-xl bg-white/70 border-none focus:ring-2 focus:ring-purple-500 w-full placeholder-gray-500 outline-none' disabled={loading} />
               </div>
             </div>
 
@@ -76,21 +76,33 @@ const LoginPage = () => {
               <Label htmlFor='password'>Password</Label>
               <div className='relative'>
                 <Lock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4' />
-                <Input id='password' name='password' type={showPassword ? "text" : "password"} placeholder='Enter your password' value={formData.password} onChange={handleChange} className='pl-10 pr-10' disabled={loading} />
+                <input
+                  id='password'
+                  name='password'
+                  type={showPassword ? "text" : "password"}
+                  placeholder='Enter your password'
+                  value={formData.password}
+                  onChange={handleChange}
+                  className='pl-10 py-3 rounded-xl bg-white/70 border-none focus:ring-2 focus:ring-purple-500 w-full placeholder-gray-500 outline-none'
+                  disabled={loading}
+                />
                 <button type='button' onClick={() => setShowPassword(!showPassword)} className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600' disabled={loading}>
                   {showPassword ? <EyeOff className='h-4 w-4' /> : <Eye className='h-4 w-4' />}
                 </button>
               </div>
+              <div className='mt-4 text-right'>
+                <button className='text-sm text-blue-600 hover:text-blue-800'>Forgot your password?</button>
+              </div>
             </div>
 
-            <Button type='submit' className='w-full' disabled={loading} onClick={handleSubmit}>
+            <Button type='submit' className='w-full bg-purple-950 rounded-3xl p-5' disabled={loading} onClick={handleSubmit}>
               {loading ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                   Signing in...
                 </>
               ) : (
-                "Sign in"
+                "LOGIN"
               )}
             </Button>
           </div>
@@ -102,10 +114,6 @@ const LoginPage = () => {
                 Sign up
               </button>
             </p>
-          </div>
-
-          <div className='mt-4 text-center'>
-            <button className='text-sm text-blue-600 hover:text-blue-800'>Forgot your password?</button>
           </div>
         </CardContent>
       </Card>

@@ -26,6 +26,7 @@ export default function Pos() {
   const [customerData, setCustomerData] = useState();
   const [receiptModal, setReceiptModal] = useState(false);
   const [showWalkinInput, setShowWalkinInput] = useState(false);
+  const [transactionFinish, setTransactionFinish] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {

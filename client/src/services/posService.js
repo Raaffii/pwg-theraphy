@@ -33,4 +33,17 @@ export const posService = {
       console.error("Error registation", error);
     }
   },
+  getCustomerPosHd: async (id) => {
+    const token = authService.getToken();
+    try {
+      const response = await api.get(`${API_BASE_URL}/api/pos/poshd/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response;
+    } catch (error) {
+      console.error("Error registation", error);
+    }
+  },
 };

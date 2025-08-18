@@ -36,7 +36,7 @@ const getCusPackageData = async (id) => {
   const [rows] = await pool.query(query, [id]);
 
   const package = {};
-  console.log("cuscus");
+
   rows.forEach((item, index) => {
     if (!package[item.packageid]) {
       package[item.packageid] = {
@@ -76,10 +76,27 @@ const insertCusPackages = async (data, id) => {
   return result.insertId;
 };
 
+const getCusPackageByPackageId = async (idPackage, idCustomer) => {
+  const query = "select * from custpackages WHERE packageid= ? AND customerid = ?";
+  const [rows] = await pool.query(query, [idPackage, idCustomer]);
+
+  return rows;
+};
+
 const minDataCusPackages = async (id, remainingsession) => {
   const query = "UPDATE custpackages SET remainsessions = ? WHERE custpackageid = ?";
   const [result] = await pool.query(query, [remainingsession, id]);
   return result;
 };
 
-module.exports = { getData, insertCusPackages, getCusPackageData, minDataCusPackages };
+const updateCusPackagesRemainSession = async (exist, data) => {
+  const { noofsession } = data;
+  const { remainsessions, custpackageid } = exist[0];
+  const newSession = remainsessions + noofsession;
+
+  const query = "UPDATE custpackages SET remainsessions = ? WHERE custpackageid = ?";
+  const [result] = await pool.query(query, [newSession, custpackageid]);
+  return result;
+};
+
+module.exports = { getData, insertCusPackages, getCusPackageData, minDataCusPackages, getCusPackageByPackageId, updateCusPackagesRemainSession };
