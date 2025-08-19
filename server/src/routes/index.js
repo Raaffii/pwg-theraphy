@@ -9,6 +9,7 @@ const evaluationRoute = require("./evaluationRoute");
 const productsRoute = require("./productsRoute");
 const posRoute = require("./posRoute");
 const packagesRoute = require("./packagesRoute");
+const receiptRoute = require("./receiptRoute");
 
 const Router = express.Router();
 
@@ -23,5 +24,6 @@ Router.use("/evaluation", evaluationRoute);
 Router.use("/products", productsRoute);
 Router.use("/pos", posRoute);
 Router.use("/package", packagesRoute);
+Router.use("/receipt", receiptRoute);
 
 module.exports = Router;

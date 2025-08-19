@@ -1,4 +1,4 @@
-import { CreditCard, ScrollText } from "lucide-react";
+import { CreditCard, ScrollText, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -8,13 +8,18 @@ import { posService } from "@/services/posService";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { packageService } from "@/services/packageService";
+import { receiptService } from "@/services/receiptService";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import axios from "axios";
 
 export default function Receipt({ selectedData, personData, formWalkinData }) {
   const navigate = useNavigate();
-
+  const [receiptLoading, setReceiptLoading] = useState(false);
   const { user, loading } = useAuth();
   const [saved, setSaved] = useState(false);
   const [discountShow, setDiscountShow] = useState(false);
+  const [email, setEmail] = useState();
 
   const location = useLocation();
 
@@ -24,6 +29,56 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
   const handlePrint = () => {
     window.print();
   };
+
+  async function handleSendEmail() {
+    setReceiptLoading(true);
+    try {
+      await new Promise((r) => setTimeout(r, 100));
+      const element = document.getElementById("printreceipt");
+
+      // capture elemen
+      const canvas = await html2canvas(element, { scale: 2 });
+      const imgData = canvas.toDataURL("image/png");
+
+      // PDF landscape
+      const pdf = new jsPDF("l", "mm", "a4");
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+
+      // ukuran canvas
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+
+      // ratio supaya fit
+      const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
+      console.log(ratio);
+
+      const finalWidth = pageWidth;
+      const finalHeight = pageHeight;
+
+      // center gambar
+      const x = (pageWidth - finalWidth) / 2;
+      const y = (pageHeight - finalHeight) / 2;
+
+      pdf.addImage(imgData, "PNG", x, y, finalWidth, finalHeight);
+      // ambil PDF sebagai Blob
+      const pdfBlob = pdf.output("blob");
+
+      // kirim via FormData
+      const formData = new FormData();
+      formData.append("file", pdfBlob, "receipt.pdf");
+      formData.append("email", formPaymentData.email);
+
+      await receiptService.sentEmail(formData);
+
+      alert("Email terkirim!");
+    } catch (error) {
+      console.error("Gagal kirim email:", error);
+      alert("Gagal kirim email");
+      setReceiptLoading(false);
+    }
+    setReceiptLoading(false);
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,7 +138,6 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
     email: personData?.email,
   });
 
-  console.log("ceca", selectedData);
   return (
     <>
       <div className='my-3'>
@@ -123,7 +177,7 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
             {selectedData.map((item, index) => (
               <tr className='hover:bg-gray-50' key={index}>
                 <td className='border border-gray-300 px-3 py-2' colSpan={3}>
-                  {item.name || item.packageCusFlag ? `${item.packagedesc} (Package Customer) ` : `${item.packagedesc} (Package) `}
+                  {item.name ? item.name : item.packageCusFlag ? `${item.packagedesc} (Package Customer) ` : `${item.packagedesc} (Package) `}
                 </td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{discountShow ? `$${item.price}` : `$${item.subPrice}`}</td>
@@ -206,24 +260,43 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
                   )}
                 </div>
               </div>
-              <div className='print-only'>
+              <div className='print-only' id='print-area'>
                 <PrintReceipt selectedData={selectedData} personData={personData} discountShow={discountShow} />
               </div>
-
-              <Button onClick={handlePrint}>Save</Button>
+              {formPaymentData.receiptOption && (
+                <>
+                  {formPaymentData.receiptOption == "printReceipt" ? (
+                    <Button onClick={handlePrint}>Print</Button>
+                  ) : (
+                    <Button onClick={handleSendEmail}>
+                      {" "}
+                      {receiptLoading && <LoaderCircle className='animate-spin' />}
+                      Sent Email
+                    </Button>
+                  )}
+                </>
+              )}
             </div>
           </>
         )}
       </div>
       <style>{`
-        .print-only {
-          display: none;
-        }
-        @media print {
-          .print-only {
-            display: block;
-          }
-        }
+       .print-only {
+  display: block;          /* tetap di DOM */
+  position: absolute;      /* sembunyikan di layar */
+  left: -9999px;
+  top: 0;
+  opacity: 0;
+}
+       @media print {
+  .print-only {
+    display: block;       /* tampil di print */
+    position: static;     /* ikut layout normal print */
+    left: 0;
+    top: 0;
+    opacity: 1;           /* terlihat saat print */
+  }
+}
       `}</style>
     </>
   );

@@ -3,13 +3,13 @@ import { CreditCard, ScrollText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
-export default function PrintReceipt({ selectedData, personData, discountShow }) {
-  const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
+export default function PrintReceipt2({ selectedData, personData, discountShow }) {
+  //   const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
 
-  console.log("selsel", selectedData);
+  //   console.log("selsel", selectedData);
   return (
     <>
-      <div id='printreceipt' className='h-full'>
+      <div id='printreceipt' className='h-full a'>
         <div className=' flex justify-between items-center bg-purple-500/50 p-2'>
           <div className='flex items-center'>
             <img src='/pwglogo.svg' alt='' className='w-20' />
@@ -46,42 +46,39 @@ export default function PrintReceipt({ selectedData, personData, discountShow })
                   </th>
                   <th className='border border-gray-300 px-3 py-2 font-medium w-[10%] text-center'>Quantity</th>
                   <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Unit Price</th>
-                  {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Subtotal</th>}
-                  {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Discount</th>}
 
                   <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Total</th>
                 </tr>
               </thead>
               <tbody>
-                {selectedData.map((item, index) => (
-                  <tr className='hover:bg-gray-50' key={index}>
-                    <td className='border border-gray-300 px-3 py-2' colSpan={3}>
-                      {item.name ? item.name : item.packageCusFlag ? `${item.packagedesc} (Package Customer) ` : `${item.packagedesc} (Package) `}
-                    </td>
-                    <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
-                    <td className='border border-gray-300 px-3 py-2 text-center'>${item.price}</td>
-                    {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>${(item.price * item.amount).toFixed(2)}</td>}
-                    {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>{item.discpercent ? `${item.discount}%` : `-$${(item.discount * 1).toFixed(2)}`}</td>}
+                <tr className='hover:bg-gray-50'>
+                  <td className='border border-gray-300 px-3 py-2' colSpan={3}>
+                    {"Romeo "}
+                  </td>
+                  <td className='border border-gray-300 px-3 py-2 text-center'>21</td>
+                  <td className='border border-gray-300 px-3 py-2 text-center'>$32.32</td>
 
-                    <td className='border border-gray-300 px-3 py-2 text-center'>${(item.amount * item.subPrice).toFixed(2)}</td>
-                  </tr>
-                ))}
+                  <td className='border border-gray-300 px-3 py-2 text-center'>$32.32</td>
+                </tr>
               </tbody>
             </table>
           </div>
 
-          <div className='flex justify-between items-center mt-20 mb-30'>
+          <div className='flex justify-between mt-20'>
             <div className=''>
               <p className='font-semibold'>Payment Menthod : </p>
               <p> Credit Card</p>
             </div>
             <div className=' w-80 text-right'>
-              <p className='border-t-2  w-full'>Total : ${totalPrice}</p>
+              <p className='border-t-2  w-full'>Total : $232.23</p>
             </div>
           </div>
-          <div className='w-full h-5 bg-white/1'> </div>
-          <div className='w-full h-5 bg-purple-950'> </div>
         </div>
+        {/* <div className='absolute bottom-0 left-0 bg-purple-500/50 text-center p-3 pb-10 w-full'>
+          <p className='text-xl font-semibold'>Thank You For Your Purchase</p>
+          <p>For question or any concern please contact</p>
+          <p>PWG@gmail.com, Bob(21)32132123</p>
+        </div> */}
       </div>
 
       <style>{`
@@ -95,13 +92,12 @@ export default function PrintReceipt({ selectedData, personData, discountShow })
     }
 
     #printreceipt {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      background: white;
-      box-shadow: none !important;
-      border-radius: 0 !important;
+       width: 297mm;
+  min-height: 210mm;
+  padding: 10mm;
+  box-sizing: border-box;
+  background: white;
+  font-size: 12px;
     }
 
     .min-h-screen {
