@@ -88,7 +88,7 @@ export default function TransactionHistory() {
       </div>
       {modalDetail && (
         <Modal setIsOpen={setModalDetail}>
-          <TrasactionCheck idPosHd={selectedId} />
+          <TrasactionCheck idPosHd={selectedId} customerData={customerData} />
         </Modal>
       )}
     </>

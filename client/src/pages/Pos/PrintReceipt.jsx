@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 
 export default function PrintReceipt({ selectedData, personData, discountShow }) {
-  const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * item.amount, 0).toFixed(2);
-  const tax = (totalPrice * 0.1).toFixed(2);
+  const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
+
+  console.log("selsel", selectedData);
   return (
     <>
       <div id='printreceipt' className='h-full'>
@@ -75,9 +76,7 @@ export default function PrintReceipt({ selectedData, personData, discountShow })
               <p> Credit Card</p>
             </div>
             <div className=' w-80 text-right'>
-              <p className='border-t-2  w-full'>Subtotal : ${totalPrice}</p>
-              <p className=' w-full border-b-2'>Tax : ${tax}</p>
-              <p className=' w-full border-b-2 border-purple-600 '>Total Amount : ${(Number(totalPrice) + Number(tax)).toFixed(2)}</p>
+              <p className='border-t-2  w-full'>Total : ${totalPrice}</p>
             </div>
           </div>
         </div>

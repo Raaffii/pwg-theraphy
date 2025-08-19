@@ -56,7 +56,7 @@ const LoginPage = () => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-prime-color-two px-4'>
+    <div className='min-h-screen flex items-center justify-center  px-4 border border-purple-950'>
       <Card className='w-full max-w-md bg-white/30 backdrop-blur-lg shadow-xl border border-white/20 rounded-2xl'>
         <CardHeader className='space-y-1'>
           <CardTitle className='text-2xl font-bold text-center'>Login</CardTitle>
