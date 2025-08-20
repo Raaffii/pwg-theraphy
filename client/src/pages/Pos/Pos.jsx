@@ -51,6 +51,10 @@ export default function Pos() {
     walkinContact: "",
   });
 
+  const handleDeleteAll = async () => {
+    setSelectedData([]);
+  };
+
   return (
     <>
       <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
@@ -65,6 +69,15 @@ export default function Pos() {
         </div>
         {/* selected item */}
         <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5 col-span-4'>
+          {!selectedData.length == 0 && (
+            <div className='w-full flex justify-between items-center'>
+              <p>List Of Selected Item</p>
+              <button onClick={handleDeleteAll} className='bg-red-600 text-white rounded-xl p-1 shadow-md'>
+                Del
+              </button>
+            </div>
+          )}
+          <hr />
           <div className='space-y-1'>
             {selectedData.length != 0 && <InventorySelectedHeader />}
             {selectedData.map((item, index) =>
@@ -94,7 +107,7 @@ export default function Pos() {
               <Modal setIsOpen={setReceiptModal}>
                 {" "}
                 <div className='max-h-[600px] overflow-y-auto'>
-                  <Receipt selectedData={selectedData} personData={customerData} formWalkinData={formWalkinData} />
+                  <Receipt selectedData={selectedData} personData={customerData} formWalkinData={formWalkinData} setSelectedData={setSelectedData} />
                 </div>
               </Modal>
             )}

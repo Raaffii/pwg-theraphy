@@ -1,28 +1,35 @@
 import React from "react";
-import { Document, Page, View, Text, Image, StyleSheet } from "@react-pdf/renderer";
+import { Document, Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
 import pwglogo from "../../assets/pwglogo.svg";
-// Styles
+
+Font.register({
+  family: "Lexend",
+  src: "/Lexend-Regular.ttf",
+});
+
 const styles = StyleSheet.create({
-  page: { fontSize: 10 },
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#D3AAFB", padding: 20 },
+  page: { fontFamily: "Lexend", fontSize: 14 },
+  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", backgroundColor: "#D3AAFB", padding: 5 },
   headerLeft: { flexDirection: "row", alignItems: "center" },
-  logo: { width: 50, height: 40, marginRight: 8 },
+  logo: { width: 60, height: 60, marginRight: 8 },
   section: { marginTop: 30, flexDirection: "row", padding: 20, gap: 10 },
   table: { display: "flex", flexDirection: "column", marginTop: 40, borderWidth: 1, borderColor: "#ccc", padding: 20 },
-  soldto: { marginLeft: 10 },
+  from: { marginRight: 50 },
+  soldto: { marginLeft: 50, paddingRight: 50 },
   tableRow: { flexDirection: "row" },
   tableHeader: { backgroundColor: "#f3f3f3", fontWeight: "bold" },
   tableColDesc: { flex: 3, borderWidth: 1, borderColor: "#ccc", padding: 4 },
   tableColCenter: { flex: 1, borderWidth: 1, borderColor: "#ccc", padding: 4, textAlign: "center" },
   footer: { flexDirection: "row", justifyContent: "space-between", marginTop: 80, padding: 20 },
-  totalBox: { width: 200, textAlign: "right", borderTopWidth: 2, borderTopColor: "#000", paddingTop: 4 },
+  totalBox: { width: 200, textAlign: "right", borderTopWidth: 1, borderTopColor: "#000", paddingTop: 4 },
   divider: { height: 5, backgroundColor: "#fff" },
   bottomBar: { height: 10, backgroundColor: "#D3AAFB" },
   bottomfooter: { position: "absolute", bottom: 0, left: 0, backgroundColor: "#D3AAFB", textAlign: "center", padding: 30, width: "100%" },
 });
 
+const today = new Date().toISOString().split("T")[0];
 // Component
-export const ReceiptDocument = ({ paymentData, selectedData, discountShow, totalPrice }) => (
+export const ReceiptDocument = ({ personData, selectedData, discountShow, totalPrice }) => (
   <Document>
     <Page size='A3' orientation='landscape' style={styles.page}>
       {/* Header */}
@@ -32,14 +39,14 @@ export const ReceiptDocument = ({ paymentData, selectedData, discountShow, total
           <Text>Prife Wellness Group</Text>
         </View>
         <View>
-          <Text>Payment Date:</Text>
-          <Text>Receipt #</Text>
+          <Text>Payment Date: {today}</Text>
+          <Text>Receipt #322323</Text>
         </View>
       </View>
 
       {/* From & Sold To */}
       <View style={styles.section}>
-        <View>
+        <View style={styles.from}>
           <Text>From</Text>
           <Text>Prife Wellness Group</Text>
           <Text>Address Of Prife Wellness Group</Text>
@@ -47,9 +54,9 @@ export const ReceiptDocument = ({ paymentData, selectedData, discountShow, total
         </View>
         <View style={styles.soldto}>
           <Text>Sold To</Text>
-          <Text>Arief Muhammad</Text>
-          <Text>JL Apel</Text>
-          <Text>Apel@gmai.com</Text>
+          <Text>{personData.name}</Text>
+          <Text>{personData.contact_no}</Text>
+          <Text>{personData.email}</Text>
         </View>
       </View>
 

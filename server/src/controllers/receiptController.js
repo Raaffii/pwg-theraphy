@@ -43,11 +43,10 @@ const sentEmail = async (req, res) => {
     // delete file
     fs.unlink(filePath);
 
-    res.json({ message: `Email sent to ${email}` });
-    res.status(200).json("Sent Email");
+    res.status(200).json({ sent: true, message: "Success Sent Email" });
   } catch (err) {
     console.error("Send email error:", err);
-    res.status(500).json({ error: "Failed to send email" });
+    res.status(500).json({ sent: false, message: "Failed Sent Email" });
   }
 };
 

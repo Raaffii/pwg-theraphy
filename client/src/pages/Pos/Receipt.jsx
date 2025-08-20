@@ -16,7 +16,7 @@ import jsPDF from "jspdf";
 import axios from "axios";
 import { saveAs } from "file-saver";
 
-export default function Receipt({ selectedData, personData, formWalkinData }) {
+export default function Receipt({ selectedData, personData, formWalkinData, setSelectedData }) {
   const navigate = useNavigate();
   const [receiptLoading, setReceiptLoading] = useState(false);
   const { user, loading } = useAuth();
@@ -34,9 +34,9 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
   };
 
   async function handleSendEmail() {
-    setReceiptLoading(true);
     try {
       // makes dokument PDF
+      setReceiptLoading((prev) => !prev);
       const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
       const blob = await pdf(<ReceiptDocument selectedData={selectedData} personData={personData} discountShow={discountShow} totalPrice={totalPrice} />).toBlob();
 
@@ -45,17 +45,20 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
       formData.append("file", blob, "receipt.pdf");
       formData.append("email", formPaymentData.email);
 
-      await receiptService.sentEmail(formData);
-
+      const result = await receiptService.sentEmail(formData);
+      console.log("status", result);
+      if (result.sent) {
+        alert("Email Sent!");
+      } else {
+        alert("Sending fail!");
+      }
       //testing for----------------------------
       // saveAs(blob, "receipt.pdf");
-
-      alert("Email Sent!");
     } catch (error) {
       console.error("Failed Sentong email:", error);
       alert("Failed sent email");
     }
-    setReceiptLoading(false);
+    setReceiptLoading((prev) => !prev);
   }
 
   const handleChange = (e) => {
@@ -260,19 +263,19 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
       </div>
       <style>{`
        .print-only {
-  display: block;          /* tetap di DOM */
-  position: absolute;      /* sembunyikan di layar */
+  display: block;         
+  position: absolute;    
   left: -9999px;
   top: 0;
   opacity: 0;
 }
        @media print {
   .print-only {
-    display: block;       /* tampil di print */
-    position: static;     /* ikut layout normal print */
+    display: block;      
+    position: static;    
     left: 0;
     top: 0;
-    opacity: 1;           /* terlihat saat print */
+    opacity: 1;           
   }
 }
       `}</style>
