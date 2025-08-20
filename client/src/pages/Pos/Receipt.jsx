@@ -9,9 +9,12 @@ import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { packageService } from "@/services/packageService";
 import { receiptService } from "@/services/receiptService";
+import { ReceiptDocument } from "./ReceiptDocument";
+import { pdf } from "@react-pdf/renderer";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 export default function Receipt({ selectedData, personData, formWalkinData }) {
   const navigate = useNavigate();
@@ -33,49 +36,22 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
   async function handleSendEmail() {
     setReceiptLoading(true);
     try {
-      await new Promise((r) => setTimeout(r, 100));
-      const element = document.getElementById("printreceipt");
+      // buat dokumen PDF
+      const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
+      const blob = await pdf(<ReceiptDocument selectedData={selectedData} personData={personData} discountShow={discountShow} totalPrice={totalPrice} />).toBlob();
 
-      // capture elemen
-      const canvas = await html2canvas(element, { scale: 2 });
-      const imgData = canvas.toDataURL("image/png");
+      // // kirim via FormData
+      // const formData = new FormData();
+      // formData.append("file", blob, "receipt.pdf");
+      // formData.append("email", formPaymentData.email);
 
-      // PDF landscape
-      const pdf = new jsPDF("l", "mm", "a4");
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      // ukuran canvas
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-
-      // ratio supaya fit
-      const ratio = Math.min(pageWidth / imgWidth, pageHeight / imgHeight);
-      console.log(ratio);
-
-      const finalWidth = pageWidth;
-      const finalHeight = pageHeight;
-
-      // center gambar
-      const x = (pageWidth - finalWidth) / 2;
-      const y = (pageHeight - finalHeight) / 2;
-
-      pdf.addImage(imgData, "PNG", x, y, finalWidth, finalHeight);
-      // ambil PDF sebagai Blob
-      const pdfBlob = pdf.output("blob");
-
-      // kirim via FormData
-      const formData = new FormData();
-      formData.append("file", pdfBlob, "receipt.pdf");
-      formData.append("email", formPaymentData.email);
-
-      await receiptService.sentEmail(formData);
+      // await receiptService.sentEmail(formData);
+      saveAs(blob, "receipt.pdf");
 
       alert("Email terkirim!");
     } catch (error) {
       console.error("Gagal kirim email:", error);
       alert("Gagal kirim email");
-      setReceiptLoading(false);
     }
     setReceiptLoading(false);
   }

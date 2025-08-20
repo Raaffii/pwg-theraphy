@@ -33,26 +33,29 @@ export default function TransactionHistory() {
     fetchData(id);
   }, []);
 
-  console.log("ssss", cusPosHdData);
-
   const handleClick = (id) => {
     setSelectedId(id);
     setModalDetail((prev) => !prev);
   };
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(cusPosHdData.length / itemsPerPage);
 
+  // slice data sesuai halaman
+  const currentData = cusPosHdData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   return (
     <>
       {" "}
       <p className='text-blue-600 hover:underline my-2 cursor-pointer' onClick={() => navigate("/therapist")}>
         &larr; Back
       </p>
-      <div className='grid lg:grid-cols-2 gap-5'>
+      <div className='gap-5'>
         <div className='h-full flex items-center'>
           {" "}
           <p>Transaction History</p>
         </div>
 
-        <div className='border border-gray-300 shadow-md rounded-2xl p-2'>
+        <div className='border border-gray-300 shadow-md rounded-2xl p-2 w-1/2'>
           <div className='flex flex-col sm:flex-row justify-between gap-2 sm:items-center'>
             <div className='flex flex-wrap gap-x-4 gap-y-1 text-sm'>
               <p>Name: {customerData[0]?.name || ""}</p>
@@ -72,7 +75,7 @@ export default function TransactionHistory() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {cusPosHdData.map((item, index) => (
+            {currentData.map((item, index) => (
               <TableRow className='rounded-xl hover:bg-prime-color cursor-pointer' key={index}>
                 {}
                 <TableCell className='text-center'>{new Date(item.transdate).toLocaleString()}</TableCell>
@@ -85,6 +88,36 @@ export default function TransactionHistory() {
             ))}
           </TableBody>
         </Table>
+        <div className='flex gap-2 m-4 items-center'>
+          {/* Prev */}
+          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className='bg-white shadow-lg p-1 border border-1 border-purple-500'>
+            Prev
+          </button>
+
+          {/* nomor halaman */}
+          {(() => {
+            const pages = [];
+            let start = Math.max(currentPage - 1, 1);
+            let end = Math.min(start + 2, totalPages);
+
+            if (end - start < 2) {
+              start = Math.max(end - 2, 1);
+            }
+
+            for (let i = start; i <= end; i++) {
+              pages.push(
+                <button key={i} className={currentPage === i ? "font-bold bg-purple-500 p-1 shadow-lg rounded-sm text-white" : ""} onClick={() => setCurrentPage(i)}>
+                  {i}
+                </button>
+              );
+            }
+            return pages;
+          })()}
+
+          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className='bg-white shadow-lg p-1 border border-1 border-purple-500'>
+            Next
+          </button>
+        </div>
       </div>
       {modalDetail && (
         <Modal setIsOpen={setModalDetail}>

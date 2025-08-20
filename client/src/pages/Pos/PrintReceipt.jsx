@@ -79,8 +79,11 @@ export default function PrintReceipt({ selectedData, personData, discountShow })
               <p className='border-t-2  w-full'>Total : ${totalPrice}</p>
             </div>
           </div>
-          <div className='w-full h-5 bg-white/1'> </div>
-          <div className='w-full h-5 bg-purple-950'> </div>
+        </div>
+        <div className='absolute bottom-0 left-0 bg-purple-500/50 text-center p-3 pb-10 w-full'>
+          <p className='text-xl font-semibold'>Thank You For Your Purchase</p>
+          <p>For question or any concern please contact</p>
+          <p>PWG@gmail.com, Bob(21)32132123</p>
         </div>
       </div>
 

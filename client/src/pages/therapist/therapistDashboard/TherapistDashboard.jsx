@@ -10,11 +10,12 @@ import { Eye, Trash2, ClipboardPlus, Package, Computer, History } from "lucide-r
 import Pagination from "@/pages/Shared/Pagination";
 import { useNavigate } from "react-router-dom";
 import { paginate } from "@/utils/paginate";
+import SearcBar from "@/pages/Shared/SearchBar";
 
 export default function TherapistDashboard() {
   const navigate = useNavigate();
   const [consentList, setConsentList] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentDatas, setCurrentDatas] = useState([]);
   const [selectedDelete, setSelectedDelete] = useState();
   const [openModal, setOpenModal] = useState(false);
   const [openModalForm, setOpenModalForm] = useState(false);
@@ -48,7 +49,7 @@ export default function TherapistDashboard() {
       setCurrentPage(page);
     }
   };
-  let { currentItems, totalPages } = paginate(consentList, currentPage, 10);
+  // let { currentItems, totalPages } = paginate(consentList, currentPage, 10);
 
   const handleDelete = async (id) => {
     setSelectedDelete(id);
@@ -81,26 +82,19 @@ export default function TherapistDashboard() {
 
   const handleSearch = (e) => {
     const value = e.target.value;
-
     const filtered = consentList.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()));
-
-    console.log("fil", filtered);
+    currentData = filtered;
   };
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(consentList.length / itemsPerPage);
+  let currentData = consentList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
       <div className='flex justify-between items-center'>
-        <div className='space-x-2'>
-          <select name='' id=''>
-            <option value=''>Register</option>
-            <option value=''>Consent</option>
-            <option value=''>Evaluation</option>
-          </select>
-          <input type='text' placeholder='search' className='border' onChange={handleSearch} />
-
-          <input type='checkbox' />
-          <label htmlFor=''> Active only</label>
-        </div>
+        <SearcBar handleSearch={handleSearch} />
         <Button onClick={() => setOpenModalForm(true)} className='bg-prime-color hover:bg-prime-color-hover'>
           +{" "}
         </Button>
@@ -137,7 +131,7 @@ export default function TherapistDashboard() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentItems.map((item, index) => (
+          {currentData.map((item, index) => (
             <TableRow key={index} className='rounded-xl hover:bg-prime-color cursor-pointer '>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.contact_no}</TableCell>
@@ -158,7 +152,36 @@ export default function TherapistDashboard() {
           ))}
         </TableBody>
       </Table>
-      <Pagination totalPages={totalPages} HandlepagesChange={HandlepagesChange} currentPage={currentPage} />
+      <div className='flex gap-2 m-4 items-center'>
+        {/* Prev */}
+        <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className='bg-white shadow-lg p-1 border border-1 border-purple-500'>
+          Prev
+        </button>
+
+        {/* nomor halaman */}
+        {(() => {
+          const pages = [];
+          let start = Math.max(currentPage - 1, 1);
+          let end = Math.min(start + 2, totalPages);
+
+          if (end - start < 2) {
+            start = Math.max(end - 2, 1);
+          }
+
+          for (let i = start; i <= end; i++) {
+            pages.push(
+              <button key={i} className={currentPage === i ? "font-bold bg-purple-500 p-1 shadow-lg rounded-sm text-white" : ""} onClick={() => setCurrentPage(i)}>
+                {i}
+              </button>
+            );
+          }
+          return pages;
+        })()}
+
+        <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className='bg-white shadow-lg p-1 border border-1 border-purple-500'>
+          Next
+        </button>
+      </div>
       {showModal && selectedItem && (
         <Modal setIsOpen={setShowModal} big={true}>
           <div className='max-h-[600px] overflow-y-auto'>

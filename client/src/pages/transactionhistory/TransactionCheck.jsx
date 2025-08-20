@@ -23,6 +23,7 @@ export default function TrasactionCheck({ idPosHd, customerData }) {
   const totalPrice = dataPosline.reduce((total, item) => total + item.total_price * 1, 0).toFixed(2);
   return (
     <div>
+      <h1 className='my-3'>Transaction Detail</h1>
       <table className='w-full border border-gray-300 text-sm mb-6 shadow-sm rounded-lg overflow-hidden'>
         <thead>
           <tr className='bg-gray-100 text-left'>
@@ -60,13 +61,13 @@ export default function TrasactionCheck({ idPosHd, customerData }) {
           </tr>
         </tfoot>
       </table>
-      <div className='flex gap-2 justify-end'>
+      {/* <div className='flex gap-2 justify-end'>
         <Button>Sent To email</Button>
         <Button onClick={handlePrint}>Print</Button>
       </div>
       <div className='print-only'>
         <PrintReceipt selectedData={dataPosline} personData={customerData} />
-      </div>
+      </div> */}
       <style>{`
         .print-only {
           display: none;
