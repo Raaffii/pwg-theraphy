@@ -2,9 +2,17 @@ import { useEffect, useState } from "react";
 import { posService } from "@/services/posService";
 import { Button } from "@/components/ui/button";
 import PrintReceipt from "../Pos/PrintReceipt";
+import { useAuth } from "@/context/AuthContext";
+import { Input } from "@/components/ui/input";
+import { ReceiptDocument } from "../Pos/ReceiptDocument";
+import { pdf } from "@react-pdf/renderer";
+import { LoaderCircle } from "lucide-react";
+import { receiptService } from "@/services/receiptService";
 
 export default function TrasactionCheck({ idPosHd, customerData }) {
+  const [receiptLoading, setReceiptLoading] = useState(false);
   const [dataPosline, setDataPosLine] = useState([]);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     const fetch = async () => {
@@ -19,8 +27,58 @@ export default function TrasactionCheck({ idPosHd, customerData }) {
   const handlePrint = () => {
     window.print();
   };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormPaymentData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
+  async function handleSendEmail() {
+    setReceiptLoading(true);
+    try {
+      // makes dokument PDF
+      const totalPrice = dataPosline.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
+      const blob = await pdf(<ReceiptDocument selectedData={dataPosline} personData={customerData} discountShow={true} totalPrice={totalPrice} />).toBlob();
+
+      // sent via FormData
+      const formData = new FormData();
+      formData.append("file", blob, "receipt.pdf");
+      formData.append("email", formPaymentData.email);
+
+      await receiptService.sentEmail(formData);
+
+      //testing for----------------------------
+      // saveAs(blob, "receipt.pdf");
+
+      alert("Email Sent!");
+    } catch (error) {
+      console.error("Failed Sent email:", error);
+      alert("Failed sent email");
+    }
+    setReceiptLoading(false);
+  }
+
+  const handleClick = (e) => {
+    const { name, value } = e.target;
+    if (formPaymentData.receiptOption == value) {
+      setFormPaymentData((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
+  };
   const totalPrice = dataPosline.reduce((total, item) => total + item.total_price * 1, 0).toFixed(2);
+  const [formPaymentData, setFormPaymentData] = useState({
+    customerId: customerData?.customerid || null,
+    therapistId: user?.therapistId,
+    paymentMethod: "",
+    receiptOption: "",
+    totalPrice: totalPrice,
+    email: customerData?.email,
+  });
+
   return (
     <div>
       <h1 className='my-3'>Transaction Detail</h1>
@@ -47,7 +105,7 @@ export default function TrasactionCheck({ idPosHd, customerData }) {
               <td className='border border-gray-300 px-3 py-2 text-center'>{item.qty}</td>
               <td className='border border-gray-300 px-3 py-2 text-center'>${item.unitprice}</td>
               <td className='border border-gray-300 px-3 py-2 text-center'>${item.price}</td>
-              <td className='border border-gray-300 px-3 py-2 text-center'>{item.discpercent ? `${item.disc}%` : `-$${item.disc}`}</td>
+              <td className='border border-gray-300 px-3 py-2 text-center'>{item.discpercent ? `${item.discount}%` : `-$${item.discount}`}</td>
               <td className='border border-gray-300 px-3 py-2 text-center'>${item.total_price}</td>
             </tr>
           ))}
@@ -61,13 +119,42 @@ export default function TrasactionCheck({ idPosHd, customerData }) {
           </tr>
         </tfoot>
       </table>
-      {/* <div className='flex gap-2 justify-end'>
-        <Button>Sent To email</Button>
-        <Button onClick={handlePrint}>Print</Button>
+      <div className='flex justify-between items-center'>
+        <div className=''>
+          <p className='mb-3 '>Receipt Option</p>
+          <div className='flex gap-9'>
+            {!(formPaymentData.receiptOption == "printReceipt") && (
+              <label className='inline-flex items-center'>
+                <input type='radio' name='receiptOption' value='emailReceipt' onChange={handleChange} checked={formPaymentData.receiptOption == "emailReceipt"} className='form-radio text-blue-600' onClick={handleClick} />
+                <span className='ml-2 whitespace-nowrap'>Email Receipt</span>
+                {formPaymentData.receiptOption == "emailReceipt" && <Input className='mx-5' placeholder='Email' value={formPaymentData.email} name='email' onChange={handleChange} />}
+              </label>
+            )}
+            {!(formPaymentData.receiptOption == "emailReceipt") && (
+              <label className='inline-flex items-center'>
+                <input type='radio' name='receiptOption' value='printReceipt' onChange={handleChange} checked={formPaymentData.receiptOption == "printReceipt"} className='form-radio text-blue-600' onClick={handleClick} />
+                <span className='ml-2  whitespace-nowrap'>Print Receipt</span>
+              </label>
+            )}
+          </div>
+        </div>
+        <div className='print-only' id='print-area'>
+          <PrintReceipt selectedData={dataPosline} personData={customerData} discountShow={true} />
+        </div>
+        {formPaymentData.receiptOption && (
+          <>
+            {formPaymentData.receiptOption == "printReceipt" ? (
+              <Button onClick={handlePrint}>Print</Button>
+            ) : (
+              <Button onClick={handleSendEmail}>
+                {" "}
+                {receiptLoading && <LoaderCircle className='animate-spin' />}
+                Sent Email
+              </Button>
+            )}
+          </>
+        )}
       </div>
-      <div className='print-only'>
-        <PrintReceipt selectedData={dataPosline} personData={customerData} />
-      </div> */}
       <style>{`
         .print-only {
           display: none;

@@ -68,6 +68,7 @@ export default function TransactionHistory() {
         <Table>
           <TableHeader>
             <TableRow className='text-center'>
+              <TableHead className='text-center'>Number</TableHead>
               <TableHead className='text-center'>Date</TableHead>
               <TableHead className='text-center'>Session Notes</TableHead>
               <TableHead className='text-center'>Created</TableHead>
@@ -77,10 +78,10 @@ export default function TransactionHistory() {
           <TableBody>
             {currentData.map((item, index) => (
               <TableRow className='rounded-xl hover:bg-prime-color cursor-pointer' key={index}>
-                {}
+                <TableCell className='text-center'>{(currentPage - 1) * itemsPerPage + index + 1}</TableCell>
                 <TableCell className='text-center'>{new Date(item.transdate).toLocaleString()}</TableCell>
                 <TableCell className='text-center'>{item.payment_method}</TableCell>
-                <TableCell className='text-center'>{item.total_amount}</TableCell>
+                <TableCell className='text-center'>${item.total_amount}</TableCell>
                 <TableCell className='flex gap-2 h-full items-center  justify-center'>
                   <Eye className='cursor-pointer hover:text-blue-600 transition duration-200 text-gray-500 w-5' onClick={() => handleClick(item.posid)} />
                 </TableCell>

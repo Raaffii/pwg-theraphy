@@ -16,6 +16,7 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
   const [dataProduct, setDataProduct] = useState([]);
   const [dataProductOriginal, setDataProductOriginal] = useState([]);
   const [listDataPackage, setListDataPackage] = useState([]);
+  const [listDataPackageOriginal, setListDataPackageOriginal] = useState([]);
   const [packageShow, setPackageShow] = useState(false);
   const [packageCusFlag, setPackageCusFlag] = useState(false);
 
@@ -26,12 +27,14 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
       setPackageShow(true);
       const dataPackage = await packageService.getPackage();
       setListDataPackage(dataPackage);
+      setListDataPackageOriginal(dataPackage);
     } else if (filter == "PackageCus") {
       setPackageCusFlag(true);
       setInventoryType(filter);
       setPackageShow(true);
       const dataPackage = await packageService.getCusPackage(customerId);
       setListDataPackage(dataPackage);
+      setListDataPackageOriginal(dataPackage);
     } else {
       setPackageShow(false);
       setInventoryType(filter);
@@ -58,9 +61,24 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
     fetch();
   }, []);
 
+  const handleSearch = (e) => {
+    const value = e.target.value;
+
+    if (!packageShow) {
+      const filtered = dataProductOriginal.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()) && item.productcat === inventoryType);
+      setDataProduct(filtered);
+    } else {
+      console.log("pacori", listDataPackageOriginal);
+      const filtered = listDataPackageOriginal.filter((item) => item.packagedesc.toLowerCase().includes(value.toLowerCase()));
+      console.log("filer", filtered);
+
+      setListDataPackage(filtered);
+    }
+  };
+
   return (
     <div className='border-2 border-purple-900/30 shadow-md rounded-2xl col-span-2 gap-2 p-2 bg-purple-900/5'>
-      <Input className=' bg-white h-10' placeholder='Search' />
+      <Input className=' bg-white h-10' placeholder='Search' onChange={handleSearch} />
       <div className={`w-full lg:grid ${customerId ? "grid-cols-4" : "grid-cols-2"} gap-2 my-5 space-y-2 lg:space-y-0 `}>
         <Card className={`p-3 hover:scale-105 transition-transform duration-300 ${inventoryType == "Service" && "bg-purple-100/90  border border-purple-950"} cursor-pointer`} onClick={() => handleFilter("Service")}>
           <p>Service</p>

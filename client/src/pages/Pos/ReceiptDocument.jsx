@@ -70,10 +70,10 @@ export const ReceiptDocument = ({ paymentData, selectedData, discountShow, total
           <View style={styles.tableRow} key={idx}>
             <Text style={styles.tableColDesc}>{item.name ? item.name : item.packageCusFlag ? `${item.packagedesc} (Package Customer)` : `${item.packagedesc} (Package)`}</Text>
             <Text style={styles.tableColCenter}>{item.amount}</Text>
-            <Text style={styles.tableColCenter}>${item.price}</Text>
+            <Text style={styles.tableColCenter}>${discountShow ? item.price : item.subPrice}</Text>
             {discountShow && <Text style={styles.tableColCenter}>${(item.price * item.amount).toFixed(2)}</Text>}
             {discountShow && <Text style={styles.tableColCenter}>{item.discpercent ? `${item.discount}%` : `-$${(item.discount * 1).toFixed(2)}`}</Text>}
-            <Text style={styles.tableColCenter}>${(item.amount * item.subPrice).toFixed(2)}</Text>
+            <Text style={styles.tableColCenter}>${(item.subPrice * 1).toFixed(2)}</Text>
           </View>
         ))}
       </View>

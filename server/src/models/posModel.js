@@ -26,7 +26,7 @@ const getPosHdCusData = async (id) => {
 
 const getPosLineCusData = async (id) => {
   const query = `SELECT * ,
-    total_price AS subPrice, qty AS amount, oriprice AS price FROM poslines JOIN poshd ON poslines.posid = poshd.posid JOIN products ON poslines.itemid=products.productid LEFT JOIN package on poslines.itemid=package.packageid WHERE poslines.posid = ?`;
+    total_price AS subPrice, qty AS amount, oriprice AS price, disc AS discount FROM poslines JOIN poshd ON poslines.posid = poshd.posid JOIN products ON poslines.itemid=products.productid LEFT JOIN package on poslines.itemid=package.packageid WHERE poslines.posid = ?`;
   const [rows] = await pool.query(query, [id]);
   return rows;
 };

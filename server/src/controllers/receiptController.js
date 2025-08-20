@@ -1,6 +1,7 @@
 const productsService = require("../services/productsService");
 require("dotenv").config();
 nodemailer = require("nodemailer");
+const fs = require("fs").promises;
 
 const sentEmail = async (req, res) => {
   try {
@@ -10,9 +11,8 @@ const sentEmail = async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    const filePath = req.file.path; // langsung dari multer
-    const { email } = req.body; // ambil email dari frontend
-
+    const filePath = req.file.path; // from multer
+    const { email } = req.body; // fronent email
     // if (!email) {
     //   return res.status(400).json({ error: "Email tujuan wajib diisi" });
     // }
@@ -26,9 +26,9 @@ const sentEmail = async (req, res) => {
       },
     });
 
-    // kirim email dengan attachment
+    // sent email with attachment
     await transporter.sendMail({
-      from: '"Therapy Centre" <rraaafffii@gmail.com>', // sesuaikan dengan akun Gmail kamu
+      from: '"Therapy Centre" ',
       to: email, // dari req.body.email
       subject: "Your Receipt",
       text: "Here is your receipt in PDF format",
@@ -40,10 +40,11 @@ const sentEmail = async (req, res) => {
       ],
     });
 
-    // hapus file setelah terkirim
-    fs.unlinkSync(filePath);
+    // delete file
+    fs.unlink(filePath);
 
     res.json({ message: `Email sent to ${email}` });
+    res.status(200).json("Sent Email");
   } catch (err) {
     console.error("Send email error:", err);
     res.status(500).json({ error: "Failed to send email" });

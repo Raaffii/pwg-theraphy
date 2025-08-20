@@ -36,22 +36,24 @@ export default function Receipt({ selectedData, personData, formWalkinData }) {
   async function handleSendEmail() {
     setReceiptLoading(true);
     try {
-      // buat dokumen PDF
+      // makes dokument PDF
       const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
       const blob = await pdf(<ReceiptDocument selectedData={selectedData} personData={personData} discountShow={discountShow} totalPrice={totalPrice} />).toBlob();
 
-      // // kirim via FormData
-      // const formData = new FormData();
-      // formData.append("file", blob, "receipt.pdf");
-      // formData.append("email", formPaymentData.email);
+      // sent via FormData
+      const formData = new FormData();
+      formData.append("file", blob, "receipt.pdf");
+      formData.append("email", formPaymentData.email);
 
-      // await receiptService.sentEmail(formData);
-      saveAs(blob, "receipt.pdf");
+      await receiptService.sentEmail(formData);
 
-      alert("Email terkirim!");
+      //testing for----------------------------
+      // saveAs(blob, "receipt.pdf");
+
+      alert("Email Sent!");
     } catch (error) {
-      console.error("Gagal kirim email:", error);
-      alert("Gagal kirim email");
+      console.error("Failed Sentong email:", error);
+      alert("Failed sent email");
     }
     setReceiptLoading(false);
   }

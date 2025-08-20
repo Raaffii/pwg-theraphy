@@ -26,14 +26,21 @@ export default function TherapistDashboard() {
   const [selectedEvaluation, setSelectedEvaluation] = useState();
   const [modalActionChoose, setModalActionChoose] = useState(false);
   const [selectedChoose, setSelectedChoose] = useState();
+  const [currentDataShow, setCurrentDataShow] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState();
 
   const consentRef = useRef();
-
+  const itemsPerPage = 5;
   useEffect(() => {
     const fetch = async () => {
       try {
         const data = await consentService.getConsent();
         setConsentList(data);
+        const pageTotal = Math.ceil(consentList.length / itemsPerPage);
+        setTotalPages(pageTotal);
+        let currentData = data.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+        setCurrentDataShow(currentData);
       } catch (err) {
         // setError("Fail To gain data");
       } finally {
@@ -49,7 +56,6 @@ export default function TherapistDashboard() {
       setCurrentPage(page);
     }
   };
-  // let { currentItems, totalPages } = paginate(consentList, currentPage, 10);
 
   const handleDelete = async (id) => {
     setSelectedDelete(id);
@@ -82,14 +88,9 @@ export default function TherapistDashboard() {
 
   const handleSearch = (e) => {
     const value = e.target.value;
-    const filtered = consentList.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()));
-    currentData = filtered;
+    const filtered = consentList.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()) || item.email.toLowerCase().includes(value.toLowerCase()));
+    setCurrentDataShow(filtered);
   };
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-  const totalPages = Math.ceil(consentList.length / itemsPerPage);
-  let currentData = consentList.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
     <>
@@ -131,7 +132,7 @@ export default function TherapistDashboard() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentData.map((item, index) => (
+          {currentDataShow.map((item, index) => (
             <TableRow key={index} className='rounded-xl hover:bg-prime-color cursor-pointer '>
               <TableCell>{item.name}</TableCell>
               <TableCell>{item.contact_no}</TableCell>
