@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { evaluationService } from "@/services/evaluationService";
 import { interestsService } from "@/services/interestsService";
 import toast from "react-hot-toast";
-import BodyPartSelection from "./evaluationpart/BodyPartSelection";
+import BodyPartSelection from "./evaluationFormPartial/BodyPartSelection";
 
 export default function EvaluationForm({ customerData, consentData, setModal, data = null, setReloadFlag }) {
   const [coordsFront, setCoordsFront] = useState([]);

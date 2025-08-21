@@ -1,5 +1,5 @@
-import PosCard from "../PosPartialComponent/ItemCard";
-import PackageCard from "../PosPartialComponent/PackageCard";
+import PosCard from "./ItemCard";
+import PackageCard from "./PackageCard";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 

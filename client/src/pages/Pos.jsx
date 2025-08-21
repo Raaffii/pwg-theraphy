@@ -7,15 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 //pages
-import PosCard from "./PosPartialComponent/ItemCard";
-import InventorySelected from "./PosPage/InventorySelected";
-import Inventory from "./PosPage/Inventory";
-import TotalPriceSelected from "./PosPartialComponent/TotalPriceSelected";
-import Modal from "../Shared/Modal";
-import Receipt from "./Receipt";
-import InventortySelectedPackage from "./PosPage/InventorySelectedPackage";
-import CustomerDataAndWalkin from "./PosPage/CustomerDataAndWalkin";
-import InventorySelectedHeader from "./PosPage/InventorySelectedHeader";
+import PosCard from "../components/pos/ItemCard";
+import InventorySelectedItem from "../components/pos/InventorySelectedItem";
+import Inventory from "../components/pos/Inventory";
+import TotalPriceSelected from "../components/pos/TotalPriceSelected";
+import Modal from "@/shared/Modal";
+import Receipt from "../components/pos/Checkout";
+import InventortySelectedPackage from "../components/pos/InventorySelectedPackage";
+import CustomerDataAndWalkin from "../components/pos/CustomerDataAndWalkin";
+import InventorySelectedHeader from "../components/pos/InventorySelectedHeader";
 
 // service
 import { customerService } from "@/services/customerService";
@@ -84,7 +84,7 @@ export default function Pos() {
               item?.packageid ? (
                 <InventortySelectedPackage key={index} item={item} packagedesc={item.packagedesc} price={item.price} packageName={item.packageName} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} packageid={item.packageid} />
               ) : (
-                <InventorySelected key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} subPrice={item.subPrice} />
+                <InventorySelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} subPrice={item.subPrice} />
               )
             )}
 

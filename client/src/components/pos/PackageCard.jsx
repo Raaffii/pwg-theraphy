@@ -17,13 +17,12 @@ export default function PackageCard({ item, index, packageCusFlag, setSelectedDa
     });
   };
 
-  console.log("pack", item);
   return (
     <Card
       className={`relative w-full shadow-md flex flex-col bg-white border-2 hover:border-2 overflow-hidden
       ${packageCusFlag ? "hover:border-blue-900 border-blue-400" : "hover:border-purple-900 border-purple-400"}`}
       key={index}>
-      {/* Overlay animasi */}
+      {/* Overlay animation */}
       <div
         className={`absolute inset-0 bg-white transition-transform duration-500 ease-in-out
     ${showInfo ? "translate-y-0" : "translate-y-full"}`}>

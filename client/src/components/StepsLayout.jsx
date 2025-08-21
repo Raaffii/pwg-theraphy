@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { consentService } from "@/services/consentService";
-import Modal from "@/pages/Shared/Modal";
+import Modal from "@/shared/Modal";
 import { useState } from "react";
 
 const StepsLayout = () => {

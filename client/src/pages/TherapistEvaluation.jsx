@@ -2,13 +2,13 @@ import { Navigate, useParams } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Eye, Trash2, ClipboardPlus, Package, Pencil } from "lucide-react";
-import Modal from "@/pages/Shared/Modal";
+import Modal from "@/shared/Modal";
 import { Button } from "@/components/ui/button";
-import SearcBar from "../../Shared/SearchBar";
-import EvaluationForm from "@/pages/form/evaluation/EvaluationForm";
+import SearcBar from "@/shared/SearchBar";
+import EvaluationForm from "@/components/form/evaluationForm/EvaluationForm";
 import { useNavigate } from "react-router-dom";
-import CustomerConsentForm from "@/pages/form/consents/CustomerConsentForm";
-import Pagination from "@/pages/Shared/Pagination";
+import CustomerConsentForm from "@/components/form/consentForm/CustomerConsentForm";
+import Pagination from "@/shared/Pagination";
 
 //service
 import { customerService } from "@/services/customerService";

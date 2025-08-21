@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 
-export default function PosSelectedItem({ id, name, price, subPrice, amount, selectedData, setSelectedData, index }) {
+export default function InventorySelectedItem({ id, name, price, subPrice, amount, selectedData, setSelectedData, index }) {
   const [discountNumber, setDiscountNumber] = useState(0);
   const [percentDiscount, setPercentDiscount] = useState(false);
   const [totalItemPrice, setTotalItemPrice] = useState(subPrice);

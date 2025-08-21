@@ -2,21 +2,21 @@ import { CreditCard, ScrollText, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
-import PrintReceipt from "./PrintReceipt";
+import PrintReceipt from "../receiptPdf/PrintReceipt";
 import { Input } from "@/components/ui/input";
 import { posService } from "@/services/posService";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { packageService } from "@/services/packageService";
 import { receiptService } from "@/services/receiptService";
-import { ReceiptDocument } from "./ReceiptDocument";
+import { ReceiptDocument } from "../receiptPdf/EmailReceipt";
 import { pdf } from "@react-pdf/renderer";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
 import { saveAs } from "file-saver";
 
-export default function Receipt({ selectedData, personData, formWalkinData, setSelectedData }) {
+export default function Checkout({ selectedData, personData, formWalkinData, setSelectedData }) {
   const navigate = useNavigate();
   const [receiptLoading, setReceiptLoading] = useState(false);
   const { user, loading } = useAuth();

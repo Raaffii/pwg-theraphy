@@ -6,24 +6,22 @@ import Layout from "@/components/Layout";
 import StepsLayout from "@/components/StepsLayout";
 import DashboardPage from "@/pages/DashboardPage";
 import ProfilePage from "@/pages/ProfilePage";
-import CustomerRegistrationForm from "@/pages/form/personalData/CustomerRegistrationForm";
-import CustomerConsentForm from "@/pages/form/consents/CustomerConsentForm";
-import CustomerEvaluationForm from "@/pages/form/CustomerEvaluationForm";
-import CustomerFeedbackForm from "@/pages/form/CustomerFeedbackForm";
-import CustomerReview from "@/pages/form/CustomerReviewForm";
+import CustomerRegistrationForm from "@/components/form/customerDataForm/CustomerRegistrationForm";
+import CustomerConsentForm from "@/components/form/consentForm/CustomerConsentForm";
+import CustomerEvaluationForm from "@/components/form/CustomerEvaluationForm";
+import CustomerFeedbackForm from "@/components/form/CustomerFeedbackForm";
+import CustomerReview from "@/components/form/CustomerReviewForm";
 import CustomerSteps from "@/pages/CustomerSteps";
 import SignupPage from "@/pages/SignupPage";
-import TherapistDashboard from "@/pages/therapist/therapistDashboard/TherapistDashboard";
+import TherapistDashboard from "@/pages/TherapistDashboard";
 import Logout from "@/pages/auth/Logout";
-import ConsentsList from "@/pages/therapist/ConsentsList";
-import TherapistEvaluation from "@/pages/therapist/therapistEvaluation/TherapistEvaluation";
-import EvaluationForm from "@/pages/form/evaluation/EvaluationForm";
-import Pos from "@/pages/Pos/Pos";
-import Invoice from "@/pages/Pos/Invoice";
-import Receipt from "@/pages/Pos/Receipt";
-import PrintReceipt from "@/pages/Pos/PrintReceipt";
-import TransactionHistory from "@/pages/transactionhistory/TransactionHistory";
-import PrintReceipt2 from "@/pages/Pos/PrintReceipt2";
+import TherapistEvaluation from "@/pages/TherapistEvaluation";
+import EvaluationForm from "@/components/form/evaluationForm/EvaluationForm";
+import Pos from "@/pages/Pos";
+
+import Checkout from "@/components/pos/Checkout";
+import PrintReceipt from "@/components/receiptPdf/PrintReceipt";
+import TransactionHistory from "@/pages/TransactionHistory";
 
 const privateRoutes = {
   path: "/",
@@ -65,13 +63,10 @@ const therapistRoutes = {
   ),
   children: [
     { path: "", element: <TherapistDashboard /> },
-    { path: "consentslist", element: <ConsentsList /> },
     { path: "pos/:id", element: <Pos /> },
     { path: "pos/", element: <Pos /> },
-    { path: "invoice", element: <Invoice /> },
-    { path: "receipt", element: <Receipt /> },
+    { path: "checkout", element: <Checkout /> },
     { path: "printreceipt", element: <PrintReceipt /> },
-    { path: "printreceipt2", element: <PrintReceipt2 /> },
     { path: "evaluation/:id", element: <TherapistEvaluation /> },
     { path: "transaction/:id", element: <TransactionHistory /> },
   ],

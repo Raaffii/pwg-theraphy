@@ -6,10 +6,10 @@ import { Input } from "@/components/ui/input";
 import { interestsService } from "@/services/interestsService";
 import { customerService } from "@/services/customerService";
 import toast from "react-hot-toast";
-import Referrer from "./personalDataPart/Referrer";
-import PersonalDetail from "./personalDataPart/PersonalDetail";
-import EmergancyContact from "./personalDataPart/EmergencyContact";
-import InterestSelection from "./personalDataPart/InterestSelection";
+import Referrer from "./customerDataFormPartial/Referrer";
+import PersonalDetail from "./customerDataFormPartial/PersonalDetail";
+import EmergancyContact from "./customerDataFormPartial/EmergencyContact";
+import InterestSelection from "./customerDataFormPartial/InterestSelection";
 import { useAuth } from "@/context/AuthContext";
 import useInitializeCustomerForm from "@/hooks/useInitializeCustomerForm";
 

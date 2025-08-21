@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { posService } from "@/services/posService";
 import { Button } from "@/components/ui/button";
-import PrintReceipt from "../Pos/PrintReceipt";
+import PrintReceipt from "../receiptPdf/PrintReceipt";
 import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
-import { ReceiptDocument } from "../Pos/ReceiptDocument";
+import { ReceiptDocument } from "@/components/receiptPdf/EmailReceipt";
 import { pdf } from "@react-pdf/renderer";
 import { LoaderCircle } from "lucide-react";
 import { receiptService } from "@/services/receiptService";

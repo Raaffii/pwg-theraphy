@@ -1,16 +1,16 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { consentService } from "@/services/consentService";
 import { useState, useEffect, useRef } from "react";
-import Modal from "../../Shared/Modal";
+import Modal from "../shared/Modal";
 import { Button } from "@/components/ui/button";
 
-import CustomerConsentForm from "@/pages/form/consents/CustomerConsentForm";
+import CustomerConsentForm from "@/components/form/consentForm/CustomerConsentForm";
 
 import { Eye, Trash2, ClipboardPlus, Package, Computer, History } from "lucide-react";
-import Pagination from "@/pages/Shared/Pagination";
+import Pagination from "@/shared/Pagination";
 import { useNavigate } from "react-router-dom";
 import { paginate } from "@/utils/paginate";
-import SearcBar from "@/pages/Shared/SearchBar";
+import SearcBar from "@/shared/SearchBar";
 
 export default function TherapistDashboard() {
   const navigate = useNavigate();
@@ -159,7 +159,7 @@ export default function TherapistDashboard() {
           Prev
         </button>
 
-        {/* nomor halaman */}
+        {/* page number */}
         {(() => {
           const pages = [];
           let start = Math.max(currentPage - 1, 1);

@@ -16,14 +16,14 @@ import useInitializeConsentForm from "@/hooks/useInitializeConsentForm";
 import useInitializeCustomerForm from "@/hooks/useInitializeCustomerForm";
 
 //partial
-import DateAndVoucher from "./consentspart/DateAndVoucher";
-import DeviceSelection from "./consentspart/DeviceSelection";
-import WalkinReferral from "./consentspart/WalkinReferral";
-import PersonalParticulars from "./consentspart/PersonalParticulars";
-import HealthDeclaration from "./consentspart/HealthDeclaration";
-import Disclaimer from "./consentspart/Disclaimer";
-import Signature from "./consentspart/Signature";
-import TherapistAndRating from "./consentspart/TherapistAndRating";
+import DateAndVoucher from "./consentFormPartial/DateAndVoucher";
+import DeviceSelection from "./consentFormPartial/DeviceSelection";
+import WalkinReferral from "./consentFormPartial/WalkinReferral";
+import PersonalParticulars from "./consentFormPartial/PersonalParticulars";
+import HealthDeclaration from "./consentFormPartial/HealthDeclaration";
+import Disclaimer from "./consentFormPartial/Disclaimer";
+import Signature from "./consentFormPartial/Signature";
+import TherapistAndRating from "./consentFormPartial/TherapistAndRating";
 import { useAuth } from "@/context/AuthContext";
 
 const CustomerConsentForm = forwardRef((props, ref) => {

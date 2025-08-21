@@ -1,4 +1,4 @@
-import SearcBar from "../Shared/SearchBar";
+import SearcBar from "../shared/SearchBar";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pencil, Eye, Trash2 } from "lucide-react";
@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { customerService } from "@/services/customerService";
 import { posService } from "@/services/posService";
 
-import Modal from "../Shared/Modal";
-import TrasactionCheck from "./TransactionCheck";
+import Modal from "../shared/Modal";
+import TrasactionCheck from "../components/transactionhistory/TransactionCheck";
 
 export default function TransactionHistory() {
   const [customerData, setCustomerData] = useState([]);
