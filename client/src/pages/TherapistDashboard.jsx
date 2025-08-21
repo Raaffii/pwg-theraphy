@@ -52,12 +52,6 @@ export default function TherapistDashboard() {
     fetch();
   }, [openModalForm, showModal]);
 
-  const HandlepagesChange = (page) => {
-    if (page >= 1 && page <= totalPages) {
-      setCurrentPage(page);
-    }
-  };
-
   const handleDelete = async (id, name) => {
     setSelectedDelete(id);
     setSelectedDeleteName(name);
@@ -77,7 +71,7 @@ export default function TherapistDashboard() {
     try {
       const response = consentService.deleteById(selectedDelete);
       setConsentList((prev) => prev.filter((item) => item.customerid !== selectedDelete));
-      currentItems = consentList.slice(indexOfFirsItem, indexOfLastItem);
+      setDeleteModal(false);
     } catch (err) {
       console.log("error deleting", err);
     }
@@ -139,11 +133,11 @@ export default function TherapistDashboard() {
               <TableCell>{item.emergency_contact_no}</TableCell>
               <TableCell className={item.active ? "text-green-600" : "text-red-600"}>{item.active ? "Active" : "Inactive"}</TableCell>
               <TableCell className='flex gap-2'>
-                <Eye onClick={() => handleView(item)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5' />
-                <Trash2 onClick={() => handleDelete(item.customerid, item.name)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5 ' />
+                <Eye onClick={() => handleView(item)} className='cursor-pointer hover:text-blue-400 transition duration-200  w-5' />
+                <Trash2 onClick={() => handleDelete(item.customerid, item.name)} className='cursor-pointer hover:text-blue-400 transition duration-200  w-5 ' />
               </TableCell>
               <TableCell className='items-center justify-center gap-2'>
-                <ClipboardPlus onClick={() => handleChoose(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5' />
+                <ClipboardPlus onClick={() => handleChoose(item.customerid)} className='cursor-pointer hover:text-blue-400 transition duration-200  w-5' />
               </TableCell>
             </TableRow>
           ))}
