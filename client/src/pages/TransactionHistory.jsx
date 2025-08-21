@@ -1,4 +1,4 @@
-import SearcBar from "../shared/SearchBar";
+import SearcBar from "../Shared/SearchBar";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pencil, Eye, Trash2 } from "lucide-react";
@@ -9,8 +9,8 @@ import { useNavigate } from "react-router-dom";
 import { customerService } from "@/services/customerService";
 import { posService } from "@/services/posService";
 
-import Modal from "../shared/Modal";
-import TrasactionCheck from "../components/transactionhistory/TransactionCheck";
+import Modal from "../Shared/Modal";
+import TrasactionCheck from "../components/transactionHistory/TransactionCheck";
 
 export default function TransactionHistory() {
   const [customerData, setCustomerData] = useState([]);
@@ -20,7 +20,7 @@ export default function TransactionHistory() {
 
   const navigate = useNavigate();
   const { id } = useParams();
-  console.log("clid", id);
+
   useEffect(() => {
     const fetchData = async (id) => {
       const DataExistCustomer = await customerService.getCustomerData(id);
@@ -71,7 +71,7 @@ export default function TransactionHistory() {
               <TableHead className='text-center'>Number</TableHead>
               <TableHead className='text-center'>Date</TableHead>
               <TableHead className='text-center'>Session Notes</TableHead>
-              <TableHead className='text-center'>Created</TableHead>
+              <TableHead className='text-center'>Amount</TableHead>
               <TableHead className='text-center'>Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -91,11 +91,11 @@ export default function TransactionHistory() {
         </Table>
         <div className='flex gap-2 m-4 items-center'>
           {/* Prev */}
-          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className='bg-white shadow-lg p-1 border border-1 border-purple-500'>
+          <button onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))} disabled={currentPage === 1} className='bg-white shadow-lg p-1 border border-1 border-purple-900 rounded-lg'>
             Prev
           </button>
 
-          {/* nomor halaman */}
+          {/* page number*/}
           {(() => {
             const pages = [];
             let start = Math.max(currentPage - 1, 1);
@@ -115,7 +115,7 @@ export default function TransactionHistory() {
             return pages;
           })()}
 
-          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className='bg-white shadow-lg p-1 border border-1 border-purple-500'>
+          <button onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages} className='bg-white shadow-lg p-1 border border-1 border-purple-900 rounded-lg'>
             Next
           </button>
         </div>

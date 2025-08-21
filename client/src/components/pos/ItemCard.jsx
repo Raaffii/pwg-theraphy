@@ -1,9 +1,7 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function PosCard({ name, price, type, selectedData, setSelectedData, productid }) {
+export default function ItemCard({ name, price, type, selectedData, setSelectedData, productid }) {
   const cardClick = async (id, name, price, type) => {
-    console.log("idsasdaas", name);
-
     setSelectedData((prev) => {
       const foundItem = prev.find((item) => item.id === id);
 

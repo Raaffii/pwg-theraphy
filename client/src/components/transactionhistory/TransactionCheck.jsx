@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { posService } from "@/services/posService";
 import { Button } from "@/components/ui/button";
-import PrintReceipt from "../receiptPdf/PrintReceipt";
+
 import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
-import { ReceiptDocument } from "@/components/receiptPdf/EmailReceipt";
+
 import { pdf } from "@react-pdf/renderer";
 import { LoaderCircle } from "lucide-react";
 import { receiptService } from "@/services/receiptService";
 
+import { PrintReceipt, EmailReceipt } from "@/components/receiptPdf";
 export default function TrasactionCheck({ idPosHd, customerData }) {
   const [receiptLoading, setReceiptLoading] = useState(false);
   const [dataPosline, setDataPosLine] = useState([]);

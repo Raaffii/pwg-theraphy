@@ -1,23 +1,24 @@
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { consentService } from "@/services/consentService";
 import { useState, useEffect, useRef } from "react";
-import Modal from "../shared/Modal";
+import Modal from "../Shared/Modal";
 import { Button } from "@/components/ui/button";
 
 import CustomerConsentForm from "@/components/form/consentForm/CustomerConsentForm";
 
 import { Eye, Trash2, ClipboardPlus, Package, Computer, History } from "lucide-react";
-import Pagination from "@/shared/Pagination";
+import Pagination from "@/Shared/Pagination";
 import { useNavigate } from "react-router-dom";
 import { paginate } from "@/utils/paginate";
-import SearcBar from "@/shared/SearchBar";
+import SearcBar from "@/Shared/SearchBar";
 
 export default function TherapistDashboard() {
   const navigate = useNavigate();
   const [consentList, setConsentList] = useState([]);
   const [currentDatas, setCurrentDatas] = useState([]);
   const [selectedDelete, setSelectedDelete] = useState();
-  const [openModal, setOpenModal] = useState(false);
+  const [selectedDeleteName, setSelectedDeleteName] = useState();
+  const [deleteModal, setDeleteModal] = useState(false);
   const [openModalForm, setOpenModalForm] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -57,9 +58,10 @@ export default function TherapistDashboard() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, name) => {
     setSelectedDelete(id);
-    setOpenModal(true);
+    setSelectedDeleteName(name);
+    setDeleteModal(true);
   };
   const handleView = (item) => {
     setSelectedItem(item);
@@ -108,15 +110,9 @@ export default function TherapistDashboard() {
           </Modal>
         )}
       </div>
-      {openModal && (
-        <Modal title={"Confirm Delete"} setIsOpen={setOpenModal} small={true}>
-          <Button variant='destructive' onClick={confirmDelete}>
-            Delete {selectedDelete}
-          </Button>
-        </Modal>
-      )}
+
       <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+        <TableCaption>A List Of Customer</TableCaption>
         <TableHeader>
           <TableRow className='text-center'>
             <TableHead className=''>Name</TableHead>
@@ -144,7 +140,7 @@ export default function TherapistDashboard() {
               <TableCell className={item.active ? "text-green-600" : "text-red-600"}>{item.active ? "Active" : "Inactive"}</TableCell>
               <TableCell className='flex gap-2'>
                 <Eye onClick={() => handleView(item)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5' />
-                <Trash2 onClick={() => handleDelete(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5 ' />
+                <Trash2 onClick={() => handleDelete(item.customerid, item.name)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5 ' />
               </TableCell>
               <TableCell className='items-center justify-center gap-2'>
                 <ClipboardPlus onClick={() => handleChoose(item.customerid)} className='cursor-pointer hover:text-blue-600 transition duration-200  w-5' />
@@ -209,14 +205,18 @@ export default function TherapistDashboard() {
           </div>
         </Modal>
       )}
-      {/* <div className='grid grid-rows-3 gap-2'>
-        {menuItems.map((item, index) => (
-          <div key={index} className={`${item.color} h-full rounded-2xl flex flex-col items-center justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer`}>
-            <ClipboardPlus className='w-7 h-7' />
-            <p className='text-base font-semibold'>{item.label}</p>
-          </div>
-        ))}
-      </div> */}
+
+      {deleteModal && (
+        <Modal title={"Confirm Delete"} setIsOpen={setDeleteModal} small={true}>
+          <p class='text-sm text-gray-700 dark:text-gray-300'>
+            Delete <strong>{selectedDeleteName}</strong>? This will also remove all related data (packages, evaluations, etc.).
+          </p>
+          <br />
+          <Button variant='destructive' onClick={confirmDelete}>
+            Delete
+          </Button>
+        </Modal>
+      )}
 
       {evaluationModal && (
         <Modal title={"Customer Detail"} setIsOpen={setEvaluationModal} big={true}>

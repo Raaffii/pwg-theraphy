@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function PrintReceipt({ selectedData, personData, discountShow }) {
   const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
-
-  console.log("selsel", selectedData);
   return (
     <>
       <div id='printreceipt' className='h-full'>

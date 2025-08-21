@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 
 const today = new Date().toISOString().split("T")[0];
 // Component
-export const ReceiptDocument = ({ personData, selectedData, discountShow, totalPrice }) => (
+export const EmailReceipt = ({ personData, selectedData, discountShow, totalPrice }) => (
   <Document>
     <Page size='A3' orientation='landscape' style={styles.page}>
       {/* Header */}

@@ -2,19 +2,22 @@ import { CreditCard, ScrollText, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
-import PrintReceipt from "../receiptPdf/PrintReceipt";
+
 import { Input } from "@/components/ui/input";
 import { posService } from "@/services/posService";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { packageService } from "@/services/packageService";
 import { receiptService } from "@/services/receiptService";
-import { ReceiptDocument } from "../receiptPdf/EmailReceipt";
+
 import { pdf } from "@react-pdf/renderer";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
 import { saveAs } from "file-saver";
+
+//pages
+import { PrintReceipt, EmailReceipt } from "@/components/receiptPdf";
 
 export default function Checkout({ selectedData, personData, formWalkinData, setSelectedData }) {
   const navigate = useNavigate();
@@ -38,7 +41,7 @@ export default function Checkout({ selectedData, personData, formWalkinData, set
       // makes dokument PDF
       setReceiptLoading((prev) => !prev);
       const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
-      const blob = await pdf(<ReceiptDocument selectedData={selectedData} personData={personData} discountShow={discountShow} totalPrice={totalPrice} />).toBlob();
+      const blob = await pdf(<EmailReceipt selectedData={selectedData} personData={personData} discountShow={discountShow} totalPrice={totalPrice} />).toBlob();
 
       // sent via FormData
       const formData = new FormData();
@@ -46,7 +49,7 @@ export default function Checkout({ selectedData, personData, formWalkinData, set
       formData.append("email", formPaymentData.email);
 
       const result = await receiptService.sentEmail(formData);
-      console.log("status", result);
+
       if (result.sent) {
         alert("Email Sent!");
       } else {
@@ -94,7 +97,7 @@ export default function Checkout({ selectedData, personData, formWalkinData, set
       }
 
       const packageUseExist = selectedData.find((prev) => prev.packageCusFlag === true);
-      console.log("packageusage", packageUseExist);
+
       if (packageUseExist) {
         await packageService.minCusPackage(selectedData);
       }
@@ -154,11 +157,10 @@ export default function Checkout({ selectedData, personData, formWalkinData, set
           </thead>
 
           <tbody>
-            {console.log("sel", selectedData)}
             {selectedData.map((item, index) => (
               <tr className='hover:bg-gray-50' key={index}>
                 <td className='border border-gray-300 px-3 py-2' colSpan={3}>
-                  {item.name ? item.name : item.packageCusFlag ? `${item.packagedesc} (Package Customer) ` : `${item.packagedesc} (Package) `}
+                  {item.name ? item.name : item.packageCusFlag ? `${item.packagedesc} ( ${item.remainSessions - item.amount} Visit Remaining) ` : `${item.packagedesc} (New Package) `}
                 </td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
                 <td className='border border-gray-300 px-3 py-2 text-center'>{discountShow ? `$${item.price}` : `$${item.subPrice}`}</td>
@@ -208,11 +210,6 @@ export default function Checkout({ selectedData, personData, formWalkinData, set
               <input type='radio' name='paymentMethod' value='paynow' onChange={!saved && handleChange} checked={formPaymentData.paymentMethod == "paynow"} className='form-radio text-blue-600' />
               <span className='ml-2'>Paynow</span>
             </label>
-
-            {/* <label className='inline-flex items-center bg-gray-300 p-3 rounded-sm w-40'>
-              <input type='radio' name='paymentMethod' value='mobilePay' onChange={!saved && handleChange} checked={formPaymentData.paymentMethod == "mobilePay"} className='form-radio text-blue-600' />
-              <span className='ml-2'>Mobile Pay</span>
-            </label> */}
           </div>
         </div>
 

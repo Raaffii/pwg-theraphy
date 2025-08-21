@@ -6,16 +6,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-//pages
-import PosCard from "../components/pos/ItemCard";
-import InventorySelectedItem from "../components/pos/InventorySelectedItem";
-import Inventory from "../components/pos/Inventory";
-import TotalPriceSelected from "../components/pos/TotalPriceSelected";
+
 import Modal from "@/shared/Modal";
-import Receipt from "../components/pos/Checkout";
-import InventortySelectedPackage from "../components/pos/InventorySelectedPackage";
-import CustomerDataAndWalkin from "../components/pos/CustomerDataAndWalkin";
-import InventorySelectedHeader from "../components/pos/InventorySelectedHeader";
+//pages
+import { Inventory, Checkout, CustomerDataAndWalkin, InventorySelectedHeader, InventorySelectedPackage, InventorySelectedItem, ItemCard, PackageCard, TotalPriceSelected } from "@/components/pos";
 
 // service
 import { customerService } from "@/services/customerService";
@@ -82,7 +76,7 @@ export default function Pos() {
             {selectedData.length != 0 && <InventorySelectedHeader />}
             {selectedData.map((item, index) =>
               item?.packageid ? (
-                <InventortySelectedPackage key={index} item={item} packagedesc={item.packagedesc} price={item.price} packageName={item.packageName} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} packageid={item.packageid} />
+                <InventorySelectedPackage key={index} item={item} packagedesc={item.packagedesc} price={item.price} packageName={item.packageName} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} packageid={item.packageid} />
               ) : (
                 <InventorySelectedItem key={index} id={item.id} name={item.name} price={item.price} amount={item.amount} setSelectedData={setSelectedData} selectedData={selectedData} index={index} subPrice={item.subPrice} />
               )
@@ -107,7 +101,7 @@ export default function Pos() {
               <Modal setIsOpen={setReceiptModal}>
                 {" "}
                 <div className='max-h-[600px] overflow-y-auto'>
-                  <Receipt selectedData={selectedData} personData={customerData} formWalkinData={formWalkinData} setSelectedData={setSelectedData} />
+                  <Checkout selectedData={selectedData} personData={customerData} formWalkinData={formWalkinData} setSelectedData={setSelectedData} />
                 </div>
               </Modal>
             )}

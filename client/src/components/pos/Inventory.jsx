@@ -1,5 +1,5 @@
-import PosCard from "./ItemCard";
-import PackageCard from "./PackageCard";
+import ItemCard from "@/components/pos/ItemCard";
+import PackageCard from "@/components/pos/PackageCard";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 
@@ -102,7 +102,7 @@ export default function Inventory({ selectedData, setSelectedData, customerId })
       {!packageShow ? (
         <div className='grid grid-cols-2 lg:grid-cols-4 gap-3 p-2'>
           {dataProduct.map((item, index) => (
-            <PosCard key={index} name={item.name} price={item.unitprice} type={item.productcat} selectedData={selectedData} setSelectedData={setSelectedData} productid={item.productid} />
+            <ItemCard key={index} name={item.name} price={item.unitprice} type={item.productcat} selectedData={selectedData} setSelectedData={setSelectedData} productid={item.productid} />
           ))}
         </div>
       ) : (

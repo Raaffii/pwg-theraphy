@@ -27,7 +27,7 @@ import TherapistAndRating from "./consentFormPartial/TherapistAndRating";
 import { useAuth } from "@/context/AuthContext";
 
 const CustomerConsentForm = forwardRef((props, ref) => {
-  const { role = "customer", idCustomer = 0, outsave = false, setTriggerKey } = props;
+  const { role = "customer", idCustomer = 0, outsave = false } = props;
   const [extended, setExtended] = useState(false);
   const [loadings, setLoadings] = useState(false);
   const [therapistsList, setTherapistsList] = useState([]);
@@ -99,7 +99,6 @@ const CustomerConsentForm = forwardRef((props, ref) => {
         console.log(error);
       } finally {
         setLoadings(false);
-        setTriggerKey((prev) => prev + 1);
       }
     }
   };
