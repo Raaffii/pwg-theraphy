@@ -24,6 +24,7 @@ import Receipt from "@/pages/Pos/Receipt";
 import PrintReceipt from "@/pages/Pos/PrintReceipt";
 import TransactionHistory from "@/pages/transactionhistory/TransactionHistory";
 import PrintReceipt2 from "@/pages/Pos/PrintReceipt2";
+import ProductsPage from "@/pages/productsPage";
 
 const privateRoutes = {
   path: "/",
@@ -66,6 +67,7 @@ const therapistRoutes = {
   children: [
     { path: "", element: <TherapistDashboard /> },
     { path: "consentslist", element: <ConsentsList /> },
+    { path: "product", element: <ProductsPage /> },
     { path: "pos/:id", element: <Pos /> },
     { path: "pos/", element: <Pos /> },
     { path: "invoice", element: <Invoice /> },
@@ -104,4 +106,10 @@ const publicRoutes = [
   },
 ];
 
-export const routes = [...publicRoutes, privateRoutes, stepsRoutes, therapistRoutes, { path: "*", element: <NotFoundPage /> }];
+export const routes = [
+  ...publicRoutes,
+  privateRoutes,
+  stepsRoutes,
+  therapistRoutes,
+  { path: "*", element: <NotFoundPage /> },
+];

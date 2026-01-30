@@ -1,15 +1,28 @@
 import { Title } from "@radix-ui/react-dialog";
 
-export default function Modal({ children, title, setIsOpen, small = false }) {
+export default function Modal({
+  children,
+  title = "-",
+  setIsOpen,
+  small = false,
+}) {
   return (
-    <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50' onClick={() => setIsOpen(false)}>
-      <div onClick={(e) => e.stopPropagation()} className={`${small ? "bg-white rounded-xl lg:w-1/5 p-6" : "bg-white p-6 rounded-xl w-4/5"}`}>
-        <div className='w-full flex justify-end'>
-          <button className='text-gray-500 hover:text-red-500 font-bold text-xl' onClick={() => setIsOpen(false)}>
-            x
+    <div
+      className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50'
+      onClick={() => setIsOpen(false)}>
+      <div
+        className={`bg-white rounded-xl p-6 ${small ? "lg:w-1/5" : "w-4/5"}`}
+        onClick={(e) => e.stopPropagation()}>
+        <div className='mb-4 flex w-full items-center justify-between'>
+          {title && <h2 className='text-lg font-bold'>{title}</h2>}
+
+          <button
+            type='button'
+            className='text-xl font-bold text-gray-500 hover:text-red-500'
+            onClick={() => setIsOpen(false)}>
+            ×
           </button>
         </div>
-        <div className='flex justify-between m-2  '>{title && <h2 className='text-lg font-bold mb-4'>{title}</h2>}</div>
 
         {children}
       </div>

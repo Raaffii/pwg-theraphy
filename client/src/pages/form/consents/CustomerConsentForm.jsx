@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { devices, healthConditions } from "@/utils/Hardcodeddata";
@@ -27,7 +33,12 @@ import TherapistAndRating from "./consentspart/TherapistAndRating";
 import { useAuth } from "@/context/AuthContext";
 
 const CustomerConsentForm = forwardRef((props, ref) => {
-  const { role = "customer", idCustomer = 0, outsave = false, setTriggerKey } = props;
+  const {
+    role = "customer",
+    idCustomer = 0,
+    outsave = false,
+    setTriggerKey,
+  } = props;
   const [extended, setExtended] = useState(false);
   const [loadings, setLoadings] = useState(false);
   const [therapistsList, setTherapistsList] = useState([]);
@@ -48,18 +59,32 @@ const CustomerConsentForm = forwardRef((props, ref) => {
       try {
         const check = await consentService.getConsentByid(user.customerId);
 
-        const isDataExist = await customerService.getCustomerData(user.customerId);
+        const isDataExist = await customerService.getCustomerData(
+          user.customerId,
+        );
 
         if (isDataExist.length > 0) {
-          await customerService.updateRegistration(user.customerId, formPersonalData);
+          await customerService.updateRegistration(
+            user.customerId,
+            formPersonalData,
+          );
         } else {
-          await customerService.customerRegistration(user.customerId, formPersonalData);
+          await customerService.customerRegistration(
+            user.customerId,
+            formPersonalData,
+          );
         }
         let status;
         if (check.length > 0) {
-          status = await consentService.consentUpdate(user.customerId, formData);
+          status = await consentService.consentUpdate(
+            user.customerId,
+            formData,
+          );
         } else {
-          status = await consentService.consentRegistration(user.customerId, formData);
+          status = await consentService.consentRegistration(
+            user.customerId,
+            formData,
+          );
         }
         if (status.response && status.response.status === 500) {
           toast.error("Someting Is Miss");
@@ -80,12 +105,21 @@ const CustomerConsentForm = forwardRef((props, ref) => {
         let status;
         let id;
         if (isDataExist.length > 0) {
-          await customerService.updateRegistration(idCustomer, formPersonalData);
+          await customerService.updateRegistration(
+            idCustomer,
+            formPersonalData,
+          );
           status = await consentService.consentUpdate(idCustomer, formData);
           id = idCustomer;
         } else {
-          const resp = await customerService.customerRegistration(0, formPersonalData);
-          status = await consentService.consentRegistration(resp.data.data, formData);
+          const resp = await customerService.customerRegistration(
+            0,
+            formPersonalData,
+          );
+          status = await consentService.consentRegistration(
+            resp.data.data,
+            formData,
+          );
           id = resp.data.data;
         }
         if (status.response && status.response.status === 500) {
@@ -233,26 +267,67 @@ const CustomerConsentForm = forwardRef((props, ref) => {
   return (
     <div className='p-6 space-y-3'>
       {/* Header */}
-      <h1 className='text-2xl font-bold text-red-700 mb-2'>CUSTOMER CONSENT FORM</h1>
-      <p className='text-sm text-gray-500 mb-4'>客户同意书 BORANG KEBENARAN PELANGGAN</p>
+      <h1 className='text-2xl font-bold text-red-700 mb-2'>
+        CUSTOMER CONSENT FORM
+      </h1>
+      <p className='text-sm text-gray-500 mb-4'>
+        客户同意书 BORANG KEBENARAN PELANGGAN
+      </p>
       {/* Date and Voucher No */}
       <DateAndVoucher formData={formData} handleChange={handleChange} />
       {/* Device Selection */}
-      <DeviceSelection formData={formData} handleChange={handleChange} interestsList={interestsList} />
+      <DeviceSelection
+        formData={formData}
+        handleChange={handleChange}
+        interestsList={interestsList}
+      />
       {/* Walk-in / Referral */}
       <WalkinReferral formData={formData} handleChange={handleChange} />
       {/* Personal Particulars */}
-      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>PERSONAL PARTICULARS 客户信息 BUTIRAN PELANGGAN</div>
-      <PersonalParticulars formData={formData} formPersonalData={formPersonalData} handleChange={handleChange} personalData={personalData} handleChangePersonal={handleChangePersonal} />
+      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>
+        PERSONAL PARTICULARS 客户信息 BUTIRAN PELANGGAN
+      </div>
+      <PersonalParticulars
+        formData={formData}
+        formPersonalData={formPersonalData}
+        handleChange={handleChange}
+        personalData={personalData}
+        handleChangePersonal={handleChangePersonal}
+      />
       {/* Health Declaration */}
-      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>HEALTH DECLARATION 健康声明 PENGISYTIHARAN KESIHATAN</div>
-      <HealthDeclaration formData={formData} handleChange={handleChange} healthConditions={healthConditions} setFormData={setFormData} />
+      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>
+        HEALTH DECLARATION 健康声明 PENGISYTIHARAN KESIHATAN
+      </div>
+      <HealthDeclaration
+        formData={formData}
+        handleChange={handleChange}
+        healthConditions={healthConditions}
+        setFormData={setFormData}
+      />
       {/* Disclaimer */}
-      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>DISCLAIMER 客户免责声明 PENAFIAN</div>
-      <Disclaimer formData={formData} handleChange={handleChange} personalData={personalData} extended={extended} setExtended={setExtended} Button={Button} />
+      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>
+        DISCLAIMER 客户免责声明 PENAFIAN
+      </div>
+      <Disclaimer
+        formData={formData}
+        handleChange={handleChange}
+        personalData={personalData}
+        extended={extended}
+        setExtended={setExtended}
+        Button={Button}
+      />
       {/* Signature & Rating */}
-      <Signature formData={formData} handleChange={handleChange} sig={{ saveSignature, clearSignature, sigCanvas, SignatureCanvas }} Button={Button} />
-      <TherapistAndRating formData={formData} handleChange={handleChange} therapistsList={therapistsList} />
+      <Signature
+        formData={formData}
+        handleChange={handleChange}
+        sig={{ saveSignature, clearSignature, sigCanvas, SignatureCanvas }}
+        Button={Button}
+      />
+      <TherapistAndRating
+        formData={formData}
+        handleChange={handleChange}
+        therapistsList={therapistsList}
+      />
       <div className='flex justify-between my-10'>
         {!outsave && (
           <>

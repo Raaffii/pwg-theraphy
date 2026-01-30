@@ -7,51 +7,47 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { consentService } from "@/services/consentService";
-import { useState, useEffect, useRef } from "react";
-import Modal from "../../Shared/Modal";
+import { useState, useEffect } from "react";
+import Modal from "./Shared/Modal";
 import { Button } from "@/components/ui/button";
-
-import CustomerConsentForm from "@/pages/form/consents/CustomerConsentForm";
-
+import AddProduct from "./Product/AddProduct";
 import { Eye, Trash2, ClipboardPlus, Computer, History } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SearcBar from "@/pages/Shared/SearchBar";
+import { useProduct } from "@/hooks/useProduct";
 
-export default function TherapistDashboard() {
+export default function ProductsPage() {
   const navigate = useNavigate();
-  const [consentList, setConsentList] = useState([]);
+  const { fetchProduct, product, deleteProduct } = useProduct();
+
   const [filteredList, setFilteredList] = useState([]);
+  const [currentDataShow, setCurrentDataShow] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [currentDataShow, setCurrentDataShow] = useState([]);
-  const [itemsPerPage] = useState(10);
+  const itemsPerPage = 10;
 
   const [openModalForm, setOpenModalForm] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [selectedDelete, setSelectedDelete] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [modalActionChoose, setModalActionChoose] = useState(false);
   const [selectedChoose, setSelectedChoose] = useState(null);
 
-  const consentRef = useRef();
-
-  // Fetch data
+  // Fetch product
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await consentService.getConsent();
-        setConsentList(data);
-        setFilteredList(data);
-        setCurrentPage(1);
-      } catch (err) {
-        console.error("Fail to fetch consent data", err);
-      }
+    const fetch = async () => {
+      await fetchProduct();
     };
-    fetchData();
-  }, [openModalForm, showModal]);
+    fetch();
+  }, []);
 
+  // Update filteredList saat product berubah
+  useEffect(() => {
+    setFilteredList(product);
+    setCurrentPage(1);
+  }, [product]);
+
+  // Update currentDataShow saat filteredList atau currentPage berubah
   useEffect(() => {
     const pageTotal = Math.ceil(filteredList.length / itemsPerPage) || 1;
     setTotalPages(pageTotal);
@@ -59,15 +55,15 @@ export default function TherapistDashboard() {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     setCurrentDataShow(filteredList.slice(start, end));
-  }, [filteredList, currentPage, itemsPerPage]);
+  }, [filteredList, currentPage]);
 
   // Search
   const handleSearch = (e) => {
     const value = e.target.value.toLowerCase();
-    const filtered = consentList.filter(
+    const filtered = product.filter(
       (item) =>
         item.name.toLowerCase().includes(value) ||
-        item.email.toLowerCase().includes(value),
+        item.productcat.toLowerCase().includes(value),
     );
     setFilteredList(filtered);
     setCurrentPage(1);
@@ -80,12 +76,7 @@ export default function TherapistDashboard() {
 
   const confirmDelete = async () => {
     try {
-      await consentService.deleteById(selectedDelete);
-      const updatedList = consentList.filter(
-        (item) => item.customerid !== selectedDelete,
-      );
-      setConsentList(updatedList);
-      setFilteredList(updatedList);
+      await deleteProduct(selectedDelete);
       setOpenModalDelete(false);
     } catch (err) {
       console.error("Error deleting", err);
@@ -94,7 +85,6 @@ export default function TherapistDashboard() {
 
   const handleView = (item) => {
     setSelectedItem(item);
-    setShowModal(true);
   };
 
   const handleChoose = (id) => {
@@ -116,41 +106,41 @@ export default function TherapistDashboard() {
 
       {/* Modals */}
       {openModalForm && (
-        <Modal setIsOpen={setOpenModalForm} big={true}>
+        <Modal setIsOpen={setOpenModalForm} title='Add Product' small>
           <div className='max-h-[600px] overflow-y-auto'>
-            <CustomerConsentForm role='therapist' />
+            <AddProduct setOpen={setOpenModalForm} />
           </div>
         </Modal>
       )}
 
       {openModalDelete && (
-        <Modal
-          title='Confirm Delete'
-          setIsOpen={setOpenModalDelete}
-          small={true}>
+        <Modal setIsOpen={setOpenModalDelete} title='Confirm Delete' small>
           <Button variant='destructive' onClick={confirmDelete}>
             Delete {selectedDelete}
           </Button>
         </Modal>
       )}
 
-      {showModal && selectedItem && (
-        <Modal setIsOpen={setShowModal} big={true}>
+      {selectedItem && (
+        <Modal
+          setIsOpen={() => setSelectedItem(null)}
+          title='Edit Product'
+          small>
           <div className='max-h-[600px] overflow-y-auto'>
-            <CustomerConsentForm
-              ref={consentRef}
-              role='therapist'
-              idCustomer={selectedItem.customerid}
+            <AddProduct
+              selectedItem={selectedItem}
+              mode='edit'
+              setOpen={() => setSelectedItem(null)}
             />
           </div>
         </Modal>
       )}
 
       {modalActionChoose && (
-        <Modal setIsOpen={setModalActionChoose} small={true}>
+        <Modal setIsOpen={setModalActionChoose} small>
           <div className='grid grid-rows-3 gap-2'>
             <div
-              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer'
+              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 cursor-pointer'
               onClick={() =>
                 navigate(`/therapist/evaluation/${selectedChoose}`)
               }>
@@ -158,13 +148,13 @@ export default function TherapistDashboard() {
               <p className='text-base font-semibold'>Evaluation</p>
             </div>
             <div
-              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer'
+              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 cursor-pointer'
               onClick={() => navigate(`/therapist/pos/${selectedChoose}`)}>
               <Computer className='w-7 h-7' />
               <p className='text-base font-semibold'>Point Of Sales</p>
             </div>
             <div
-              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 transition-transform duration-300 shadow-md cursor-pointer'
+              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 cursor-pointer'
               onClick={() =>
                 navigate(`/therapist/transaction/${selectedChoose}`)
               }>
@@ -177,19 +167,14 @@ export default function TherapistDashboard() {
 
       {/* Table */}
       <Table>
-        <TableCaption>A list of your recent consents.</TableCaption>
+        <TableCaption>Product List</TableCaption>
         <TableHeader>
           <TableRow className='text-center'>
             <TableHead>#</TableHead>
             <TableHead>Name</TableHead>
-            <TableHead>Contact</TableHead>
-            <TableHead>Gender</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Device</TableHead>
-            <TableHead>Emergency Contact</TableHead>
-            <TableHead>Emergency Contact Name</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Unit Price</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead></TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
@@ -202,12 +187,8 @@ export default function TherapistDashboard() {
                 {(currentPage - 1) * itemsPerPage + index + 1}
               </TableCell>
               <TableCell>{item.name}</TableCell>
-              <TableCell>{item.contact_no}</TableCell>
-              <TableCell>{item.gender === "Male" ? "M" : "F"}</TableCell>
-              <TableCell>{item.email}</TableCell>
-              <TableCell>{item.device_used}</TableCell>
-              <TableCell>{item.emergency_contact_no}</TableCell>
-              <TableCell>{item.emergency_contact_name}</TableCell>
+              <TableCell>{item.productcat}</TableCell>
+              <TableCell>{item.unitprice}</TableCell>
               <TableCell
                 className={item.active ? "text-green-600" : "text-red-600"}>
                 {item.active ? "Active" : "Inactive"}
@@ -218,13 +199,7 @@ export default function TherapistDashboard() {
                   className='cursor-pointer hover:text-blue-600 w-5'
                 />
                 <Trash2
-                  onClick={() => handleDelete(item.customerid)}
-                  className='cursor-pointer hover:text-blue-600 w-5'
-                />
-              </TableCell>
-              <TableCell>
-                <ClipboardPlus
-                  onClick={() => handleChoose(item.customerid)}
+                  onClick={() => handleDelete(item.productid)}
                   className='cursor-pointer hover:text-blue-600 w-5'
                 />
               </TableCell>
@@ -233,7 +208,6 @@ export default function TherapistDashboard() {
         </TableBody>
       </Table>
 
-      {/* Pagination */}
       <div className='flex gap-4 mt-4  items-center'>
         {/* Prev */}
         <button

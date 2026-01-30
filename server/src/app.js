@@ -4,7 +4,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const Router = require("./routes/index");
 const cookieParser = require("cookie-parser");
-
+const path = require("path");
 const app = express();
 
 const frontendURL = process.env.FRONTEND_URL || "http://localhost:3000";
@@ -12,10 +12,12 @@ app.use(
   cors({
     origin: frontendURL || "http://localhost:3000",
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
+
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(helmet());
