@@ -1,7 +1,15 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { consentService } from "@/services/consentService";
 import { useState, useEffect } from "react";
-import Modal from "../Shared/Modal";
+import Modal from "../../components/Shared/Modal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
@@ -53,7 +61,9 @@ export default function ConsentsList() {
   const confirmDelete = async () => {
     try {
       const response = consentService.deleteById(selectedDelete);
-      setConsentList((prev) => prev.filter((item) => item.customerid !== selectedDelete));
+      setConsentList((prev) =>
+        prev.filter((item) => item.customerid !== selectedDelete),
+      );
       currentItems = consentList.slice(indexOfFirsItem, indexOfLastItem);
     } catch (err) {
       console.log("error deleting", err);
@@ -89,7 +99,9 @@ export default function ConsentsList() {
             <TableHead className='text-center'>Email</TableHead>
             <TableHead className='text-center'>Selected Device</TableHead>
             <TableHead className='text-center'>Emergancy Contact</TableHead>
-            <TableHead className='text-center'>Emergancy Contact Name</TableHead>
+            <TableHead className='text-center'>
+              Emergancy Contact Name
+            </TableHead>
             <TableHead className='text-center'>Therapist</TableHead>
           </TableRow>
         </TableHeader>
@@ -106,7 +118,9 @@ export default function ConsentsList() {
               <TableCell>
                 <button onClick={() => handleView(item)}>View</button>
                 <br />
-                <button onClick={() => handleDelete(item.customerid)}>Delete</button>
+                <button onClick={() => handleDelete(item.customerid)}>
+                  Delete
+                </button>
               </TableCell>
             </TableRow>
           ))}
@@ -114,7 +128,10 @@ export default function ConsentsList() {
       </Table>
       <div className='flex gap-2 mt-4'>
         {[...Array(totalPages)].map((_, i) => (
-          <button key={i} onClick={() => pagesChange(i + 1)} className={`w-10 h-10 flex items-center justify-center border rounded ${currentPage === i + 1 ? "bg-gray-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}>
+          <button
+            key={i}
+            onClick={() => pagesChange(i + 1)}
+            className={`w-10 h-10 flex items-center justify-center border rounded ${currentPage === i + 1 ? "bg-gray-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}>
             {i + 1}
           </button>
         ))}
@@ -128,11 +145,15 @@ export default function ConsentsList() {
           <p>Country : {selectedItem.country}</p>
           <p>Health Issue</p>
           <p>{selectedItem.implantbreast != 0 && "implant breast"}</p>
-          <p>{selectedItem.implantelecmon != 0 && "implant electron monitor"}</p>
+          <p>
+            {selectedItem.implantelecmon != 0 && "implant electron monitor"}
+          </p>
           <p>{selectedItem.implanteyslens != 0 && "implant eye lens"}</p>
           <p>{selectedItem.implantmetal != 0 && "implant metal"}</p>
           {/* Tambahkan field lain sesuai kebutuhan */}
-          <Button onClick={() => setShowModal(false)} className='mt-4 bg-blue-500 text-white px-4 py-2 rounded'>
+          <Button
+            onClick={() => setShowModal(false)}
+            className='mt-4 bg-blue-500 text-white px-4 py-2 rounded'>
             Close
           </Button>
         </Modal>

@@ -2,9 +2,7 @@ const posService = require("../services/posService");
 
 const insertPosHd = async (req, res) => {
   try {
-    console.log("pos hd data", req.body);
     const result = await posService.posInsertHd(req.body, req.user.userId);
-    console.log("serres", result);
 
     res.status(200).json({
       success: true,
@@ -24,7 +22,11 @@ const insertPosHd = async (req, res) => {
 
 const insertPosLine = async (req, res) => {
   try {
-    const result = await posService.posInsertLine(req.body.idResult, req.body.selectedData, req.user.userId);
+    const result = await posService.posInsertLine(
+      req.body.idResult,
+      req.body.selectedData,
+      req.user.userId,
+    );
 
     res.status(200).json({
       success: true,
@@ -44,13 +46,25 @@ const insertPosLine = async (req, res) => {
 
 const getCusPosHd = async (req, res) => {
   try {
-    const id = req.params.id;
-    const result = await posService.getCustomerPosHd(id);
+    let { page, pageSize, searchTerm, customerId } = req.query;
+
+    const result = await posService.getCustomerPosHd({
+      page,
+      limit: pageSize,
+      searchTerm,
+      customerId,
+    });
 
     res.status(200).json({
       success: true,
       message: "Registration successful",
       data: result,
+      pagination: {
+        currentPage: Number(page),
+        pageSize: Number(pageSize),
+        totalPages: Math.ceil(result.total / pageSize),
+        totalItems: result.total,
+      },
     });
   } catch (error) {
     console.error("Error Get Data:", error);

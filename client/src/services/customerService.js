@@ -9,26 +9,33 @@ export const customerService = {
     const margedData = { data1, data2 };
     const token = authService.getToken();
     try {
-      const response = await api.post(`${API_BASE_URL}/api/customer/${id}`, margedData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.post(
+        `${API_BASE_URL}/api/customer/${id}`,
+        margedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       return response;
     } catch (error) {
       console.error("Error registation", error);
     }
   },
   updateRegistration: async (id, data1, data2) => {
-    console.log(data1);
     const margedData = { data1, data2 };
     const token = authService.getToken();
     try {
-      const response = await api.put(`${API_BASE_URL}/api/customer/${id}`, margedData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.put(
+        `${API_BASE_URL}/api/customer/${id}`,
+        margedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       return response.data;
     } catch (error) {
       console.error("Error registation", error);
@@ -51,11 +58,14 @@ export const customerService = {
   getCustomerJoinInterestData: async (id) => {
     const token = authService.getToken();
     try {
-      const response = await api.get(`${API_BASE_URL}/api/customer/joininterest/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.get(
+        `${API_BASE_URL}/api/customer/joininterest/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       return response.data;
     } catch (error) {
       console.error("Error fetch data", error);
@@ -108,7 +118,12 @@ export const customerService = {
     try {
       const decoded = jwtDecode(token);
 
-      if (!decoded.userId || !decoded.iat || !decoded.jti || decoded.exp * 1000 < Date.now()) {
+      if (
+        !decoded.userId ||
+        !decoded.iat ||
+        !decoded.jti ||
+        decoded.exp * 1000 < Date.now()
+      ) {
         authService.removeToken();
         return false;
       }

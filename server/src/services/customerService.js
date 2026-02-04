@@ -8,7 +8,11 @@ const createRegistration = async (data, idAccount, idCustomer, idUser2) => {
     //   console.log(idCustomer);
     // await customer.updateCustomer(data.data1, idCustomer);
     // } else {
-    const result = await customer.insertCustomer(data.data1, idAccount, idUser2);
+    const result = await customer.insertCustomer(
+      data.data1,
+      idAccount,
+      idUser2,
+    );
     // }
     if (data.data2 && data.data2.length > 0) {
       for (const idInterests of data.data2) {
@@ -57,4 +61,16 @@ const getDataJoinInterest = async (id) => {
   return response;
 };
 
-module.exports = { createRegistration, getData, getDataByid, getDataJoinInterest, updateRegistration };
+const deleteById = async (id) => {
+  const response = await customer.deleteDataById(id);
+  return response;
+};
+
+module.exports = {
+  createRegistration,
+  getData,
+  getDataByid,
+  getDataJoinInterest,
+  updateRegistration,
+  deleteById,
+};

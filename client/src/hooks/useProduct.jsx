@@ -34,7 +34,7 @@ export const useProduct = () => {
         };
         const response = await productsService.getProducts(apiParams);
 
-        const data = formatproductData(response);
+        const data = formatproductData(response.data);
 
         setProduct(data);
         setPagination(
@@ -114,20 +114,26 @@ export const useProduct = () => {
       setIsSubmitting(true);
       setError(null);
 
-      await productsService.deleteProduct(id);
-      toast.success("product deleted successfully");
+      const result = await productsService.deleteProduct(id);
+
+      console.log("ceceecce", result);
+      toast.success("Product deleted successfully");
 
       setProduct((prev) => prev.filter((item) => item.productid !== id));
 
       return { success: true };
     } catch (err) {
       console.error("Error deleting product:", err);
-      toast.error(err.message);
-      setError(err.message);
 
-      return { success: false, error: err.message };
+      const errorMessage =
+        err.response?.data?.message || "Failed to delete product";
+
+      toast.error(errorMessage);
+      setError(errorMessage);
+
+      return { success: false, error: errorMessage };
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   }, []);
 
@@ -153,6 +159,7 @@ export const useProduct = () => {
 
   const onPageSizeChange = useCallback(
     async (pageSize) => {
+      console.log("pagesize", pageSize);
       const newParams = { ...params, pageSize, page: 1 };
       setParams(newParams);
       return await fetchProduct({ pageSize, page: 1 });

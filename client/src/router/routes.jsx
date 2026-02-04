@@ -13,18 +13,19 @@ import CustomerFeedbackForm from "@/pages/form/CustomerFeedbackForm";
 import CustomerReview from "@/pages/form/CustomerReviewForm";
 import CustomerSteps from "@/pages/CustomerSteps";
 import SignupPage from "@/pages/SignupPage";
-import TherapistDashboard from "@/pages/therapist/therapistDashboard/TherapistDashboard";
+import TherapistDashboard from "@/pages/TherapistDashboard";
 import Logout from "@/pages/auth/Logout";
 import ConsentsList from "@/pages/therapist/ConsentsList";
-import TherapistEvaluation from "@/pages/therapist/therapistEvaluation/TherapistEvaluation";
+import TherapistEvaluation from "@/pages/TherapistEvaluation";
 import EvaluationForm from "@/pages/form/evaluation/EvaluationForm";
-import Pos from "@/pages/Pos/Pos";
-import Invoice from "@/pages/Pos/Invoice";
-import Receipt from "@/pages/Pos/Receipt";
-import PrintReceipt from "@/pages/Pos/PrintReceipt";
-import TransactionHistory from "@/pages/transactionhistory/TransactionHistory";
-import PrintReceipt2 from "@/pages/Pos/PrintReceipt2";
+import PosPage from "@/pages/PosPage";
+import Invoice from "@/components/InvoiceReceipt/Invoice";
+import Receipt from "@/components/InvoiceReceipt/Receipt";
+import PrintReceipt from "@/components/InvoiceReceipt/PrintReceipt";
+import TransactionHistory from "@/pages/TransactionHistory";
+import PrintReceipt2 from "@/components/InvoiceReceipt/PrintReceipt2";
 import ProductsPage from "@/pages/productsPage";
+import PatienTreatment from "@/pages/PatientTreatment";
 
 const privateRoutes = {
   path: "/",
@@ -68,13 +69,14 @@ const therapistRoutes = {
     { path: "", element: <TherapistDashboard /> },
     { path: "consentslist", element: <ConsentsList /> },
     { path: "product", element: <ProductsPage /> },
-    { path: "pos/:id", element: <Pos /> },
-    { path: "pos/", element: <Pos /> },
+    { path: "pos/:id", element: <PosPage /> },
+    { path: "pos/", element: <PosPage /> },
     { path: "invoice", element: <Invoice /> },
     { path: "receipt", element: <Receipt /> },
     { path: "printreceipt", element: <PrintReceipt /> },
     { path: "printreceipt2", element: <PrintReceipt2 /> },
     { path: "evaluation/:id", element: <TherapistEvaluation /> },
+    { path: "treatment/:id", element: <PatienTreatment /> },
     { path: "transaction/:id", element: <TransactionHistory /> },
   ],
 };

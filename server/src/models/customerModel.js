@@ -7,7 +7,8 @@ const getData = async () => {
 };
 
 const getDataJoinInterest = async (id) => {
-  const query = "SELECT * FROM customers LEFT JOIN customer_interests ON customers.customerid = customer_interests.customer_id LEFT JOIN products ON products.id = customer_interests.product_id WHERE customerid = ?";
+  const query =
+    "SELECT * FROM customers LEFT JOIN customer_interests ON customers.customerid = customer_interests.customer_id LEFT JOIN products ON products.id = customer_interests.product_id WHERE customerid = ?";
   const [rows] = await pool.query(query, [id]);
 
   return rows;
@@ -31,9 +32,6 @@ const initiate = async (account_id) => {
 };
 
 const insertCustomer = async (data, idaccount = 0, idUser2) => {
-  console.log("boy");
-
-  console.log(idaccount);
   const {
     name,
     email,
@@ -51,9 +49,24 @@ const insertCustomer = async (data, idaccount = 0, idUser2) => {
 
   const query = `INSERT INTO customers (name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, registration_date, account_id, dateofbirth, referred_other, entereddate, enteredby) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
-  const [result] = await pool.query(query, [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, new Date(), idaccount, dateOfBirth, referred_other, new Date(), idUser2]);
-  console.log("idd");
-  console.log(result.insertId);
+  const [result] = await pool.query(query, [
+    name,
+    email,
+    contact_no,
+    address,
+    postalcode,
+    country,
+    referred_by,
+    emergency_contact_name,
+    emergency_contact_no,
+    new Date(),
+    idaccount,
+    dateOfBirth,
+    referred_other,
+    new Date(),
+    idUser2,
+  ]);
+
   return result.insertId;
 };
 
@@ -93,14 +106,30 @@ const updateCustomer = async (updateData, id, idUser2) => {
       editedby=?,
       editeddate=?
      WHERE customerid = ?`,
-    [name, email, contact_no, address, postalcode, country, referred_by, emergency_contact_name, emergency_contact_no, dateOfBirth, referred_other, idUser2, new Date(), id]
+    [
+      name,
+      email,
+      contact_no,
+      address,
+      postalcode,
+      country,
+      referred_by,
+      emergency_contact_name,
+      emergency_contact_no,
+      dateOfBirth,
+      referred_other,
+      idUser2,
+      new Date(),
+      id,
+    ],
   );
 
   return result.affectedRows > 0;
 };
 
 const customerInterests = async (idUser, idInterests) => {
-  const query = "INSERT INTO customer_interests (customer_id, product_id) VALUES (?, ?)";
+  const query =
+    "INSERT INTO customer_interests (customer_id, product_id) VALUES (?, ?)";
   await pool.query(query, [idUser, idInterests]);
 };
 
@@ -113,9 +142,15 @@ const findCustomerByEmail = async (email) => {
   const [rows] = await pool.query(
     `SELECT customerid, email 
      FROM customers WHERE email = ? `,
-    [email]
+    [email],
   );
   return rows[0];
+};
+
+const deleteDataById = async (customer_id) => {
+  const query = `DELETE FROM customers WHERE customerid = ?;`;
+  const [result] = await pool.query(query, [customer_id]);
+  return result;
 };
 
 module.exports = {
@@ -129,4 +164,5 @@ module.exports = {
   getCustomerByAccountId,
   findCustomerByEmail,
   getDataJoinInterest,
+  deleteDataById,
 };

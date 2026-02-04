@@ -1,8 +1,8 @@
 const pool = require("../config/db");
 
-const insertConsent = async (data, customer_id, user_id) => {
-  console.log(data);
+const insertConsent = async (data, customer_id, user_id, therapistId) => {
   const now = new Date();
+
   const {
     date,
     therapist,
@@ -35,16 +35,15 @@ const insertConsent = async (data, customer_id, user_id) => {
   } = data;
 
   const query = `INSERT INTO consentfrm 
-  (customerid, therapistid,  voucherno, device_used, gender, age, walkin, implantelecmon, 
+  (customerid, therapistid,  voucherno,  gender, age, walkin, implantelecmon, 
   implantmetal, implanteyslens, issueheartbypass, implantbreast, implantpacemaker,nonwalkin, nonwalkincontact, 
   nonwalkinname,  consentfrmdate, entereddate, enteredby, issueothers,issuecoheartdisease, issuelungdisease, issuediabetes, issuestrokehistory, issuehypertension, issuepregnant, issuecancer, issuemenstruating, issuesurgery, issuehospitalninetydays,
-  issueseizure ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+  issueseizure ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
 
   const [result] = await pool.query(query, [
     customer_id,
-    therapist,
+    therapistId,
     voucherNo,
-    selectedDevices,
     gender,
     age,
     walkin,
@@ -74,20 +73,49 @@ const insertConsent = async (data, customer_id, user_id) => {
     issueseizure,
   ]);
 
-  return result.affectedRows > 0;
+  return result.insertId;
 };
 
 const getConsentById = async (customer_id) => {
   const query = `
-    SELECT * 
+    SELECT 
+      consentfrm.*,
+      customers.*,
+      therapists.*,
+      consentdevice.device_used,
+      products.name as productname
     FROM consentfrm 
-    JOIN customers ON consentfrm.customerid = customers.customerid JOIN therapists ON consentfrm.therapistid=therapists.therapistsid
-    WHERE consentfrm.customerid = ?`;
+    JOIN customers 
+      ON consentfrm.customerid = customers.customerid
+    JOIN therapists 
+      ON consentfrm.therapistid = therapists.therapistsid
+    LEFT JOIN consentdevice 
+      ON consentfrm.consentfrmid = consentdevice.consentfrmid
+    LEFT JOIN products 
+      ON consentdevice.device_used = products.productid
+    WHERE consentfrm.customerid = ?
+  `;
+
   const [rows] = await pool.query(query, [customer_id]);
-  return rows;
+
+  if (!rows.length) return null;
+
+  const base = rows[0];
+
+  const selectedDevices = rows
+    .filter((r) => r.device_used !== null)
+    .map((r) => ({
+      id: r.device_used,
+      name: r.productname,
+    }));
+
+  return {
+    ...base,
+    selectedDevices,
+  };
 };
 
-const updateConsent = async (data, customer_id, user_id) => {
+const updateConsent = async (data, consentFrmId, user_id) => {
   const now = new Date();
   const {
     date,
@@ -118,13 +146,10 @@ const updateConsent = async (data, customer_id, user_id) => {
     issueseizure,
   } = data;
 
-  console.log(data);
-
   const query = `
   UPDATE consentfrm SET
     therapistid = ?,
     voucherno = ?,
-    device_used = ?,
     gender = ?,
     age = ?,
     walkin = ?,
@@ -151,13 +176,12 @@ const updateConsent = async (data, customer_id, user_id) => {
     issuesurgery=?,
     issuehospitalninetydays=?,
     issueseizure=?
-  WHERE customerid = ?
+  WHERE consentfrmid = ?
 `;
 
   const [result] = await pool.query(query, [
     therapist,
     voucherNo,
-    selectedDevices,
     gender,
     age,
     1, // walkin
@@ -184,16 +208,45 @@ const updateConsent = async (data, customer_id, user_id) => {
     issuesurgery,
     issuehospitalninetydays,
     issueseizure,
-    customer_id, // untuk WHERE
+    consentFrmId, // untuk WHERE
   ]);
 
   return result.affectedRows > 0;
 };
 
-const getData = async () => {
-  const query = `SELECT * FROM consentfrm JOIN customers ON consentfrm.customerid = customers.customerid`;
-  const [row] = await pool.query(query);
-  return row;
+const getData = async (options = {}) => {
+  let { page = 1, limit = 10, searchTerm = "" } = options;
+
+  const params = [];
+  const conditions = [];
+
+  if (searchTerm) {
+    conditions.push("customers.name like ? ");
+    const searchValue = `%${searchTerm}%`;
+    params.push(searchValue);
+  }
+
+  const whereClause =
+    conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+  let query = `SELECT * FROM consentfrm JOIN 
+  customers ON consentfrm.customerid = customers.customerid ${whereClause}`;
+
+  const queryParams = [...params];
+  if (page && limit) {
+    const offset = (page - 1) * limit;
+    query += ` LIMIT ? OFFSET ?`;
+    queryParams.push(Number(limit), Number(offset));
+  }
+
+  const [row] = await pool.query(query, queryParams);
+
+  const countQuery = `SELECT COUNT(*) AS total  FROM consentfrm JOIN 
+  customers ON consentfrm.customerid = customers.customerid ${whereClause} `;
+  const [countResult] = await pool.execute(countQuery, [...params]);
+  const total = countResult[0].total;
+
+  return { data: row, total: total };
 };
 
 const deleteDataById = async (customer_id) => {
@@ -201,4 +254,10 @@ const deleteDataById = async (customer_id) => {
   const [result] = await pool.query(query, [customer_id]);
   return result;
 };
-module.exports = { insertConsent, getConsentById, updateConsent, getData, deleteDataById };
+module.exports = {
+  insertConsent,
+  getConsentById,
+  updateConsent,
+  getData,
+  deleteDataById,
+};

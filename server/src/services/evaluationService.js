@@ -37,9 +37,9 @@ const addNewSessionNotes = async (id, idUser, evaluationId, data) => {
   }
 };
 
-const getEvaluationData = async (id) => {
+const getEvaluationData = async (id, options = {}) => {
   try {
-    const result = evaluation.getEvaluation(id);
+    const result = evaluation.getEvaluation(id, options);
 
     return result;
   } catch (error) {
@@ -64,10 +64,24 @@ const updateEvalanotate = async (id, idUser, data, entereddate) => {
 
     let result;
     front.forEach((item) => {
-      result = evaluation.updateDataEvalanotate(id, idUser, item, "1", enteredby, entereddate);
+      result = evaluation.updateDataEvalanotate(
+        id,
+        idUser,
+        item,
+        "1",
+        enteredby,
+        entereddate,
+      );
     });
     back.forEach((item) => {
-      result = evaluation.updateDataEvalanotate(id, idUser, item, "0", enteredby, entereddate);
+      result = evaluation.updateDataEvalanotate(
+        id,
+        idUser,
+        item,
+        "0",
+        enteredby,
+        entereddate,
+      );
     });
     return result;
   } catch (error) {
@@ -116,9 +130,57 @@ const deleteDataEvaluation = async (id) => {
   }
 };
 
+const getByCustomerId = async (id) => {
+  try {
+    const result = evaluation.getByCustomerId(id);
+    return result;
+  } catch (error) {
+    console.error("Service error:", error);
+    throw new Error("Failed update evalanotate");
+  }
+};
+
+const deleteByCustomerId = async (id) => {
+  try {
+    const result = evaluation.deleteByCustomerId(id);
+    return result;
+  } catch (error) {
+    console.error("Service error:", error);
+    throw new Error("Failed update evalanotate");
+  }
+};
+
 const deleteDataEvalanotate = async (id) => {
   try {
     const result = evaluation.deleteEvalannotate(id);
+    return result;
+  } catch (error) {
+    console.error("Service error:", error);
+    throw new Error("Failed update evalanotate");
+  }
+};
+
+const deleteEvalonatateBulk = async (ids) => {
+  try {
+    const result = evaluation.deleteEvalannotateBulk(ids);
+    return result;
+  } catch (error) {
+    console.error("Service error:", error);
+    throw new Error("Failed update evalanotate");
+  }
+};
+const deleteEvaluationPainAreasBulk = async (ids) => {
+  try {
+    const result = evaluation.deleteEvaluationPainAreasBulk(ids);
+    return result;
+  } catch (error) {
+    console.error("Service error:", error);
+    throw new Error("Failed update evalanotate");
+  }
+};
+const deleteSessionNoteBulk = async (ids) => {
+  try {
+    const result = evaluation.deleteSessionNoteBulk(ids);
     return result;
   } catch (error) {
     console.error("Service error:", error);
@@ -146,4 +208,23 @@ const deleteDataSession = async (id) => {
   }
 };
 
-module.exports = { addNewEvaluation, addNewEvalanotate, addNewSessionNotes, getEvaluationData, updateEvaluation, updateEvalanotate, updateSessionNotes, addEvaluationPainArea, updateEvaluationPainArea, deleteDataEvaluation, deleteDataEvalanotate, deleteDataPainAreas, deleteDataSession };
+module.exports = {
+  addNewEvaluation,
+  addNewEvalanotate,
+  addNewSessionNotes,
+  getEvaluationData,
+  updateEvaluation,
+  updateEvalanotate,
+  updateSessionNotes,
+  addEvaluationPainArea,
+  updateEvaluationPainArea,
+  deleteDataEvaluation,
+  deleteDataEvalanotate,
+  deleteDataPainAreas,
+  deleteDataSession,
+  getByCustomerId,
+  deleteEvalonatateBulk,
+  deleteEvaluationPainAreasBulk,
+  deleteSessionNoteBulk,
+  deleteByCustomerId,
+};

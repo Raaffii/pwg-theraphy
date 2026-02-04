@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { consentService } from "@/services/consentService";
-import Modal from "@/pages/Shared/Modal";
+import Modal from "@/components/Shared/Modal";
 import { useState } from "react";
 
 const StepsLayout = () => {
@@ -57,7 +57,9 @@ const StepsLayout = () => {
         <Modal title={"Confirm"} setIsOpen={setOpenModal}>
           {" "}
           <p className='mb-6 text-gray-700'>Confirm Delete?</p>
-          <button onClick={confirmDelete} className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50'>
+          <button
+            onClick={confirmDelete}
+            className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-50'>
             Delete
           </button>
         </Modal>
@@ -66,14 +68,17 @@ const StepsLayout = () => {
         <section className='bg-white p-6 shadow-md rounded-xl'>
           <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
             {/* Register */}
-            <div className={`bg-gray-50 p-4 rounded-lg border-2 grid grid-cols-3 items-center ${currentStep == 1 && `border-black`}`}>
+            <div
+              className={`bg-gray-50 p-4 rounded-lg border-2 grid grid-cols-3 items-center ${currentStep == 1 && `border-black`}`}>
               <div className='flex col-span-2 flex-col'>
                 <h3 className='font-semibold text-gray-700'>Customer Data</h3>
                 <p className='text-gray-600'>Status : Save</p>
               </div>
 
               <div className='flex gap-2 items-center'>
-                <Button variant='ghost' onClick={() => handleView("/steps/personal-data")}>
+                <Button
+                  variant='ghost'
+                  onClick={() => handleView("/steps/personal-data")}>
                   View
                 </Button>
                 <Button variant='ghost'>Delete</Button>
@@ -81,14 +86,17 @@ const StepsLayout = () => {
             </div>
 
             {/* Consent */}
-            <div className={`bg-gray-50 p-4 rounded-lg border-2 grid grid-cols-3 items-center ${currentStep == 2 && `border-black`}`}>
+            <div
+              className={`bg-gray-50 p-4 rounded-lg border-2 grid grid-cols-3 items-center ${currentStep == 2 && `border-black`}`}>
               <div className='flex col-span-2 flex-col'>
                 <h3 className='font-semibold text-gray-700'>Consent</h3>
                 <p className='text-gray-600'>Status : Empty</p>
               </div>
 
               <div className='flex gap-2 items-center'>
-                <Button variant='ghost' onClick={() => handleView("/steps/consent")}>
+                <Button
+                  variant='ghost'
+                  onClick={() => handleView("/steps/consent")}>
                   View
                 </Button>
                 <Button variant='ghost' onClick={() => handleDelete("consent")}>
@@ -98,14 +106,17 @@ const StepsLayout = () => {
             </div>
 
             {/* Evaluation */}
-            <div className={`bg-gray-50 p-4 rounded-lg border-2 grid grid-cols-3 items-center ${currentStep == 3 && `border-black`}`}>
+            <div
+              className={`bg-gray-50 p-4 rounded-lg border-2 grid grid-cols-3 items-center ${currentStep == 3 && `border-black`}`}>
               <div className='flex col-span-2 flex-col'>
                 <h3 className='font-semibold text-gray-700'>Evaluation</h3>
                 <p className='text-gray-600'>Status : Save</p>
               </div>
 
               <div className='flex gap-2 items-center'>
-                <Button variant='ghost' onClick={() => handleView("/steps/evaluation")}>
+                <Button
+                  variant='ghost'
+                  onClick={() => handleView("/steps/evaluation")}>
                   View
                 </Button>
                 <Button variant='ghost'>Delete</Button>
@@ -115,10 +126,14 @@ const StepsLayout = () => {
         </section>
         <section className='my-10'>
           <div className='flex justify-between mb-1'>
-            <span className='text-sm font-medium text-gray-700'>Step {currentStep} of 3</span>
+            <span className='text-sm font-medium text-gray-700'>
+              Step {currentStep} of 3
+            </span>
           </div>
           <div className='w-full bg-gray-200 rounded-full h-1.5'>
-            <div className='bg-black h-1.5 rounded-full transition-all duration-1000 ease-in-out' style={{ width: `${percentage}%` }}></div>
+            <div
+              className='bg-black h-1.5 rounded-full transition-all duration-1000 ease-in-out'
+              style={{ width: `${percentage}%` }}></div>
           </div>
         </section>
         <section className='bg-white p-6 shadow-md rounded-xl'>

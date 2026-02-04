@@ -1,5 +1,3 @@
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
 import api from "@/utils/api";
 import { authService } from "./authService";
 
@@ -33,14 +31,19 @@ export const posService = {
       console.error("Error registation", error);
     }
   },
-  getCustomerPosHd: async (id) => {
+  getCustomerPosHd: async (params) => {
     const token = authService.getToken();
+    console.log("params", params);
     try {
-      const response = await api.get(`${API_BASE_URL}/api/pos/poshd/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.get(
+        `${API_BASE_URL}/api/pos/poshd`,
+        { params },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       return response.data;
     } catch (error) {
       console.error("Error registation", error);

@@ -5,15 +5,21 @@ import { authService } from "./authService";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const productsService = {
-  getProducts: async () => {
+  getProducts: async (params) => {
     // const margedData = { data1, data2 };
+
     const token = authService.getToken();
     try {
-      const response = await api.get(`${API_BASE_URL}/api/products`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.get(
+        `${API_BASE_URL}/api/products`,
+        { params },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
+
       return response.data;
     } catch (error) {
       console.error("Error registation", error);
@@ -47,10 +53,13 @@ export const productsService = {
           Authorization: `Bearer ${token}`,
         },
       });
-      return response.data;
+
+      console.log("ceeeeeeeeeee", response);
+
+      return response;
     } catch (error) {
       console.error("Error registation", error);
-      return error;
+      throw error;
     }
   },
 

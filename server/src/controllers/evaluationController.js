@@ -4,9 +4,23 @@ const addEvaluation = async (req, res) => {
   try {
     const id = req.params.id;
     const idUser = req.user.userId;
-    const evaluationId = await evaluationService.addNewEvaluation(id, idUser, req.body);
-    await evaluationService.addNewEvalanotate(id, idUser, evaluationId, req.body);
-    await evaluationService.addNewSessionNotes(id, idUser, evaluationId, req.body);
+    const evaluationId = await evaluationService.addNewEvaluation(
+      id,
+      idUser,
+      req.body,
+    );
+    await evaluationService.addNewEvalanotate(
+      id,
+      idUser,
+      evaluationId,
+      req.body,
+    );
+    await evaluationService.addNewSessionNotes(
+      id,
+      idUser,
+      evaluationId,
+      req.body,
+    );
     await evaluationService.addEvaluationPainArea(evaluationId, req.body);
     res.status(200).json({
       success: true,
@@ -25,16 +39,27 @@ const addEvaluation = async (req, res) => {
 
 const editEvaluation = async (req, res) => {
   try {
-    console.log("entered by : " + req.body.enteredby);
-
     const id = req.params.id;
     const idUser = req.user.userId;
-    const evaluationId = await evaluationService.updateEvaluation(id, idUser, req.body);
+    const evaluationId = await evaluationService.updateEvaluation(
+      id,
+      idUser,
+      req.body,
+    );
 
     await evaluationService.deleteDataEvalanotate(id);
-    const entereddate = await evaluationService.updateSessionNotes(id, idUser, req.body);
+    const entereddate = await evaluationService.updateSessionNotes(
+      id,
+      idUser,
+      req.body,
+    );
 
-    await evaluationService.updateEvalanotate(id, idUser, req.body, entereddate);
+    await evaluationService.updateEvalanotate(
+      id,
+      idUser,
+      req.body,
+      entereddate,
+    );
     await evaluationService.updateEvaluationPainArea(id, req.body);
     res.status(200).json({
       success: true,
@@ -53,13 +78,22 @@ const editEvaluation = async (req, res) => {
 
 const getEvaluation = async (req, res) => {
   try {
-    const id = req.params.id;
-    const result = await evaluationService.getEvaluationData(id);
+    let { page, pageSize, searchTerm, customerId } = req.query;
+
+    const result = await evaluationService.getEvaluationData(customerId, {
+      page,
+      limit: pageSize,
+      searchTerm,
+    });
 
     res.status(200).json({
-      success: true,
-      message: "Registration successful",
-      data: result,
+      data: result.data,
+      pagination: {
+        currentPage: Number(page),
+        pageSize: Number(pageSize),
+        totalPages: Math.ceil(result.total / pageSize),
+        totalItems: result.total,
+      },
     });
   } catch (error) {
     console.error("Error Get Data:", error);
@@ -86,4 +120,9 @@ const deleteEvaluation = async (req, res) => {
   }
 };
 
-module.exports = { addEvaluation, getEvaluation, editEvaluation, deleteEvaluation };
+module.exports = {
+  addEvaluation,
+  getEvaluation,
+  editEvaluation,
+  deleteEvaluation,
+};

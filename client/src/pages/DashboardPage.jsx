@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
-import React from "react";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
@@ -25,7 +22,9 @@ const DashboardPage = () => {
               <br />
               GIVE US Feed Back
             </p>
-            <button className='mt-4 bg-white px-4 py-1 rounded-full text-sm font-medium'>Feedback</button>
+            <button className='mt-4 bg-white px-4 py-1 rounded-full text-sm font-medium'>
+              Feedback
+            </button>
           </div>
 
           {/* Therapy History Card */}
@@ -36,7 +35,9 @@ const DashboardPage = () => {
               <li className='border-b'>Session 2</li>
               <li className=''>Session 3</li>
             </ul>
-            <p className='text-right text-xs mt-2 text-gray-600'>See More &gt;</p>
+            <p className='text-right text-xs mt-2 text-gray-600'>
+              See More &gt;
+            </p>
           </div>
         </div>
 
@@ -47,7 +48,9 @@ const DashboardPage = () => {
               <h2 className='text-2xl font-bold'>WELCOME</h2>
               <p className='text-lg'>Steve Jobs</p>
             </div>
-            <button className='mt-6 bg-white px-6 py-2 rounded-full font-semibold' onClick={handleClick}>
+            <button
+              className='mt-6 bg-white px-6 py-2 rounded-full font-semibold'
+              onClick={handleClick}>
               Registration
             </button>
           </div>

@@ -7,12 +7,16 @@ const registration = async (req, res) => {
   let idUser = req.user.userId;
   const idUser2 = req.user.userId;
   if (idCustomer == 0) {
-    console.log(idCustomer);
     idUser = null;
   }
   //---------------------------------------------------------------------------------
   try {
-    const result = await customerService.createRegistration(req.body, idUser, idCustomer, idUser2);
+    const result = await customerService.createRegistration(
+      req.body,
+      idUser,
+      idCustomer,
+      idUser2,
+    );
 
     res.status(200).json({
       success: true,
@@ -37,11 +41,15 @@ const update = async (req, res) => {
   let idUser = req.user.userId;
   const idUser2 = req.user.userId;
   if (idCustomer == 0) {
-    console.log(idCustomer);
     idUser = null;
   }
   try {
-    const result = await customerService.updateRegistration(req.body, idUser, idCustomer, idUser2);
+    const result = await customerService.updateRegistration(
+      req.body,
+      idUser,
+      idCustomer,
+      idUser2,
+    );
 
     res.status(200).json({
       success: true,
@@ -91,4 +99,10 @@ const getJoinInterest = async (req, res) => {
   }
 };
 
-module.exports = { registration, getCustomerData, getCustomerDataByid, getJoinInterest, update };
+module.exports = {
+  registration,
+  getCustomerData,
+  getCustomerDataByid,
+  getJoinInterest,
+  update,
+};

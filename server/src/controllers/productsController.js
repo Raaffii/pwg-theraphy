@@ -5,8 +5,24 @@ const path = require("path");
 
 const getProducts = async (req, res) => {
   try {
-    const data = await productsService.getDataProducts();
-    res.status(200).json(data);
+    let { page, pageSize, searchTerm, filter } = req.query;
+
+    const result = await productsService.getDataProducts({
+      page,
+      limit: pageSize,
+      searchTerm,
+      filter,
+    });
+
+    res.status(200).json({
+      data: result.data,
+      pagination: {
+        currentPage: Number(page),
+        pageSize: Number(pageSize),
+        totalPages: Math.ceil(result.total / pageSize),
+        totalItems: result.total,
+      },
+    });
   } catch (error) {
     console.error("Error fetching  data:", error);
     return res.status(500).json({ message: "Internal server error" });
@@ -24,12 +40,10 @@ const postProducts = async (req, res) => {
 
       newFilename = `product-${insertId}${ext}`;
 
-      // 2. Rename file di folder uploads
       fs.renameSync(`uploads/${tempFilename}`, `uploads/${newFilename}`);
 
       const data = { ...req.body, image: newFilename };
 
-      // 3. Update nama file di DB
       await productsService.updateProducts(insertId, data);
     }
 
@@ -43,12 +57,28 @@ const postProducts = async (req, res) => {
 const deleteProducts = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log("celce", id);
+    const product = await productsService.getProductById(id);
+
     const data = await productsService.deleteProducts(id);
+
+    const oldFilePath = path.join(__dirname, "../../uploads", product.picture);
+
+    if (fs.existsSync(oldFilePath)) {
+      fs.unlinkSync(oldFilePath);
+    }
+
     res.status(200).json(data);
   } catch (error) {
-    console.error("Error fetching  data:", error);
-    return res.status(500).json({ message: "Internal server error" });
+    if (error.code === "ER_ROW_IS_REFERENCED_2") {
+      return res.status(409).json({
+        message:
+          "Cannot delete this product because it is linked to transacton data.",
+      });
+    } else {
+      return res
+        .status(500)
+        .json({ message: "Internal server error", error: "Error Server" });
+    }
   }
 };
 
@@ -57,26 +87,22 @@ const updateProducts = async (req, res) => {
     const id = req.params.id;
     const data = req.body;
 
-    console.log("data", data);
-    console.log("file", req.file);
+    const product = await productsService.getProductById(id);
 
     if (req.file) {
       const tempFilename = req.file.filename;
       const ext = path.extname(tempFilename);
       const newFilename = `product-${id}${ext}`;
 
-      // Hapus file lama jika ada
-
       const oldFilePath = path.join(
         __dirname,
         "../../uploads",
-        `product-${id}`,
+        `product-${product.picture}`,
       );
       if (fs.existsSync(oldFilePath)) {
         fs.unlinkSync(oldFilePath);
       }
 
-      // Rename file baru
       fs.renameSync(`uploads/${tempFilename}`, `uploads/${newFilename}`);
 
       // Update nama file di data

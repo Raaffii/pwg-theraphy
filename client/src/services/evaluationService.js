@@ -8,11 +8,15 @@ export const evaluationService = {
   addEvaluation: async (id, data) => {
     const token = authService.getToken();
     try {
-      const response = await api.post(`${API_BASE_URL}/api/evaluation/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.post(
+        `${API_BASE_URL}/api/evaluation/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       return response;
     } catch (error) {
       console.error("Error registation", error);
@@ -21,37 +25,50 @@ export const evaluationService = {
   updateEvaluation: async (id, data) => {
     const token = authService.getToken();
     try {
-      const response = await api.put(`${API_BASE_URL}/api/evaluation/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.put(
+        `${API_BASE_URL}/api/evaluation/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       return response;
     } catch (error) {
       console.error("Error registation", error);
     }
   },
-  getEvaluationData: async (id) => {
+  getEvaluationData: async (params, id) => {
     const token = authService.getToken();
+
     try {
-      const response = await api.get(`${API_BASE_URL}/api/evaluation/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.get(
+        `${API_BASE_URL}/api/evaluation`,
+        { params },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
-      return response;
+      );
+      return response.data;
     } catch (error) {
       console.error("Error registation", error);
     }
   },
+
   deleteEvaluationData: async (id) => {
     const token = authService.getToken();
     try {
-      const response = await api.delete(`${API_BASE_URL}/api/evaluation/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await api.delete(
+        `${API_BASE_URL}/api/evaluation/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
       return response;
     } catch (error) {
       console.error("Error registation", error);

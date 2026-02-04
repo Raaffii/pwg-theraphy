@@ -1,155 +1,57 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useImperativeHandle,
-  forwardRef,
-} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { devices, healthConditions } from "@/utils/Hardcodeddata";
-import SignatureCanvas from "react-signature-canvas";
+import { healthConditions } from "@/utils/Hardcodeddata";
+
 import toast from "react-hot-toast";
 
-//service
+// service
 import { consentService } from "@/services/consentService";
 import { therapistsService } from "@/services/therapistsService";
 import { customerService } from "@/services/customerService";
 import { interestsService } from "@/services/interestsService";
 
-//hook
+// hook
 import useInitializeConsentForm from "@/hooks/useInitializeConsentForm";
 import useInitializeCustomerForm from "@/hooks/useInitializeCustomerForm";
-
-//partial
+import TherapistAndRating from "./consentspart/TherapistAndRating";
+// partial
 import DateAndVoucher from "./consentspart/DateAndVoucher";
 import DeviceSelection from "./consentspart/DeviceSelection";
 import WalkinReferral from "./consentspart/WalkinReferral";
 import PersonalParticulars from "./consentspart/PersonalParticulars";
 import HealthDeclaration from "./consentspart/HealthDeclaration";
-import Disclaimer from "./consentspart/Disclaimer";
-import Signature from "./consentspart/Signature";
-import TherapistAndRating from "./consentspart/TherapistAndRating";
+
 import { useAuth } from "@/context/AuthContext";
 
-const CustomerConsentForm = forwardRef((props, ref) => {
+const CustomerConsentForm = (props) => {
+  const hasFetchedData = useRef(false);
   const {
     role = "customer",
     idCustomer = 0,
     outsave = false,
     setTriggerKey,
   } = props;
-  const [extended, setExtended] = useState(false);
-  const [loadings, setLoadings] = useState(false);
-  const [therapistsList, setTherapistsList] = useState([]);
-  const [interestsList, setInterestsList] = useState();
-  const [personalData, setPersonalData] = useState([]);
-  const [dataExist, setDataExist] = useState();
-  const { user, loading } = useAuth();
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const navigate = useNavigate();
-  //Next and Prev handle
-  const handleNext = async () => {
-    if (role == "customer") {
-      //change this ----------------------------------------------------------------------------------------
+  const { user, loading } = useAuth();
 
-      try {
-        const check = await consentService.getConsentByid(user.customerId);
+  const [loadings, setLoadings] = useState(false);
 
-        const isDataExist = await customerService.getCustomerData(
-          user.customerId,
-        );
-
-        if (isDataExist.length > 0) {
-          await customerService.updateRegistration(
-            user.customerId,
-            formPersonalData,
-          );
-        } else {
-          await customerService.customerRegistration(
-            user.customerId,
-            formPersonalData,
-          );
-        }
-        let status;
-        if (check.length > 0) {
-          status = await consentService.consentUpdate(
-            user.customerId,
-            formData,
-          );
-        } else {
-          status = await consentService.consentRegistration(
-            user.customerId,
-            formData,
-          );
-        }
-        if (status.response && status.response.status === 500) {
-          toast.error("Someting Is Miss");
-          navigate("/steps/consent");
-        } else {
-          toast.success("Data Saved");
-          navigate("/steps/evaluation");
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoadings(false);
-      }
-    } else {
-      try {
-        console.log("we are here");
-        const isDataExist = await customerService.getCustomerData(idCustomer);
-        let status;
-        let id;
-        if (isDataExist.length > 0) {
-          await customerService.updateRegistration(
-            idCustomer,
-            formPersonalData,
-          );
-          status = await consentService.consentUpdate(idCustomer, formData);
-          id = idCustomer;
-        } else {
-          const resp = await customerService.customerRegistration(
-            0,
-            formPersonalData,
-          );
-          status = await consentService.consentRegistration(
-            resp.data.data,
-            formData,
-          );
-          id = resp.data.data;
-        }
-        if (status.response && status.response.status === 500) {
-          toast.error("Someting Is Miss");
-          navigate("/therapist");
-        } else {
-          toast.success("Data Saved");
-          navigate(`/therapist/evaluation/${id}`);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoadings(false);
-        setTriggerKey((prev) => prev + 1);
-      }
-    }
-  };
-  const handlePrev = () => {
-    navigate("/steps/personal-data");
-  };
+  const [therapistsList, setTherapistsList] = useState([]);
+  const [interestsList, setInterestsList] = useState([]);
+  const [personalData, setPersonalData] = useState([]);
+  const [consentData, setConsentData] = useState([]);
 
   const [formData, setFormData] = useState({
     date: "",
     voucherNo: "",
-    selectedDevices: "",
+    selectedDevices: [],
     gender: "",
     selectedConditions: "",
     otherCondition: "",
     signatureDate: "",
-    therapist: "",
+    therapist: 1,
     breastImplant: 0,
     pacemakerImplant: 0,
     electronicMonitorImplant: 0,
@@ -192,155 +94,216 @@ const CustomerConsentForm = forwardRef((props, ref) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleChangePersonal = (e) => {
     const { name, value } = e.target;
-    setFormPersonalData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormPersonalData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ------USE EFFECT----------
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
+  const handleNext = async () => {
+    try {
+      setLoadings(true);
+
+      let targetId = role === "customer" ? user.customerId : idCustomer;
+
+      const customerExist = await customerService.getCustomerData(targetId);
+      const consentExist = await consentService.getConsentByid(targetId);
+
+      console.log("cistomer exist", consentExist, customerExist);
+
+      if (customerExist.length > 0) {
+        console.log("update update");
+        await customerService.updateRegistration(targetId, formPersonalData);
+      } else {
+        console.log("insert insert");
+        const resp = await customerService.customerRegistration(
+          role === "customer" ? user.customerId : 0,
+          formPersonalData,
+        );
+
+        if (role !== "customer") {
+          targetId = resp.data.data;
+        }
+      }
+
+      let status;
+
+      if (consentExist?.length > 0 || consentExist) {
+        console.log("update update");
+        status = await consentService.consentUpdate(
+          consentData.consentfrmid,
+          formData,
+        );
+      } else {
+        console.log("insert insert");
+        status = await consentService.consentRegistration(targetId, formData);
+      }
+
+      if (status?.response?.status === 500) {
+        toast.error("Something is missing");
+        return;
+      }
+
+      toast.success("Data saved successfully");
+
+      if (role === "customer") {
+        navigate("/steps/evaluation");
+      } else {
+        navigate(`/therapist/evaluation/${targetId}`);
+        setTriggerKey?.((prev) => prev + 1);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Server error");
+    } finally {
+      setLoadings(false);
+    }
+  };
+
+  const handleDeviceChange = (e) => {
+    const value = Number(e.target.value);
+
+    const selectedItem = interestsList.find((item) => item.productid === value);
+
+    setFormData((prev) => {
+      const exists = prev.selectedDevices.some((item) => item.id === value);
+
+      return {
+        ...prev,
+        selectedDevices: exists
+          ? prev.selectedDevices.filter((item) => item.id !== value)
+          : [
+              ...prev.selectedDevices,
+              {
+                id: value,
+                name: selectedItem?.name || null,
+              },
+            ],
+      };
     });
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const dataTherapist = await therapistsService.therapistsList();
-        setTherapistsList(dataTherapist);
-        const dataDevice = await interestsService.interestestsList();
+    if (hasFetchedData.current) return;
+    hasFetchedData.current = true;
+    if (!user) return;
 
-        setInterestsList(dataDevice);
-        if (idCustomer == 0) {
-          const data = await customerService.getCustomerData(user.customerId);
-          setPersonalData(data);
-          const dataex = await consentService.getConsentByid(user.customerId);
-          setDataExist(dataex);
-        } else {
-          const data = await customerService.getCustomerData(idCustomer);
-          setPersonalData(data);
-          const dataex = await consentService.getConsentByid(idCustomer);
-          setDataExist(dataex);
+    const fetchData = async () => {
+      try {
+        const [therapists, devices] = await Promise.all([
+          therapistsService.therapistsList(),
+          interestsService.interestestsList(),
+        ]);
+
+        setTherapistsList(therapists);
+        setInterestsList(devices);
+
+        const targetId = idCustomer === 0 ? user.customerId : idCustomer;
+
+        if (targetId) {
+          const customer = await customerService.getCustomerData(targetId);
+          const consent = await consentService.getConsentByid(targetId);
+
+          setPersonalData(customer);
+          setConsentData(consent);
         }
       } catch (err) {
-        // setError("Fail To gain data");
-      } finally {
-        // setLoadings(false);
+        console.error(err);
       }
     };
 
-    fetch();
-  }, []);
+    fetchData();
+  }, [user, idCustomer]);
 
-  //--------------------------- Signature Set Up Start
-  const sigCanvas = useRef();
-
-  const clearSignature = () => {
-    sigCanvas.current.clear();
-  };
-
-  const saveSignature = () => {
-    const dataUrl = sigCanvas.current.toDataURL();
-    console.log("Tanda tangan base64:", dataUrl);
-  };
-  //---------------------------- Signature Set Up End
-
-  useInitializeConsentForm(dataExist, setFormData);
-
+  useInitializeConsentForm(consentData, setFormData);
   useInitializeCustomerForm(personalData, setFormPersonalData);
 
-  useImperativeHandle(ref, () => ({
-    triggerClick: handleNext,
-  }));
+  if (loading) {
+    return <div className='p-10 text-center'>Loading...</div>;
+  }
 
   return (
     <div className='p-6 space-y-3'>
-      {/* Header */}
       <h1 className='text-2xl font-bold text-red-700 mb-2'>
         CUSTOMER CONSENT FORM
       </h1>
-      <p className='text-sm text-gray-500 mb-4'>
-        客户同意书 BORANG KEBENARAN PELANGGAN
-      </p>
-      {/* Date and Voucher No */}
+
       <DateAndVoucher formData={formData} handleChange={handleChange} />
-      {/* Device Selection */}
+
       <DeviceSelection
         formData={formData}
-        handleChange={handleChange}
+        handleChange={handleDeviceChange}
         interestsList={interestsList}
       />
-      {/* Walk-in / Referral */}
+
       <WalkinReferral formData={formData} handleChange={handleChange} />
-      {/* Personal Particulars */}
-      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>
-        PERSONAL PARTICULARS 客户信息 BUTIRAN PELANGGAN
+
+      <div className='bg-blue-900 text-white px-2 py-1 font-semibold'>
+        PERSONAL PARTICULARS
       </div>
+
       <PersonalParticulars
         formData={formData}
         formPersonalData={formPersonalData}
         handleChange={handleChange}
-        personalData={personalData}
         handleChangePersonal={handleChangePersonal}
       />
-      {/* Health Declaration */}
-      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>
-        HEALTH DECLARATION 健康声明 PENGISYTIHARAN KESIHATAN
+
+      <div className='bg-blue-900 text-white px-2 py-1 font-semibold'>
+        HEALTH DECLARATION
       </div>
+
       <HealthDeclaration
         formData={formData}
         handleChange={handleChange}
         healthConditions={healthConditions}
         setFormData={setFormData}
       />
-      {/* Disclaimer */}
-      <div className='bg-blue-900 text-white px-2 py-1 mb-2 font-semibold'>
-        DISCLAIMER 客户免责声明 PENAFIAN
+
+      {/* <div className='bg-blue-900 text-white px-2 py-1 font-semibold'>
+        DISCLAIMER
       </div>
+
       <Disclaimer
         formData={formData}
         handleChange={handleChange}
-        personalData={personalData}
         extended={extended}
         setExtended={setExtended}
         Button={Button}
-      />
-      {/* Signature & Rating */}
+      /> */}
+      {/* 
       <Signature
         formData={formData}
         handleChange={handleChange}
         sig={{ saveSignature, clearSignature, sigCanvas, SignatureCanvas }}
         Button={Button}
-      />
-      <TherapistAndRating
+      /> */}
+
+      {/* <TherapistAndRating
         formData={formData}
         handleChange={handleChange}
         therapistsList={therapistsList}
-      />
-      <div className='flex justify-between my-10'>
-        {!outsave && (
-          <>
-            {" "}
-            <Button variant='secondary' onClick={handlePrev}>
-              Prev
-            </Button>
-            <Button onClick={handleNext}>Save</Button>
-          </>
-        )}
-      </div>
+      /> */}
+      <div className='bg-blue-900 text-white px-2 py-1 font-semibold'></div>
+      {!outsave && (
+        <div className='flex justify-end my-10'>
+          {/* <Button variant='secondary' onClick={handlePrev}>
+            Prev
+          </Button> */}
+
+          <Button onClick={handleNext} disabled={loadings}>
+            {loadings ? "Saving..." : "Save"}
+          </Button>
+        </div>
+      )}
     </div>
   );
-});
+};
 
 export default CustomerConsentForm;

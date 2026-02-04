@@ -1,8 +1,8 @@
 const products = require("../models/productsModel");
 
-const getDataProducts = async () => {
+const getDataProducts = async (options = {}) => {
   try {
-    const data = await products.getData();
+    const data = await products.getData(options);
     return data;
   } catch (error) {
     console.error("Failed to save consent:", error.message);
@@ -29,7 +29,7 @@ const deleteProducts = async (id) => {
   } catch (error) {
     console.error("Failed to save consent:", error.message);
 
-    throw new Error("Error while storing consent data");
+    throw error;
   }
 };
 
@@ -44,9 +44,21 @@ const updateProducts = async (id, data) => {
   }
 };
 
+const getProductById = async (id) => {
+  try {
+    const data = await products.getProductById(id);
+    return data;
+  } catch (error) {
+    console.error("Failed to save consent:", error.message);
+
+    throw new Error("Error while storing consent data");
+  }
+};
+
 module.exports = {
   getDataProducts,
   postProducts,
   deleteProducts,
   updateProducts,
+  getProductById,
 };

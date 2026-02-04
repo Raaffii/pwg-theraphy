@@ -1,76 +1,44 @@
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { useState, useEffect } from "react";
-import Modal from "./Shared/Modal";
+import { useState, useEffect, useRef } from "react";
+import Modal from "../components/Shared/Modal";
 import { Button } from "@/components/ui/button";
-import AddProduct from "./Product/AddProduct";
-import { Eye, Trash2, ClipboardPlus, Computer, History } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import SearcBar from "@/pages/Shared/SearchBar";
+import AddProduct from "../components/Product/AddProduct";
+
+import SearcBar from "@/components/Shared/SearchBar";
 import { useProduct } from "@/hooks/useProduct";
+import { DataTable } from "../components/table";
 
 export default function ProductsPage() {
-  const navigate = useNavigate();
-  const { fetchProduct, product, deleteProduct } = useProduct();
+  const API_URL = import.meta.env.VITE_API_URL;
 
-  const [filteredList, setFilteredList] = useState([]);
-  const [currentDataShow, setCurrentDataShow] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const itemsPerPage = 10;
-
+  const {
+    fetchProduct,
+    product,
+    deleteProduct,
+    pagination,
+    onPageChange,
+    onPageSizeChange,
+    onSearch,
+  } = useProduct();
+  const hasFetchedData = useRef(false);
   const [openModalForm, setOpenModalForm] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [selectedDelete, setSelectedDelete] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [modalActionChoose, setModalActionChoose] = useState(false);
-  const [selectedChoose, setSelectedChoose] = useState(null);
 
   // Fetch product
   useEffect(() => {
+    if (hasFetchedData.current) return;
+    hasFetchedData.current = true;
     const fetch = async () => {
       await fetchProduct();
     };
     fetch();
-  }, []);
-
-  // Update filteredList saat product berubah
-  useEffect(() => {
-    setFilteredList(product);
-    setCurrentPage(1);
-  }, [product]);
-
-  // Update currentDataShow saat filteredList atau currentPage berubah
-  useEffect(() => {
-    const pageTotal = Math.ceil(filteredList.length / itemsPerPage) || 1;
-    setTotalPages(pageTotal);
-
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    setCurrentDataShow(filteredList.slice(start, end));
-  }, [filteredList, currentPage]);
+  }, [fetchProduct]);
 
   // Search
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    const filtered = product.filter(
-      (item) =>
-        item.name.toLowerCase().includes(value) ||
-        item.productcat.toLowerCase().includes(value),
-    );
-    setFilteredList(filtered);
-    setCurrentPage(1);
-  };
 
-  const handleDelete = (id) => {
-    setSelectedDelete(id);
+  const handleDelete = (item) => {
+    setSelectedDelete(item.productid);
     setOpenModalDelete(true);
   };
 
@@ -87,16 +55,73 @@ export default function ProductsPage() {
     setSelectedItem(item);
   };
 
-  const handleChoose = (id) => {
-    setSelectedChoose(id);
-    setModalActionChoose(true);
+  const columns = [
+    {
+      accessorKey: "name",
+      header: "Picture",
+      cellClassName: "text-left",
+      render: (row) => (
+        <span>
+          {row.picture ? (
+            <img
+              src={row.picture ? `${API_URL}/uploads/${row.picture}` : ""}
+              className='w-14 h-14 object-cover rounded-lg'
+            />
+          ) : (
+            "No-Picture"
+          )}
+        </span>
+      ),
+    },
+    {
+      accessorKey: "name",
+      header: "Name",
+      cellClassName: "text-left",
+    },
+    {
+      accessorKey: "productcat",
+      header: "Category",
+      cellClassName: "text-left",
+    },
+    {
+      accessorKey: "unitprice",
+      header: "Unit Price",
+      cellClassName: "text-left",
+      render: (row) => <span>${row.unitprice}</span>,
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cellClassName: "text-left",
+      render: (row) => (
+        <div className='flex flex-wrap gap-1'>
+          <span className={row.active ? "text-green-600" : "text-red-600"}>
+            {row.active ? "Active" : "Inactive"}
+          </span>
+        </div>
+      ),
+    },
+  ];
+
+  const searchTimeout = useRef(null);
+
+  const handleSearch = (searchTerm) => {
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current);
+    }
+
+    searchTimeout.current = setTimeout(async () => {
+      if (searchTerm.length >= 3 || searchTerm.length === 0) {
+        await onSearch(searchTerm);
+      }
+    }, 1000);
   };
 
   return (
     <div className='p-4'>
       {/* Top bar */}
       <div className='flex justify-between items-center mb-4'>
-        <SearcBar handleSearch={handleSearch} />
+        <SearcBar handleSearch={(e) => handleSearch(e.target.value)} />
         <Button
           onClick={() => setOpenModalForm(true)}
           className='bg-prime-color hover:bg-prime-color-hover'>
@@ -136,100 +161,17 @@ export default function ProductsPage() {
         </Modal>
       )}
 
-      {modalActionChoose && (
-        <Modal setIsOpen={setModalActionChoose} small>
-          <div className='grid grid-rows-3 gap-2'>
-            <div
-              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 cursor-pointer'
-              onClick={() =>
-                navigate(`/therapist/evaluation/${selectedChoose}`)
-              }>
-              <ClipboardPlus className='w-7 h-7' />
-              <p className='text-base font-semibold'>Evaluation</p>
-            </div>
-            <div
-              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 cursor-pointer'
-              onClick={() => navigate(`/therapist/pos/${selectedChoose}`)}>
-              <Computer className='w-7 h-7' />
-              <p className='text-base font-semibold'>Point Of Sales</p>
-            </div>
-            <div
-              className='bg-prime-color h-full rounded-2xl flex justify-center text-white p-4 gap-2 hover:scale-105 cursor-pointer'
-              onClick={() =>
-                navigate(`/therapist/transaction/${selectedChoose}`)
-              }>
-              <History className='w-7 h-7' />
-              <p className='text-base font-semibold'>History Of Transaction</p>
-            </div>
-          </div>
-        </Modal>
-      )}
-
       {/* Table */}
-      <Table>
-        <TableCaption>Product List</TableCaption>
-        <TableHeader>
-          <TableRow className='text-center'>
-            <TableHead>#</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Unit Price</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentDataShow.map((item, index) => (
-            <TableRow
-              key={index}
-              className='rounded-xl hover:bg-prime-color cursor-pointer'>
-              <TableCell>
-                {(currentPage - 1) * itemsPerPage + index + 1}
-              </TableCell>
-              <TableCell>{item.name}</TableCell>
-              <TableCell>{item.productcat}</TableCell>
-              <TableCell>{item.unitprice}</TableCell>
-              <TableCell
-                className={item.active ? "text-green-600" : "text-red-600"}>
-                {item.active ? "Active" : "Inactive"}
-              </TableCell>
-              <TableCell className='flex gap-2'>
-                <Eye
-                  onClick={() => handleView(item)}
-                  className='cursor-pointer hover:text-blue-600 w-5'
-                />
-                <Trash2
-                  onClick={() => handleDelete(item.productid)}
-                  className='cursor-pointer hover:text-blue-600 w-5'
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
 
-      <div className='flex gap-4 mt-4  items-center'>
-        {/* Prev */}
-        <button
-          onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-          disabled={currentPage === 1}
-          className='bg-white shadow-lg px-3 py-1 border border-purple-500 rounded-md hover:bg-purple-100 transition'>
-          Prev
-        </button>
-
-        {/* Info current page */}
-        <span className='text-gray-700'>
-          Page {currentPage} of {totalPages}
-        </span>
-
-        {/* Next */}
-        <button
-          onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className='bg-white shadow-lg px-3 py-1 border border-purple-500 rounded-md hover:bg-purple-100 transition'>
-          Next
-        </button>
-      </div>
+      <DataTable
+        data={product}
+        columns={columns}
+        onDelete={handleDelete}
+        onEdit={handleView}
+        pagination={pagination}
+        onPageChange={onPageChange}
+        onSizeChange={onPageSizeChange}
+      />
     </div>
   );
 }

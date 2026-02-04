@@ -25,7 +25,6 @@ export const ProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   if (!authService.isAuthenticated()) {
-    console.log("hoy");
     return <Navigate to='/login' state={{ from: location }} replace />;
   }
   if (allowedRoles && (!user || !allowedRoles.includes(user.role))) {
