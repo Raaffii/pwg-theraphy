@@ -53,7 +53,7 @@ const update = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Registration successful",
+      message: "Update Customer Succesful",
       data: result,
     });
   } catch (error) {

@@ -11,10 +11,6 @@ import { packageService } from "@/services/packageService";
 import { receiptService } from "@/services/receiptService";
 import { ReceiptDocument } from "./ReceiptDocument";
 import { pdf } from "@react-pdf/renderer";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
-import axios from "axios";
-import { saveAs } from "file-saver";
 
 export default function Receipt({
   selectedData,
@@ -115,7 +111,6 @@ export default function Receipt({
       const packageUseExist = selectedData.find(
         (prev) => prev.packageCusFlag === true,
       );
-      console.log("packageusage", packageUseExist);
       if (packageUseExist) {
         await packageService.minCusPackage(selectedData);
       }
@@ -199,7 +194,6 @@ export default function Receipt({
           </thead>
 
           <tbody>
-            {console.log("sel", selectedData)}
             {selectedData.map((item, index) => (
               <tr className='hover:bg-gray-50' key={index}>
                 <td className='border border-gray-300 px-3 py-2' colSpan={3}>
@@ -374,6 +368,7 @@ export default function Receipt({
                   selectedData={selectedData}
                   personData={personData}
                   discountShow={discountShow}
+                  paymentMethod={formPaymentData.paymentMethod}
                 />
               </div>
               {formPaymentData.receiptOption && (

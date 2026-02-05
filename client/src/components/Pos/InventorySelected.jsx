@@ -151,13 +151,13 @@ export default function PosSelectedItem({
       <div className='flex gap-3 col-span-3 items-center p-1 bg-purple-950/10'>
         <div className='items-center'>
           <button
-            className='bg-white shadow-lg hover:bg-gray-100 text-black w-6 h-6 rounded-full flex items-center justify-center text-sm font-semibold'
+            className='bg-white shadow-lg hover:bg-gray-100 text-black w-6 h-6 rounded-sm flex items-center justify-center text-sm font-semibold'
             onClick={() => handlePlus(id)}>
             +
           </button>
           <p className='text-center'>{amount}</p>
           <button
-            className='bg-purple-400 hover:bg-gray-100 text-black w-6 h-6 rounded-full flex items-center justify-center text-sm font-semibold'
+            className='bg-purple-400 hover:bg-gray-100 text-black w-6 h-6 rounded-sm flex items-center justify-center text-sm font-semibold'
             onClick={() => handleMin(id)}>
             -
           </button>

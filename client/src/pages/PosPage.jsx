@@ -1,7 +1,7 @@
 // hooks
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Trash } from "lucide-react";
+
 //component
 
 import { Button } from "@/components/ui/button";
@@ -16,22 +16,23 @@ import CustomerDataAndWalkin from "../components/Pos/CustomerDataAndWalkin";
 import InventorySelectedHeader from "../components/Pos/InventorySelectedHeader";
 
 // service
-import { customerService } from "@/services/customerService";
+
+import { useCustomer } from "@/hooks/useCustomer";
 
 export default function PosPage() {
   const navigate = useNavigate();
   const [selectedData, setSelectedData] = useState([]);
-  const [customerData, setCustomerData] = useState();
+
   const [receiptModal, setReceiptModal] = useState(false);
   const [showWalkinInput, setShowWalkinInput] = useState(false);
 
   const { id } = useParams();
+  const { fetchCustomerDataById, customer: customerData } = useCustomer();
 
   useEffect(() => {
     const fetchData = async (id) => {
       if (id) {
-        const DataExistCustomer = await customerService.getCustomerData(id);
-        setCustomerData(DataExistCustomer[0]);
+        await fetchCustomerDataById(id);
       }
     };
     fetchData(id);
@@ -88,8 +89,8 @@ export default function PosPage() {
               <button
                 title='delete all'
                 onClick={handleDeleteAll}
-                className='bg-red-600 text-white rounded-xl p-1 shadow-md'>
-                <Trash />
+                className='bg-red-600 text-white rounded-lg p-1 shadow-sm'>
+                reset
               </button>
             </div>
           )}

@@ -1,12 +1,13 @@
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { CreditCard, ScrollText } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+export default function PrintReceipt({
+  selectedData,
+  personData,
+  discountShow,
+  paymentMethod,
+}) {
+  const totalPrice = selectedData
+    .reduce((total, item) => total + item.subPrice * 1, 0)
+    .toFixed(2);
 
-export default function PrintReceipt({ selectedData, personData, discountShow }) {
-  const totalPrice = selectedData.reduce((total, item) => total + item.subPrice * 1, 0).toFixed(2);
-
-  console.log("selsel", selectedData);
   return (
     <>
       <div id='printreceipt' className='h-full'>
@@ -27,43 +28,84 @@ export default function PrintReceipt({ selectedData, personData, discountShow })
               <p>From</p>
               <p>Prife Wellness Group</p>
               <p>Address Of Prife Wellness Group</p>
-              <p>(223)321311231231</p>
+              <p>(223)0123456789</p>
             </div>
-            <div>
-              <p>Sold To</p>
-              <p>Arief Muhammad</p>
-              <p>Address Of Arief Muhammad</p>
-              <p>Customer@Gmail.com</p>
-            </div>
+
+            {personData[0]?.name && (
+              <div>
+                <p>Sold To</p>
+                <p>{personData[0]?.name}</p>
+                <p>{personData[0]?.address}</p>
+                <p>{personData[0]?.email}</p>
+              </div>
+            )}
           </div>
 
           <div className='mt-14'>
             <table className='w-full border border-gray-300 text-sm mb-6 shadow-sm rounded-lg'>
               <thead>
                 <tr className='bg-gray-100 text-left'>
-                  <th className='border border-gray-300 px-3 py-2 font-medium w-[60%]' colSpan={3}>
+                  <th
+                    className='border border-gray-300 px-3 py-2 font-medium w-[60%]'
+                    colSpan={3}>
                     Description
                   </th>
-                  <th className='border border-gray-300 px-3 py-2 font-medium w-[10%] text-center'>Quantity</th>
-                  <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Unit Price</th>
-                  {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Subtotal</th>}
-                  {discountShow && <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Discount</th>}
+                  <th className='border border-gray-300 px-3 py-2 font-medium w-[10%] text-center'>
+                    Quantity
+                  </th>
+                  <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>
+                    Unit Price
+                  </th>
+                  {discountShow && (
+                    <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>
+                      Subtotal
+                    </th>
+                  )}
+                  {discountShow && (
+                    <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>
+                      Discount
+                    </th>
+                  )}
 
-                  <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>Total</th>
+                  <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>
+                    Total
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {selectedData.map((item, index) => (
                   <tr className='hover:bg-gray-50' key={index}>
-                    <td className='border border-gray-300 px-3 py-2' colSpan={3}>
-                      {item.name ? item.name : item.packageCusFlag ? `${item.packagedesc} (Package Customer) ` : `${item.packagedesc} (Package) `}
+                    <td
+                      className='border border-gray-300 px-3 py-2'
+                      colSpan={3}>
+                      {item.name
+                        ? item.name
+                        : item.packageCusFlag
+                          ? `${item.packagedesc} (Package Customer) `
+                          : `${item.packagedesc} (Package) `}
                     </td>
-                    <td className='border border-gray-300 px-3 py-2 text-center'>{item.amount}</td>
-                    <td className='border border-gray-300 px-3 py-2 text-center'>${item.price}</td>
-                    {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>${(item.price * item.amount).toFixed(2)}</td>}
-                    {discountShow && <td className='border border-gray-300 px-3 py-2 text-center'>{item.discpercent ? `${item.discount}%` : `-$${(item.discount * 1).toFixed(2)}`}</td>}
+                    <td className='border border-gray-300 px-3 py-2 text-center'>
+                      {item.amount}
+                    </td>
+                    <td className='border border-gray-300 px-3 py-2 text-center'>
+                      ${item.price}
+                    </td>
+                    {discountShow && (
+                      <td className='border border-gray-300 px-3 py-2 text-center'>
+                        ${(item.price * item.amount).toFixed(2)}
+                      </td>
+                    )}
+                    {discountShow && (
+                      <td className='border border-gray-300 px-3 py-2 text-center'>
+                        {item.discpercent
+                          ? `${item.discount}%`
+                          : `-$${(item.discount * 1).toFixed(2)}`}
+                      </td>
+                    )}
 
-                    <td className='border border-gray-300 px-3 py-2 text-center'>${(item.amount * item.subPrice).toFixed(2)}</td>
+                    <td className='border border-gray-300 px-3 py-2 text-center'>
+                      ${(item.amount * item.subPrice).toFixed(2)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -73,7 +115,7 @@ export default function PrintReceipt({ selectedData, personData, discountShow })
           <div className='flex justify-between items-center mt-20 mb-30'>
             <div className=''>
               <p className='font-semibold'>Payment Menthod : </p>
-              <p> Credit Card</p>
+              <p> {paymentMethod}</p>
             </div>
             <div className=' w-80 text-right'>
               <p className='border-t-2  w-full'>Total : ${totalPrice}</p>

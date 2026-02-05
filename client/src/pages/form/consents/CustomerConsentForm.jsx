@@ -1,20 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { healthConditions } from "@/utils/Hardcodeddata";
-
 import toast from "react-hot-toast";
-
 // service
-import { consentService } from "@/services/consentService";
-import { therapistsService } from "@/services/therapistsService";
-import { customerService } from "@/services/customerService";
-import { interestsService } from "@/services/interestsService";
 
 // hook
 import useInitializeConsentForm from "@/hooks/useInitializeConsentForm";
 import useInitializeCustomerForm from "@/hooks/useInitializeCustomerForm";
-import TherapistAndRating from "./consentspart/TherapistAndRating";
+import { useConsent } from "@/hooks/useConsent";
+import { useProduct } from "@/hooks/useProduct";
+import { useCustomer } from "@/hooks/useCustomer";
+// import TherapistAndRating from "./consentspart/TherapistAndRating";
 // partial
 import DateAndVoucher from "./consentspart/DateAndVoucher";
 import DeviceSelection from "./consentspart/DeviceSelection";
@@ -23,12 +20,14 @@ import PersonalParticulars from "./consentspart/PersonalParticulars";
 import HealthDeclaration from "./consentspart/HealthDeclaration";
 
 import { useAuth } from "@/context/AuthContext";
+import PropTypes from "prop-types";
+import Disclaimer from "./consentspart/Disclaimer";
 
 const CustomerConsentForm = (props) => {
   const hasFetchedData = useRef(false);
   const {
     role = "customer",
-    idCustomer = 0,
+    idCustomer,
     outsave = false,
     setTriggerKey,
   } = props;
@@ -37,11 +36,16 @@ const CustomerConsentForm = (props) => {
   const { user, loading } = useAuth();
 
   const [loadings, setLoadings] = useState(false);
+  const { createConsent, updateConsent, fetchConsentByCustomerId, consent } =
+    useConsent();
 
-  const [therapistsList, setTherapistsList] = useState([]);
-  const [interestsList, setInterestsList] = useState([]);
-  const [personalData, setPersonalData] = useState([]);
-  const [consentData, setConsentData] = useState([]);
+  const { fetchProduct, product } = useProduct();
+  const {
+    createCustomer,
+    customer: personalData,
+    updateCustomer,
+    fetchCustomerDataById,
+  } = useCustomer();
 
   const [formData, setFormData] = useState({
     date: "",
@@ -106,39 +110,27 @@ const CustomerConsentForm = (props) => {
     try {
       setLoadings(true);
 
-      let targetId = role === "customer" ? user.customerId : idCustomer;
+      let customerId = role === "customer" ? user.customerId : idCustomer;
 
-      const customerExist = await customerService.getCustomerData(targetId);
-      const consentExist = await consentService.getConsentByid(targetId);
-
-      console.log("cistomer exist", consentExist, customerExist);
-
-      if (customerExist.length > 0) {
-        console.log("update update");
-        await customerService.updateRegistration(targetId, formPersonalData);
+      if (idCustomer) {
+        await updateCustomer(customerId, formPersonalData);
       } else {
-        console.log("insert insert");
-        const resp = await customerService.customerRegistration(
+        const resp = await createCustomer(
           role === "customer" ? user.customerId : 0,
           formPersonalData,
         );
 
         if (role !== "customer") {
-          targetId = resp.data.data;
+          customerId = resp.data.data;
         }
       }
 
       let status;
 
-      if (consentExist?.length > 0 || consentExist) {
-        console.log("update update");
-        status = await consentService.consentUpdate(
-          consentData.consentfrmid,
-          formData,
-        );
+      if (idCustomer) {
+        status = await updateConsent(consent.consentfrmid, formData);
       } else {
-        console.log("insert insert");
-        status = await consentService.consentRegistration(targetId, formData);
+        status = await createConsent(customerId, formData);
       }
 
       if (status?.response?.status === 500) {
@@ -146,12 +138,10 @@ const CustomerConsentForm = (props) => {
         return;
       }
 
-      toast.success("Data saved successfully");
-
       if (role === "customer") {
         navigate("/steps/evaluation");
       } else {
-        navigate(`/therapist/evaluation/${targetId}`);
+        navigate(`/therapist/evaluation/${customerId}`);
         setTriggerKey?.((prev) => prev + 1);
       }
     } catch (err) {
@@ -165,7 +155,7 @@ const CustomerConsentForm = (props) => {
   const handleDeviceChange = (e) => {
     const value = Number(e.target.value);
 
-    const selectedItem = interestsList.find((item) => item.productid === value);
+    const selectedItem = product.find((item) => item.productid === value);
 
     setFormData((prev) => {
       const exists = prev.selectedDevices.some((item) => item.id === value);
@@ -196,22 +186,13 @@ const CustomerConsentForm = (props) => {
 
     const fetchData = async () => {
       try {
-        const [therapists, devices] = await Promise.all([
-          therapistsService.therapistsList(),
-          interestsService.interestestsList(),
-        ]);
+        fetchProduct({ filter: "Service" });
 
-        setTherapistsList(therapists);
-        setInterestsList(devices);
+        const customerId = idCustomer === 0 ? user.customerId : idCustomer;
 
-        const targetId = idCustomer === 0 ? user.customerId : idCustomer;
-
-        if (targetId) {
-          const customer = await customerService.getCustomerData(targetId);
-          const consent = await consentService.getConsentByid(targetId);
-
-          setPersonalData(customer);
-          setConsentData(consent);
+        if (customerId) {
+          await fetchCustomerDataById(customerId);
+          await fetchConsentByCustomerId(customerId);
         }
       } catch (err) {
         console.error(err);
@@ -219,9 +200,15 @@ const CustomerConsentForm = (props) => {
     };
 
     fetchData();
-  }, [user, idCustomer]);
+  }, [
+    user,
+    idCustomer,
+    fetchProduct,
+    fetchConsentByCustomerId,
+    fetchCustomerDataById,
+  ]);
 
-  useInitializeConsentForm(consentData, setFormData);
+  useInitializeConsentForm(consent, setFormData);
   useInitializeCustomerForm(personalData, setFormPersonalData);
 
   if (loading) {
@@ -239,7 +226,7 @@ const CustomerConsentForm = (props) => {
       <DeviceSelection
         formData={formData}
         handleChange={handleDeviceChange}
-        interestsList={interestsList}
+        productService={product}
       />
 
       <WalkinReferral formData={formData} handleChange={handleChange} />
@@ -266,17 +253,16 @@ const CustomerConsentForm = (props) => {
         setFormData={setFormData}
       />
 
-      {/* <div className='bg-blue-900 text-white px-2 py-1 font-semibold'>
+      <div className='bg-blue-900 text-white px-2 py-1 font-semibold'>
         DISCLAIMER
       </div>
 
       <Disclaimer
-        formData={formData}
+        formPersonalData={formPersonalData}
         handleChange={handleChange}
-        extended={extended}
-        setExtended={setExtended}
         Button={Button}
-      /> */}
+        personalData={personalData}
+      />
       {/* 
       <Signature
         formData={formData}
@@ -307,3 +293,10 @@ const CustomerConsentForm = (props) => {
 };
 
 export default CustomerConsentForm;
+
+CustomerConsentForm.propTypes = {
+  role: PropTypes.string,
+  idCustomer: PropTypes.number,
+  outsave: PropTypes.bool,
+  setTriggerKey: PropTypes.func,
+};

@@ -47,7 +47,7 @@ const updateConsents = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Registration successful",
+      message: "Update Consent successful",
       data: result,
     });
   } catch (error) {
@@ -55,7 +55,7 @@ const updateConsents = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Registration failed",
+      message: "Update Consent suscessful",
       error: error.message,
     });
   }
@@ -105,10 +105,11 @@ const deleteById = async (req, res) => {
     const result = await consentsService.deleteDataByIds(id);
     const evaluationIds = await evaluationService.getByCustomerId(id);
 
-    await evaluationService.deleteEvalonatateBulk(evaluationIds);
-    await evaluationService.deleteEvaluationPainAreasBulk(evaluationIds);
-    await evaluationService.deleteSessionNoteBulk(evaluationIds);
-
+    if (evaluationIds.length !== 0) {
+      await evaluationService.deleteEvalonatateBulk(evaluationIds);
+      await evaluationService.deleteEvaluationPainAreasBulk(evaluationIds);
+      await evaluationService.deleteSessionNoteBulk(evaluationIds);
+    }
     await evaluationService.deleteByCustomerId(id);
     await custPackService.deleteCustPack(id);
 

@@ -5,7 +5,7 @@ import { authService } from "./authService";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 
 export const customerService = {
-  customerRegistration: async (id = 0, data1, data2) => {
+  createCustomer: async (id = 0, data1, data2) => {
     const margedData = { data1, data2 };
     const token = authService.getToken();
     try {
@@ -23,7 +23,7 @@ export const customerService = {
       console.error("Error registation", error);
     }
   },
-  updateRegistration: async (id, data1, data2) => {
+  updateCustomer: async (id, data1, data2) => {
     const margedData = { data1, data2 };
     const token = authService.getToken();
     try {
@@ -42,7 +42,7 @@ export const customerService = {
     }
   },
 
-  getCustomerData: async (id) => {
+  getCustomerDataById: async (id) => {
     const token = authService.getToken();
     try {
       const response = await api.get(`${API_BASE_URL}/api/customer/${id}`, {

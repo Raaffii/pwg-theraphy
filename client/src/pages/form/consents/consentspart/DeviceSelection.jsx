@@ -1,14 +1,14 @@
 export default function DeviceSelection({
   formData,
   handleChange,
-  interestsList,
+  productService,
 }) {
   return (
     <div className='mb-4'>
       <p className='font-medium mb-1'>Kindly tick (✔) which device</p>
 
       <div className='grid grid-cols-2 md:grid-cols-3 gap-2'>
-        {interestsList?.map((item, index) => (
+        {productService?.map((item, index) => (
           <label key={index} className='inline-flex items-center text-sm'>
             <input
               type='checkbox'

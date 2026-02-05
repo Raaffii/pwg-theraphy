@@ -23,7 +23,7 @@ export default function TherapistDashboard() {
 
   const [openModalForm, setOpenModalForm] = useState(false);
   const [openModalDelete, setOpenModalDelete] = useState(false);
-  const [selectedDeleteId, setSelectedDeleteId] = useState(null);
+  const [selectedDelete, setSelectedDelete] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalActionChoose, setModalActionChoose] = useState(false);
@@ -45,13 +45,13 @@ export default function TherapistDashboard() {
   // Search
 
   const handleDelete = (item) => {
-    setSelectedDeleteId(item.customerid);
+    setSelectedDelete(item);
     setOpenModalDelete(true);
   };
 
   const confirmDelete = async () => {
     try {
-      await deleteConsent(selectedDeleteId);
+      await deleteConsent(selectedDelete.customerid);
       setOpenModalDelete(false);
     } catch (err) {
       console.error("Error deleting", err);
@@ -151,6 +151,7 @@ export default function TherapistDashboard() {
   return (
     <div className='p-4'>
       {/* Top bar */}
+
       <div className='flex justify-between items-center mb-4'>
         <SearcBar handleSearch={(e) => handleSearch(e.target.value)} />
         <Button
@@ -174,9 +175,17 @@ export default function TherapistDashboard() {
           title='Confirm Delete'
           setIsOpen={setOpenModalDelete}
           small={true}>
-          <Button variant='destructive' onClick={confirmDelete}>
-            Delete {selectedDeleteId}
-          </Button>
+          <div className='gap-2 flex-row'>
+            <p className='my-4'>
+              Are You Sure to delete
+              <span className='font-semibold'> {selectedDelete.name}</span> ?
+            </p>
+            <div className='w-full flex justify-end'>
+              <Button variant='destructive' onClick={confirmDelete}>
+                Delete
+              </Button>
+            </div>
+          </div>
         </Modal>
       )}
 

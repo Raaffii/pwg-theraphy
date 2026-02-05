@@ -1,8 +1,8 @@
-import { consentService } from "@/services/consentService";
+import { customerService } from "@/services/customerService";
 import { useState, useCallback } from "react";
 import toast from "react-hot-toast";
-export const useConsent = () => {
-  const [consent, setConsent] = useState([]);
+export const useCustomer = () => {
+  const [customer, setCustomer] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,7 +23,8 @@ export const useConsent = () => {
     }));
   }, []);
 
-  const fetchConsent = useCallback(
+  const fetchCustomer = useCallback(
+    //not yet ####################################3
     async (overrideParams = {}) => {
       try {
         setIsLoading(true);
@@ -32,11 +33,11 @@ export const useConsent = () => {
         const apiParams = {
           ...finalParams,
         };
-        const response = await consentService.getConsent(apiParams);
+        // const response = await CustomerService.getCustomer(apiParams);
 
         const data = formatproductData(response.data);
 
-        setConsent(data);
+        setCustomer(data);
         setPagination(
           response.pagination || {
             currentPage: 1,
@@ -48,10 +49,10 @@ export const useConsent = () => {
 
         return { success: true, data: data };
       } catch (err) {
-        console.error("Error fetching consent:", err);
+        console.error("Error fetching Customer:", err);
 
         setError(err.message);
-        setConsent([]);
+        setCustomer([]);
 
         return { success: false, error: err.message };
       } finally {
@@ -61,15 +62,15 @@ export const useConsent = () => {
     [params, formatproductData],
   );
 
-  const fetchConsentByCustomerId = useCallback(
+  const fetchCustomerDataById = useCallback(
     async (id) => {
       try {
         setIsLoading(true);
         setError(null);
 
-        const response = await consentService.getConsentByid(id);
+        const response = await customerService.getCustomerDataById(id);
 
-        setConsent(response);
+        setCustomer(response);
         setPagination(
           response.pagination || {
             currentPage: 1,
@@ -81,10 +82,10 @@ export const useConsent = () => {
 
         return { success: true, data: response };
       } catch (err) {
-        console.error("Error fetching consent:", err);
+        console.error("Error fetching Customer:", err);
 
         setError(err.message);
-        setConsent([]);
+        setCustomer([]);
 
         return { success: false, error: err.message };
       } finally {
@@ -94,20 +95,20 @@ export const useConsent = () => {
     [params],
   );
 
-  const createConsent = useCallback(async (id, data) => {
+  const createCustomer = useCallback(async (id, data) => {
     let toastId;
     try {
       setIsSubmitting(true);
       setError(null);
-      toastId = toast.loading("Creating new consent...");
+      toastId = toast.loading("Creating new Customer...");
 
-      const response = await consentService.consentRegistration(id, data);
-      toast.success("consent added successfully!", { id: toastId });
+      const response = await customerService.createCustomer(id, data);
+      toast.success("Customer added successfully!", { id: toastId });
 
       return { success: true, data: response.data };
     } catch (err) {
-      console.error("Error creating consent:", err);
-      toast.error(err.message || "Failed to create consent", { id: toastId });
+      console.error("Error creating Customer:", err);
+      toast.error(err.message || "Failed to create Customer", { id: toastId });
       setError(err.message);
 
       return { success: false, error: err.message };
@@ -116,19 +117,19 @@ export const useConsent = () => {
     }
   }, []);
 
-  const updateConsent = useCallback(async (id, data) => {
+  const updateCustomer = useCallback(async (id, data) => {
     if (!id) return;
     let toastId;
     try {
       setIsSubmitting(true);
       setError(null);
-      toastId = toast.loading("Updating consent details...");
-      const response = await await consentService.consentUpdate(id, data);
-      toast.success("consent updated successfully", { id: toastId });
+      toastId = toast.loading("Updating Customer details...");
+      const response = await customerService.updateCustomer(id, data);
+      toast.success("Customer updated successfully", { id: toastId });
 
       return { success: true, data: response.data };
     } catch (err) {
-      console.error("Error updating consent:", err);
+      console.error("Error updating Customer:", err);
       toast.error(err.message || "Failed to update approval", {
         id: toastId,
       });
@@ -140,38 +141,38 @@ export const useConsent = () => {
     }
   }, []);
 
-  const deleteConsent = useCallback(async (id) => {
-    if (!id) return;
+  //   const deleteCustomer = useCallback(async (id) => {
+  //     if (!id) return;
 
-    try {
-      setIsSubmitting(true);
-      setError(null);
+  //     try {
+  //       setIsSubmitting(true);
+  //       setError(null);
 
-      await consentService.deleteById(id);
-      toast.success("consent deleted successfully");
+  //       await CustomerService.deleteById(id);
+  //       toast.success("Customer deleted successfully");
 
-      setConsent((prev) => prev.filter((item) => item.customerid !== id));
+  //       setCustomer((prev) => prev.filter((item) => item.customerid !== id));
 
-      return { success: true };
-    } catch (err) {
-      console.error("Error deleting consent:", err);
-      toast.error(err.message);
-      setError(err.message);
+  //       return { success: true };
+  //     } catch (err) {
+  //       console.error("Error deleting Customer:", err);
+  //       toast.error(err.message);
+  //       setError(err.message);
 
-      return { success: false, error: err.message };
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  //       return { success: false, error: err.message };
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }, []);
 
   const onSearch = useCallback(
     async (searchTerm) => {
       const newParams = { ...params, searchTerm };
       setParams(newParams);
 
-      return await fetchConsent({ searchTerm, page: 1 });
+      return await fetchCustomer({ searchTerm, page: 1 });
     },
-    [fetchConsent, setParams, params],
+    [fetchCustomer, setParams, params],
   );
 
   const onPageChange = useCallback(
@@ -179,18 +180,18 @@ export const useConsent = () => {
       const newParams = { ...params, page };
 
       setParams(newParams);
-      return await fetchConsent({ page });
+      return await fetchCustomer({ page });
     },
-    [params, fetchConsent],
+    [params, fetchCustomer],
   );
 
   const onPageSizeChange = useCallback(
     async (pageSize) => {
       const newParams = { ...params, pageSize, page: 1 };
       setParams(newParams);
-      return await fetchConsent({ pageSize, page: 1 });
+      return await fetchCustomer({ pageSize, page: 1 });
     },
-    [params, fetchConsent],
+    [params, fetchCustomer],
   );
 
   const onFilterChange = useCallback(
@@ -202,26 +203,26 @@ export const useConsent = () => {
         page: 1,
       };
       setParams(newParams);
-      return await fetchConsent({
+      return await fetchCustomer({
         subject: filters.subject || null,
         page: 1,
       });
     },
-    [params, fetchConsent],
+    [params, fetchCustomer],
   );
 
   return {
-    fetchConsent,
-    fetchConsentByCustomerId,
-    updateConsent,
+    fetchCustomer,
+    fetchCustomerDataById,
+    updateCustomer,
     onPageChange,
     onPageSizeChange,
-    createConsent,
-    deleteConsent,
+    createCustomer,
+
     onSearch,
     onFilterChange,
     isSubmitting,
-    consent,
+    customer,
     isLoading,
     error,
     pagination,

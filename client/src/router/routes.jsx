@@ -15,7 +15,7 @@ import CustomerSteps from "@/pages/CustomerSteps";
 import SignupPage from "@/pages/SignupPage";
 import TherapistDashboard from "@/pages/TherapistDashboard";
 import Logout from "@/pages/auth/Logout";
-import ConsentsList from "@/pages/therapist/ConsentsList";
+import ConsentsList from "@/components/Therapist/ConsentsList";
 import TherapistEvaluation from "@/pages/TherapistEvaluation";
 import EvaluationForm from "@/pages/form/evaluation/EvaluationForm";
 import PosPage from "@/pages/PosPage";

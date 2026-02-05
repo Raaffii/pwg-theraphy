@@ -24,7 +24,7 @@ export const consentService = {
       return response.data;
     } catch (error) {
       console.error("Error registation", error);
-      return error;
+      throw error;
     }
   },
   consentUpdate: async (id, data) => {
@@ -43,7 +43,7 @@ export const consentService = {
       return response.data;
     } catch (error) {
       console.error("Error registation", error);
-      return error;
+      throw error;
     }
   },
   getConsent: async (params) => {

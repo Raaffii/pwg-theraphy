@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { consentService } from "@/services/consentService";
 import { useState, useEffect } from "react";
-import Modal from "../../components/Shared/Modal";
+import Modal from "../Shared/Modal";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
