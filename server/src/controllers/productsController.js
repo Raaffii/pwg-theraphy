@@ -42,7 +42,7 @@ const postProducts = async (req, res) => {
 
       fs.renameSync(`uploads/${tempFilename}`, `uploads/${newFilename}`);
 
-      const data = { ...req.body, image: newFilename };
+      const data = { ...req.body, picture: newFilename };
 
       await productsService.updateProducts(insertId, data);
     }
@@ -105,11 +105,10 @@ const updateProducts = async (req, res) => {
 
       fs.renameSync(`uploads/${tempFilename}`, `uploads/${newFilename}`);
 
-      // Update nama file di data
-      data.image = newFilename;
+      data.picture = newFilename;
+      console.log("data", data.picture);
     }
 
-    // 3️⃣ Update database
     const result = await productsService.updateProducts(id, data);
 
     res.status(200).json(result);

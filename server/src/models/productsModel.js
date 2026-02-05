@@ -71,7 +71,9 @@ const deleteProduct = async (productId) => {
 };
 
 const updateProduct = async (id, data) => {
-  const { productName, unitPrice, typeProduct, image } = data;
+  const { productName, unitPrice, typeProduct, picture } = data;
+
+  console.log("data", data);
 
   const sql = `
     UPDATE products 
@@ -83,7 +85,7 @@ const updateProduct = async (id, data) => {
     productName,
     unitPrice,
     typeProduct,
-    image,
+    picture,
     id,
   ]);
 

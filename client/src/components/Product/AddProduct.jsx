@@ -1,8 +1,14 @@
 import { useProduct } from "@/hooks/useProduct";
 import { useState } from "react";
 
-export default function AddProduct({ selectedItem, mode = "create", setOpen }) {
+export default function AddProduct({
+  selectedItem,
+  mode = "create",
+  setOpen,
+  fetchProduct,
+}) {
   const [formData, setFormData] = useState({
+    picture: selectedItem?.picture || "",
     productName: selectedItem?.name || "",
     unitPrice: selectedItem?.unitprice || "",
     typeProduct: selectedItem?.productcat || "",
@@ -20,7 +26,7 @@ export default function AddProduct({ selectedItem, mode = "create", setOpen }) {
     setPreview(URL.createObjectURL(file));
   };
 
-  const { createProduct, editProduct, fetchProduct } = useProduct();
+  const { createProduct, editProduct } = useProduct();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +44,7 @@ export default function AddProduct({ selectedItem, mode = "create", setOpen }) {
     data.append("productName", formData.productName);
     data.append("unitPrice", formData.unitPrice);
     data.append("typeProduct", formData.typeProduct);
+    data.append("picture", formData.picture);
 
     if (imageFile) {
       data.append("image", imageFile);
@@ -49,6 +56,7 @@ export default function AddProduct({ selectedItem, mode = "create", setOpen }) {
       await editProduct(selectedItem?.productid, data);
     }
 
+    console.log("fetchproduct");
     await fetchProduct();
     setOpen(false);
   };

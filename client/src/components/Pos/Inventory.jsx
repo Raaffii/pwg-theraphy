@@ -33,6 +33,7 @@ export default function Inventory({
     onPageChange,
     setParams,
     params,
+    isLoading,
   } = useProduct();
 
   const handleFilter = async (filter) => {
@@ -154,6 +155,8 @@ export default function Inventory({
                 productid={item.productid}
               />
             ))}
+
+            {isLoading && "Loading ..."}
           </div>
 
           {/* Pagination always bottom */}

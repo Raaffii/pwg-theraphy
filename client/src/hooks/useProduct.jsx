@@ -114,9 +114,8 @@ export const useProduct = () => {
       setIsSubmitting(true);
       setError(null);
 
-      const result = await productsService.deleteProduct(id);
+      await productsService.deleteProduct(id);
 
-      console.log("ceceecce", result);
       toast.success("Product deleted successfully");
 
       setProduct((prev) => prev.filter((item) => item.productid !== id));
@@ -159,7 +158,6 @@ export const useProduct = () => {
 
   const onPageSizeChange = useCallback(
     async (pageSize) => {
-      console.log("pagesize", pageSize);
       const newParams = { ...params, pageSize, page: 1 };
       setParams(newParams);
       return await fetchProduct({ pageSize, page: 1 });

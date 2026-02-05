@@ -12,7 +12,6 @@ import { DataTable } from "@/components/table";
 //utils
 import { calculateAge } from "@/utils/calculateAges";
 import { useConsent } from "@/hooks/useConsent";
-
 export default function TherapistEvaluation() {
   const hasFetchedData = useRef(false);
   const navigate = useNavigate();
@@ -24,9 +23,10 @@ export default function TherapistEvaluation() {
     onPageSizeChange,
     setParams,
     deleteEvaluation,
+    isLoading,
   } = useEvaluation();
 
-  const { fetchConsentById, consent } = useConsent();
+  const { fetchConsentByCustomerId, consent } = useConsent();
 
   const [modalPlus, setModalPlus] = useState(false);
   const [modalView, setModalView] = useState(false);
@@ -44,7 +44,7 @@ export default function TherapistEvaluation() {
     if (hasFetchedData.current) return;
     hasFetchedData.current = true;
     const fetchData = async (id) => {
-      const resp = await fetchConsentById(id);
+      const resp = await fetchConsentByCustomerId(id);
 
       const yearsold = calculateAge(resp.data?.dateOfBirth);
       setAge(yearsold);
@@ -179,6 +179,7 @@ export default function TherapistEvaluation() {
           onSizeChange={onPageSizeChange}
           onDelete={handleDelete}
           onEdit={handleView}
+          isLoading={isLoading}
         />
       </div>
       {modalPlus && (

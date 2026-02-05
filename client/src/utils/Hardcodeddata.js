@@ -1,5 +1,11 @@
 // This hardcoded data is used during development in case data is not inserted into the database (SQL)
-export const devices = ["Itera-Classic", "Itera-Pro", "Itera-Premium", "Itera-Bio", "Others"];
+export const devices = [
+  "Itera-Classic",
+  "Itera-Pro",
+  "Itera-Premium",
+  "Itera-Bio",
+  "Others",
+];
 
 export const healthConditions = [
   { key: "breastImplant", name: "Breast Implant" },
@@ -19,11 +25,22 @@ export const healthConditions = [
   { key: "issuepregnant", name: "Pregnant" },
   { key: "issuemenstruating", name: "Menstruating" },
   { key: "issuesurgery", name: "Surgery" },
-  { key: "issuehospitalninetydays", name: "Admited To Hospital For Pass 90days" },
-  { key: "others", name: "Others" },
+  {
+    key: "issuehospitalninetydays",
+    name: "Admited To Hospital For Pass 90days",
+  },
 ];
 
-export const interested = ["iTeraCare / 腾晟真爱宝", "iTera-Bio / 腾晟能量仪", "Prife LifeMeal / 腾晟代餐", "KH Alfalfa / 首蕾叶绿素", "7 Wonder", "Arowave", "Ti-Rest / 虎奶芝", "Other / 其他"];
+export const interested = [
+  "iTeraCare / 腾晟真爱宝",
+  "iTera-Bio / 腾晟能量仪",
+  "Prife LifeMeal / 腾晟代餐",
+  "KH Alfalfa / 首蕾叶绿素",
+  "7 Wonder",
+  "Arowave",
+  "Ti-Rest / 虎奶芝",
+  "Other / 其他",
+];
 
 export const attention = [
   "Neck",

@@ -3,7 +3,6 @@ import { useState } from "react";
 export default function Disclaimer({ personalData, formPersonalData, Button }) {
   const [extended, setExtended] = useState();
 
-  console.log("form data", formPersonalData);
   return (
     <div className='grid '>
       {!extended ? (

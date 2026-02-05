@@ -12,7 +12,7 @@ export default function DeviceSelection({
           <label key={index} className='inline-flex items-center text-sm'>
             <input
               type='checkbox'
-              className='mr-2'
+              className='mr-2 cursor-pointer accent-purple-400'
               name='selectedDevices'
               value={item.productid}
               checked={formData.selectedDevices.some(

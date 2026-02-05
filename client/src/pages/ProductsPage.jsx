@@ -18,6 +18,7 @@ export default function ProductsPage() {
     onPageChange,
     onPageSizeChange,
     onSearch,
+    isLoading,
   } = useProduct();
   const hasFetchedData = useRef(false);
   const [openModalForm, setOpenModalForm] = useState(false);
@@ -133,7 +134,10 @@ export default function ProductsPage() {
       {openModalForm && (
         <Modal setIsOpen={setOpenModalForm} title='Add Product' small>
           <div className='max-h-[600px] overflow-y-auto'>
-            <AddProduct setOpen={setOpenModalForm} />
+            <AddProduct
+              setOpen={setOpenModalForm}
+              fetchProduct={fetchProduct}
+            />
           </div>
         </Modal>
       )}
@@ -156,6 +160,7 @@ export default function ProductsPage() {
               selectedItem={selectedItem}
               mode='edit'
               setOpen={() => setSelectedItem(null)}
+              fetchProduct={fetchProduct}
             />
           </div>
         </Modal>
@@ -171,6 +176,7 @@ export default function ProductsPage() {
         pagination={pagination}
         onPageChange={onPageChange}
         onSizeChange={onPageSizeChange}
+        isLoading={isLoading}
       />
     </div>
   );

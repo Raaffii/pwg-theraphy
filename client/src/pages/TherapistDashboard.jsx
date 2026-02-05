@@ -19,6 +19,7 @@ export default function TherapistDashboard() {
     onPageChange,
     onPageSizeChange,
     onSearch,
+    isLoading,
   } = useConsent();
 
   const [openModalForm, setOpenModalForm] = useState(false);
@@ -237,6 +238,7 @@ export default function TherapistDashboard() {
         pagination={pagination}
         onPageChange={onPageChange}
         onSizeChange={onPageSizeChange}
+        isLoading={isLoading}
       />
     </div>
   );

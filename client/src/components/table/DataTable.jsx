@@ -193,7 +193,7 @@ export const DataTable = ({
         <div className='overflow-x-auto'>
           <Table>
             <TableHeader>
-              <TableRow className='bg-purple-950 hover:bg-gray-700'>
+              <TableRow className='bg-prime-color hover:bg-gray-700'>
                 {processedColumns.map((column, idx) => (
                   <TableHead
                     key={idx}

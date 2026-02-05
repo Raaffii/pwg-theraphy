@@ -231,7 +231,7 @@ const CustomerConsentForm = (props) => {
 
       <WalkinReferral formData={formData} handleChange={handleChange} />
 
-      <div className='bg-blue-900 text-white px-2 py-1 font-semibold'>
+      <div className='bg-prime-color text-white px-2 py-1 font-semibold'>
         PERSONAL PARTICULARS
       </div>
 
@@ -242,7 +242,7 @@ const CustomerConsentForm = (props) => {
         handleChangePersonal={handleChangePersonal}
       />
 
-      <div className='bg-blue-900 text-white px-2 py-1 font-semibold'>
+      <div className='bg-prime-color text-white px-2 py-1 font-semibold'>
         HEALTH DECLARATION
       </div>
 
@@ -253,7 +253,7 @@ const CustomerConsentForm = (props) => {
         setFormData={setFormData}
       />
 
-      <div className='bg-blue-900 text-white px-2 py-1 font-semibold'>
+      <div className='bg-prime-color text-white px-2 py-1 font-semibold'>
         DISCLAIMER
       </div>
 
