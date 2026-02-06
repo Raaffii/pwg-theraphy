@@ -11,8 +11,11 @@ const addPosHd = async (data, userId) => {
   } = data.formPaymentData;
   const { walkinName, walkinEmail, walkinContact } = data.formWalkinData;
   const discprint = data.discountShow;
+
+  const invnumber = data.invnumber;
+
   const query =
-    "INSERT INTO poshd (transdate,  total_amount, payment_method, customerId, therapist_id,walkinname, walkinemail, walkincontactno,printdisc, enteredby, entereddate) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO poshd (transdate,  total_amount, payment_method, customerId, therapist_id,walkinname, walkinemail, walkincontactno,printdisc,posinvnum, enteredby, entereddate) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
   const [result] = await pool.query(query, [
     new Date(),
     totalPrice,
@@ -23,6 +26,7 @@ const addPosHd = async (data, userId) => {
     walkinEmail,
     walkinContact,
     discprint,
+    invnumber,
     userId,
     new Date(),
   ]);

@@ -1,11 +1,35 @@
 const pos = require("../models/posModel");
+const posSetup = require("../models/posSetupModel");
 
 const posInsertHd = async (data, userId) => {
   try {
-    const result = await pos.addPosHd(data, userId);
+    console.log("dataaaaa", data);
+    const dataPosSetup = await posSetup.getPosSetup();
+
+    const invnumber = Number(dataPosSetup.nextinvnum) + 1;
+
+    const mergeData = {
+      ...data,
+      invnumber: invnumber,
+    };
+
+    const result = await pos.addPosHd(mergeData, userId);
+
+    await posSetup.updatePosSetup(dataPosSetup.setupid, invnumber);
+
     return result;
   } catch (error) {
     console.error("Failed to save consent:", error.message);
+    throw new Error("Error while storing consent data");
+  }
+};
+
+const getPosSetup = async () => {
+  try {
+    const dataPosSetup = await posSetup.getPosSetup();
+    return dataPosSetup;
+  } catch (error) {
+    console.error("Failed to Pos Setup:", error.message);
     throw new Error("Error while storing consent data");
   }
 };
@@ -53,4 +77,5 @@ module.exports = {
   posInsertLine,
   getCustomerPosHd,
   getCustomerPosLine,
+  getPosSetup,
 };

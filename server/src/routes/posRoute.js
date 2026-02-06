@@ -13,6 +13,7 @@ const {
   insertPosLine,
   getCusPosHd,
   getCusPosLine,
+  getPosSetup,
 } = require("../controllers/posController");
 
 const router = express.Router();
@@ -23,5 +24,6 @@ router.post("/posline", authenticateToken, insertPosLine);
 
 router.get("/poshd", authenticateToken, getCusPosHd);
 router.get("/posline/:id", authenticateToken, getCusPosLine);
+router.get("/possetup", authenticateToken, getPosSetup);
 
 module.exports = router;
