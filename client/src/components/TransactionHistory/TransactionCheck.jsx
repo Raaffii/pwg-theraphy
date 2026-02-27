@@ -8,17 +8,17 @@ import { ReceiptDocument } from "../InvoiceReceipt/ReceiptDocument";
 import { pdf } from "@react-pdf/renderer";
 import { LoaderCircle } from "lucide-react";
 import { receiptService } from "@/services/receiptService";
-
-export default function TrasactionCheck({ idPosHd, customerData }) {
+import { usePosSetup } from "@/hooks/usePostSetup";
+export default function TrasactionCheck({ idPosHd, customerData, dataPosHd }) {
   const [receiptLoading, setReceiptLoading] = useState(false);
   const [dataPosline, setDataPosLine] = useState([]);
   const { user, loading } = useAuth();
-
+  const { fetchPossSetup, posSetup } = usePosSetup();
   useEffect(() => {
     const fetch = async () => {
       const result = await posService.getCustomerPosLine(idPosHd);
       setDataPosLine(result.data);
-      console.log("ini loh", result.data);
+      await fetchPossSetup();
     };
 
     fetch();
@@ -92,7 +92,15 @@ export default function TrasactionCheck({ idPosHd, customerData }) {
 
   return (
     <div>
-      <h1 className='my-3'>Transaction Detail</h1>
+      <div className='mb-4 border-b pb-2'>
+        <h1 className='text-xl font-semibold tracking-wide'>
+          Transaction Detail
+        </h1>
+        <h2 className='text-sm text-gray-600'>
+          Receipt <span className='font-medium'>#{dataPosHd?.posinvnum}</span>
+        </h2>
+      </div>
+
       <table className='w-full border border-gray-300 text-sm mb-6 shadow-sm rounded-lg overflow-hidden'>
         <thead>
           <tr className='bg-gray-100 text-left'>
@@ -204,6 +212,9 @@ export default function TrasactionCheck({ idPosHd, customerData }) {
             selectedData={dataPosline}
             personData={customerData}
             discountShow={true}
+            posSetup={posSetup}
+            availableposinvnum={dataPosHd?.posinvnum}
+            transdate={dataPosHd?.transdate}
           />
         </div>
         {formPaymentData.receiptOption && (

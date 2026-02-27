@@ -167,7 +167,7 @@ export const useEvaluation = () => {
       await evaluationService.deleteEvaluationData(id);
       toast.success("evaluation deleted successfully");
 
-      setEvaluation((prev) => prev.filter((item) => item.customerid !== id));
+      setEvaluation((prev) => prev.filter((item) => item.evaluation_id !== id));
 
       return { success: true };
     } catch (err) {

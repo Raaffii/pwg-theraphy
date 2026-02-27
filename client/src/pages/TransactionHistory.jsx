@@ -1,13 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Eye } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 //service
@@ -17,14 +8,13 @@ import { DataTable } from "@/components/table";
 import Modal from "../components/Shared/Modal";
 import TrasactionCheck from "@/components/TransactionHistory/TransactionCheck";
 import { usePosHd } from "@/hooks/usePosHd";
-import { render } from "@react-pdf/renderer";
 
 export default function TransactionHistory() {
   const [customerData, setCustomerData] = useState([]);
   const [cusPosHdData, setCusPosHdData] = useState([]);
   const [modalDetail, setModalDetail] = useState(false);
-  const [selectedId, setSelectedId] = useState();
-
+  const [selected, setSelected] = useState();
+  const hasFetchedData = useRef(false);
   const {
     fetchPosHd,
     posHd,
@@ -39,29 +29,37 @@ export default function TransactionHistory() {
   const { id } = useParams();
 
   useEffect(() => {
+    if (hasFetchedData.current) return;
+    hasFetchedData.current = true;
     const fetchData = async (id) => {
-      const DataExistCustomer = await customerService.getCustomerData(id);
+      const DataExistCustomer = await customerService.getCustomerDataById(id);
       setCustomerData(DataExistCustomer);
 
       const posData = await posService.getCustomerPosHd(id);
 
       setParams({ ...params, customerId: id });
+
       await fetchPosHd({ customerId: id });
 
-      setCusPosHdData(posData.data);
+      setCusPosHdData(posData?.data);
     };
 
     fetchData(id);
   }, []);
 
   const handleClick = (item) => {
-    setSelectedId(item.posid);
+    setSelected(item);
     setModalDetail((prev) => !prev);
   };
 
   // slice data sesuai halaman
 
   const columns = [
+    {
+      accessorKey: "posinvnum",
+      header: "Receipt",
+      cellClassName: "text-left",
+    },
     {
       accessorKey: "transdate",
       header: "Date",
@@ -89,15 +87,13 @@ export default function TransactionHistory() {
     },
   ];
 
-  console.log("pagibnati", pagination);
-
   return (
     <>
       {" "}
       <p
         className='text-blue-600 hover:underline my-2 cursor-pointer'
         onClick={() => navigate("/therapist")}>
-        &larr; Back
+        &larr;Back
       </p>
       <div className='gap-5'>
         <div className='h-full flex items-center'>
@@ -126,7 +122,11 @@ export default function TransactionHistory() {
       </div>
       {modalDetail && (
         <Modal setIsOpen={setModalDetail}>
-          <TrasactionCheck idPosHd={selectedId} customerData={customerData} />
+          <TrasactionCheck
+            idPosHd={selected.posid}
+            customerData={customerData}
+            dataPosHd={selected}
+          />
         </Modal>
       )}
     </>

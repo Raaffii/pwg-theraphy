@@ -212,7 +212,7 @@ export default function TherapistEvaluation() {
           <Button
             variant='destructive'
             onClick={() => confirmDelete(deleteData)}>
-            Delete {deleteData}
+            Delete
           </Button>
         </Modal>
       )}

@@ -31,7 +31,6 @@ export const usePosHd = () => {
         const apiParams = {
           ...finalParams,
         };
-        console.log("params", params);
 
         const response = await posService.getCustomerPosHd(apiParams);
 

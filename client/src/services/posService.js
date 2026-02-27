@@ -33,7 +33,7 @@ export const posService = {
   },
   getCustomerPosHd: async (params) => {
     const token = authService.getToken();
-    console.log("params", params);
+
     try {
       const response = await api.get(
         `${API_BASE_URL}/api/pos/poshd`,

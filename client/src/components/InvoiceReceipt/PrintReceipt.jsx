@@ -1,8 +1,11 @@
 export default function PrintReceipt({
+  posSetup,
   selectedData,
   personData,
   discountShow,
   paymentMethod,
+  availableposinvnum,
+  transdate,
 }) {
   const totalPrice = selectedData
     .reduce((total, item) => total + item.subPrice * 1, 0)
@@ -10,159 +13,152 @@ export default function PrintReceipt({
 
   return (
     <>
-      <div id='printreceipt' className='h-full'>
-        <div className=' flex justify-between items-center bg-purple-500/50 p-2'>
-          <div className='flex items-center'>
+      <div
+        id='printreceipt'
+        className='min-h-screen flex flex-col bg-white text-black'>
+        {/* ================= HEADER ================= */}
+        <div className='flex justify-between items-center bg-purple-500/50 p-2'>
+          <div className='flex items-center gap-2'>
             <img src='/pwglogo.svg' alt='' className='w-20' />
-            <p>Prife Wellness Group</p>
+            <p className='font-semibold'>{posSetup?.coyname}</p>
           </div>
-          <div>
-            <p>Payment Date : 9/8/2025</p>
-            <p>Receipt #323232</p>
+          <div className='text-sm text-right'>
+            <p>
+              Payment Date :{" "}
+              {transdate
+                ? new Date(transdate).toLocaleDateString()
+                : new Date().toLocaleDateString()}
+            </p>
+            <p>Receipt #{availableposinvnum || posSetup?.nextinvnum + 1}</p>
           </div>
         </div>
 
-        <div className='px-5'>
-          <div className='mt-12 flex gap-40 space-x-4 items-center  p-2'>
-            <div className=''>
-              <p>From</p>
-              <p>Prife Wellness Group</p>
-              <p>Address Of Prife Wellness Group</p>
-              <p>(223)0123456789</p>
+        <div className='flex-1 px-5'>
+          <div className='mt-6 flex justify-between p-2'>
+            <div>
+              <p className='font-semibold'>From</p>
+              <p>{posSetup?.coyname}</p>
+              <p>
+                {posSetup?.addr1} {posSetup?.addr2} {posSetup?.addr3}
+              </p>
+              <p>{posSetup?.coycontactnumber}</p>
             </div>
 
-            {personData[0]?.name && (
-              <div>
-                <p>Sold To</p>
-                <p>{personData[0]?.name}</p>
-                <p>{personData[0]?.address}</p>
-                <p>{personData[0]?.email}</p>
+            {personData?.[0]?.name && (
+              <div className='text-right'>
+                <p className='font-semibold'>Sold To</p>
+                <p>{personData[0].name}</p>
+                <p>{personData[0].address}</p>
+                <p>{personData[0].email}</p>
               </div>
             )}
           </div>
 
-          <div className='mt-14'>
-            <table className='w-full border border-gray-300 text-sm mb-6 shadow-sm rounded-lg'>
-              <thead>
-                <tr className='bg-gray-100 text-left'>
-                  <th
-                    className='border border-gray-300 px-3 py-2 font-medium w-[60%]'
-                    colSpan={3}>
-                    Description
-                  </th>
-                  <th className='border border-gray-300 px-3 py-2 font-medium w-[10%] text-center'>
-                    Quantity
-                  </th>
-                  <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>
-                    Unit Price
-                  </th>
+          <table className='w-full border border-gray-300 text-sm mt-6'>
+            <thead>
+              <tr className='bg-gray-100'>
+                <th colSpan={3} className='border px-2 py-1 text-left'>
+                  Description
+                </th>
+                <th className='border px-2 py-1 text-center'>Qty</th>
+                <th className='border px-2 py-1 text-center'>Unit</th>
+                {discountShow && (
+                  <th className='border px-2 py-1 text-center'>Disc</th>
+                )}
+                <th className='border px-2 py-1 text-center'>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {selectedData.map((item, i) => (
+                <tr key={i}>
+                  <td colSpan={3} className='border px-2 py-1'>
+                    {item.name || item.packagedesc}
+                  </td>
+                  <td className='border px-2 py-1 text-center'>
+                    {item.amount}
+                  </td>
+                  <td className='border px-2 py-1 text-center'>
+                    ${item.price}
+                  </td>
                   {discountShow && (
-                    <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>
-                      Subtotal
-                    </th>
+                    <td className='border px-2 py-1 text-center'>
+                      {item.discpercent
+                        ? `${item.discount}%`
+                        : `-$${item.discount}`}
+                    </td>
                   )}
-                  {discountShow && (
-                    <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>
-                      Discount
-                    </th>
-                  )}
-
-                  <th className='border border-gray-300 px-3 py-2 font-medium w-[15%] text-center'>
-                    Total
-                  </th>
+                  <td className='border px-2 py-1 text-center'>
+                    ${(item.subPrice * item.amount).toFixed(2)}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {selectedData.map((item, index) => (
-                  <tr className='hover:bg-gray-50' key={index}>
-                    <td
-                      className='border border-gray-300 px-3 py-2'
-                      colSpan={3}>
-                      {item.name
-                        ? item.name
-                        : item.packageCusFlag
-                          ? `${item.packagedesc} (Package Customer) `
-                          : `${item.packagedesc} (Package) `}
-                    </td>
-                    <td className='border border-gray-300 px-3 py-2 text-center'>
-                      {item.amount}
-                    </td>
-                    <td className='border border-gray-300 px-3 py-2 text-center'>
-                      ${item.price}
-                    </td>
-                    {discountShow && (
-                      <td className='border border-gray-300 px-3 py-2 text-center'>
-                        ${(item.price * item.amount).toFixed(2)}
-                      </td>
-                    )}
-                    {discountShow && (
-                      <td className='border border-gray-300 px-3 py-2 text-center'>
-                        {item.discpercent
-                          ? `${item.discount}%`
-                          : `-$${(item.discount * 1).toFixed(2)}`}
-                      </td>
-                    )}
+              ))}
+            </tbody>
+          </table>
 
-                    <td className='border border-gray-300 px-3 py-2 text-center'>
-                      ${(item.amount * item.subPrice).toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className='flex justify-between items-center mt-20 mb-30'>
-            <div className=''>
-              <p className='font-semibold'>Payment Menthod : </p>
-              <p> {paymentMethod}</p>
+          <div className='flex justify-between items-center mt-6'>
+            <div>
+              <p className='font-semibold'>Payment Method</p>
+              <p>{paymentMethod}</p>
             </div>
-            <div className=' w-80 text-right'>
-              <p className='border-t-2  w-full'>Total : ${totalPrice}</p>
+            <div className='text-right font-semibold'>
+              Total : ${totalPrice}
             </div>
           </div>
         </div>
-        <div className='absolute bottom-0 left-0 bg-purple-500/50 text-center p-3 pb-10 w-full'>
-          <p className='text-xl font-semibold'>Thank You For Your Purchase</p>
-          <p>For question or any concern please contact</p>
-          <p>PWG@gmail.com, Bob(21)32132123</p>
+
+        <div className='bg-purple-500/50 text-center p-3 text-sm'>
+          <p className='font-semibold'>Thank You For Your Purchase</p>
+          <p>For questions please contact</p>
+          <p>{posSetup?.coyemail}</p>
         </div>
       </div>
 
       <style>{`
-  @media print {
-    body * {
-      visibility: hidden;
-    }
-
-    #printreceipt, #printreceipt * {
-      visibility: visible;
-    }
-
-    #printreceipt {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      background: white;
-      box-shadow: none !important;
-      border-radius: 0 !important;
-    }
-
-    .min-h-screen {
-      min-height: auto !important;
-    }
-
-    .no-print {
-      display: none;
-    }
-  }
-
-  @page {
-    size: A3 landscape;
+     @media print {
+  html, body {
+    width: 210mm;
+    height: 148mm;
     margin: 0;
+    padding: 0;
+    overflow: hidden;
   }
-`}</style>
+
+  body * {
+    visibility: hidden;
+  }
+
+  #printreceipt,
+  #printreceipt * {
+    visibility: visible;
+  }
+
+  #printreceipt {
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    width: 210mm;
+    height: 148mm;
+
+    padding: 1mm;
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+  }
+
+  table {
+    font-size: 10px;
+    page-break-inside: avoid;
+  }
+}
+
+@page {
+  size: A5 landscape;
+  margin: 0;
+}
+
+      `}</style>
     </>
   );
 }

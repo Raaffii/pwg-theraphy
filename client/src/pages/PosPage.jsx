@@ -56,6 +56,16 @@ export default function PosPage() {
     setSelectedData([]);
   };
 
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <>
       <p
@@ -85,7 +95,18 @@ export default function PosPage() {
         <div className='border border-gray-300 shadow-md rounded-2xl w-full p-4 space-y-5 col-span-4'>
           {!selectedData.length == 0 && (
             <div className='w-full flex justify-between items-center'>
-              <p>List Of Selected Item</p>
+              <div>
+                <p>List Of Selected Item</p>
+                <p className='text-xs text-gray-500'>
+                  {now.toLocaleDateString()}{" "}
+                  {now.toLocaleTimeString({
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })}
+                </p>
+              </div>
+
               <button
                 title='delete all'
                 onClick={handleDeleteAll}

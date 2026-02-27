@@ -1,9 +1,23 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Mail, Lock, Eye, EyeOff, PersonStanding, User } from "lucide-react";
+import {
+  Loader2,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  PersonStanding,
+  User,
+} from "lucide-react";
 import { authService } from "@/services/authService";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -38,7 +52,6 @@ const SignupPage = () => {
     }
 
     try {
-      console.log(formData);
       await authService.singup(formData);
       toast.success("Signup successful!");
       navigate("/login", { replace: true });
@@ -62,8 +75,12 @@ const SignupPage = () => {
     <div className='min-h-screen flex items-center justify-center bg-gray-50 px-4'>
       <Card className='w-full max-w-md'>
         <CardHeader className='space-y-1'>
-          <CardTitle className='text-2xl font-bold text-center'>Welcome back</CardTitle>
-          <CardDescription className='text-center'>Enter your credentials to access your account</CardDescription>
+          <CardTitle className='text-2xl font-bold text-center'>
+            Welcome back
+          </CardTitle>
+          <CardDescription className='text-center'>
+            Enter your credentials to access your account
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className='space-y-4'>
@@ -72,7 +89,16 @@ const SignupPage = () => {
                 <Label htmlFor='email'>Email</Label>
                 <div className='relative'>
                   <Mail className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4' />
-                  <Input id='email' name='email' type='email' placeholder='Enter your email' value={formData.email} onChange={handleChange} className={`pl-10 ${error && "border-red-500 focus:ring-red-500"}`} disabled={loading} />
+                  <Input
+                    id='email'
+                    name='email'
+                    type='email'
+                    placeholder='Enter your email'
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={`pl-10 ${error && "border-red-500 focus:ring-red-500"}`}
+                    disabled={loading}
+                  />
                 </div>
               </div>
             </div>
@@ -82,9 +108,26 @@ const SignupPage = () => {
                 <Label htmlFor='email'>Password</Label>
                 <div className='relative'>
                   <Lock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4' />
-                  <Input id='password' name='password' type={showPassword ? "text" : "password"} placeholder='Enter your password' value={formData.password} onChange={handleChange} className='pl-10 pr-10' disabled={loading} />
-                  <button type='button' onClick={() => setShowPassword(!showPassword)} className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600' disabled={loading}>
-                    {showPassword ? <EyeOff className='h-4 w-4' /> : <Eye className='h-4 w-4' />}
+                  <Input
+                    id='password'
+                    name='password'
+                    type={showPassword ? "text" : "password"}
+                    placeholder='Enter your password'
+                    value={formData.password}
+                    onChange={handleChange}
+                    className='pl-10 pr-10'
+                    disabled={loading}
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'
+                    disabled={loading}>
+                    {showPassword ? (
+                      <EyeOff className='h-4 w-4' />
+                    ) : (
+                      <Eye className='h-4 w-4' />
+                    )}
                   </button>
                 </div>
               </div>
@@ -93,15 +136,36 @@ const SignupPage = () => {
                 <Label htmlFor='password'>Password Confirms</Label>
                 <div className='relative'>
                   <Lock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4' />
-                  <Input id='passwordConfirm' name='passwordConfirm' type={showPassword ? "text" : "password"} placeholder='Enter your password' value={formData.passwordConfirm} onChange={handleChange} className='pl-10 pr-10' disabled={loading} />
-                  <button type='button' onClick={() => setShowPassword(!showPassword)} className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600' disabled={loading}>
-                    {showPassword ? <EyeOff className='h-4 w-4' /> : <Eye className='h-4 w-4' />}
+                  <Input
+                    id='passwordConfirm'
+                    name='passwordConfirm'
+                    type={showPassword ? "text" : "password"}
+                    placeholder='Enter your password'
+                    value={formData.passwordConfirm}
+                    onChange={handleChange}
+                    className='pl-10 pr-10'
+                    disabled={loading}
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600'
+                    disabled={loading}>
+                    {showPassword ? (
+                      <EyeOff className='h-4 w-4' />
+                    ) : (
+                      <Eye className='h-4 w-4' />
+                    )}
                   </button>
                 </div>
               </div>
             </div>
 
-            <Button type='submit' className='w-full' disabled={loading} onClick={handleSubmit}>
+            <Button
+              type='submit'
+              className='w-full'
+              disabled={loading}
+              onClick={handleSubmit}>
               {loading ? (
                 <>
                   <Loader2 className='mr-2 h-4 w-4 animate-spin' />
@@ -115,7 +179,10 @@ const SignupPage = () => {
 
           <div className='mt-6 text-center'>
             <p className='text-sm text-gray-600'>
-              Allready have an account? <button className='text-blue-600 hover:text-blue-800 font-medium'>Log in</button>
+              Allready have an account?{" "}
+              <button className='text-blue-600 hover:text-blue-800 font-medium'>
+                Log in
+              </button>
             </p>
           </div>
         </CardContent>

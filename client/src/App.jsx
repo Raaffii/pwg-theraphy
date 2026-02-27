@@ -7,6 +7,14 @@ function AppRoutes() {
   return routeElements;
 }
 
+if (window.location.hostname.startsWith("www.")) {
+  const newHost = window.location.hostname.replace("www.", "");
+  const newUrl = `${window.location.protocol}//${newHost}${
+    window.location.port ? `:${window.location.port}` : ""
+  }${window.location.pathname}${window.location.search}`;
+  window.location.href = newUrl;
+}
+
 function App() {
   return (
     <BrowserRouter>

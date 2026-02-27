@@ -146,6 +146,7 @@ export default function PosSelectedItem({
     setTotalItemPrice(totalPrice);
   };
 
+  const API_URL = import.meta.env.VITE_API_URL;
   return (
     <div className=' justify-between bg-slate-100  rounded-md grid lg:grid-cols-7 gap-2'>
       <div className='flex gap-3 col-span-3 items-center p-1 bg-purple-950/10'>
@@ -162,8 +163,9 @@ export default function PosSelectedItem({
             -
           </button>
         </div>
+
         <img
-          src={`http://localhost:3000/uploads/${picture}`}
+          src={`${API_URL}/uploads/${picture}`}
           alt=''
           className='w-12 h-12 object-cover rounded-lg'
         />

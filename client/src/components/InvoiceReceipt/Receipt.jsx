@@ -1,7 +1,6 @@
 import { CreditCard, ScrollText, LoaderCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PrintReceipt from "../../components/InvoiceReceipt/PrintReceipt";
 import { Input } from "@/components/ui/input";
 import { posService } from "@/services/posService";
@@ -11,34 +10,33 @@ import { packageService } from "@/services/packageService";
 import { receiptService } from "@/services/receiptService";
 import { ReceiptDocument } from "./ReceiptDocument";
 import { pdf } from "@react-pdf/renderer";
+import { usePosSetup } from "@/hooks/usePostSetup";
 
-export default function Receipt({
-  selectedData,
-  personData,
-  formWalkinData,
-  setSelectedData,
-}) {
-  const navigate = useNavigate();
+export default function Receipt({ selectedData, personData, formWalkinData }) {
   const [receiptLoading, setReceiptLoading] = useState(false);
   const { user, loading } = useAuth();
   const [saved, setSaved] = useState(false);
   const [discountShow, setDiscountShow] = useState(false);
-  const [email, setEmail] = useState();
-
-  const location = useLocation();
+  const { fetchPossSetup, posSetup } = usePosSetup();
 
   const totalPrice = selectedData
     .reduce((total, item) => total + item.subPrice * 1, 0)
     .toFixed(2);
-  const tax = totalPrice * 0.1;
 
   const handlePrint = () => {
     window.print();
   };
 
+  useEffect(() => {
+    const fetchPostSetup = async () => {
+      await fetchPossSetup();
+    };
+
+    fetchPostSetup();
+  }, [fetchPossSetup]);
+
   async function handleSendEmail() {
     try {
-      // makes dokument PDF
       setReceiptLoading((prev) => !prev);
       const totalPrice = selectedData
         .reduce((total, item) => total + item.subPrice * 1, 0)
@@ -93,7 +91,11 @@ export default function Receipt({
 
   const handleSave = async (e) => {
     try {
-      const posHdData = { formPaymentData, formWalkinData, discountShow };
+      const posHdData = {
+        formPaymentData,
+        formWalkinData,
+        discountShow,
+      };
       const result = await posService.poshdInsert(posHdData);
       const idResult = result.data.data;
 
@@ -127,7 +129,7 @@ export default function Receipt({
   };
 
   const [formPaymentData, setFormPaymentData] = useState({
-    customerId: personData?.customerid || null,
+    customerId: personData[0]?.customerid || null,
     therapistId: user?.therapistId,
     paymentMethod: "",
     receiptOption: "",
@@ -366,6 +368,7 @@ export default function Receipt({
               <div className='print-only' id='print-area'>
                 <PrintReceipt
                   selectedData={selectedData}
+                  posSetup={posSetup}
                   personData={personData}
                   discountShow={discountShow}
                   paymentMethod={formPaymentData.paymentMethod}
